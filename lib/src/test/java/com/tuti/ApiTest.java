@@ -21,7 +21,10 @@ public class ApiTest {
     }
     @Test
      void testSignInApi(){
-        AuthenticationResponse response = client.SignIn(new UserCredentials("adonese","12345678"));
+        UserCredentials credentials = new UserCredentials();
+        credentials.setUsername("adonese").setPassword("12345678");
+
+        AuthenticationResponse response = client.SignIn(credentials);
         User user = response.getUser();
         assertEquals("adonese",user.getUsername());
         assertEquals("Mohamed Yousif",user.getFullname());

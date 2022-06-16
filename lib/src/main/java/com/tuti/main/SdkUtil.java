@@ -1,4 +1,4 @@
-package com.tuti.util;
+package com.tuti.main;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

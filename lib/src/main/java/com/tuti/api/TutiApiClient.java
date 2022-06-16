@@ -2,11 +2,13 @@ package com.tuti.api;
 
 import com.google.gson.Gson;
 import com.tuti.api.authentication.AuthenticationResponse;
+import com.tuti.api.authentication.User;
 import com.tuti.api.authentication.UserCredentials;
 import com.tuti.model.Operations;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
 public class TutiApiClient {
@@ -23,7 +25,7 @@ public class TutiApiClient {
 
     private static synchronized OkHttpClient getOkHttpInstance(){
         if (okHttpClient==null){
-            okHttpClient= new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+            okHttpClient= new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).build();
         }
         return okHttpClient;
     }
@@ -40,12 +42,22 @@ public class TutiApiClient {
         return development ? developmentHost : productionHost;
     }
 
-    public AuthenticationResponse SignIn(@NotNull UserCredentials credentials){
-        String url = serverURL + Operations.SIGN_IN;
+    public AuthenticationResponse SignIn(UserCredentials credentials){
+        return (AuthenticationResponse) request(Operations.SIGN_IN,credentials,AuthenticationResponse.class);
+    }
+
+    public String Signup(UserCredentials credentials){
+        return (String) request(Operations.SIGN_UP,credentials,String.class);
+    }
+
+
+    public Object request(String operation, Object toBeSent,Type toBeReceived ){
+
+        String url = serverURL + operation;
         OkHttpClient okHttpClient = getOkHttpInstance();
         Gson gson = getGsonInstance();
 
-        RequestBody requestBody = RequestBody.create(new Gson().toJson(credentials),JSON);
+        RequestBody requestBody = RequestBody.create(new Gson().toJson(toBeSent),JSON);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -53,10 +65,16 @@ public class TutiApiClient {
                 .build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
-            return gson.fromJson(response.body().string(),AuthenticationResponse.class);
+            if (toBeReceived != String.class) {
+                return gson.fromJson(response.body().string(), toBeReceived);
+            }else{
+                return response.body().string();
+            }
         }catch(Exception e){
             e.printStackTrace();
             return null;
         }
     }
+
+
 }

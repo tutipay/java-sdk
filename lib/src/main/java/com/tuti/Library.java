@@ -9,6 +9,9 @@ import com.tuti.api.authentication.UserCredentials;
 public class Library {
     public static void main(String[] args) {
 		TutiApiClient client = new TutiApiClient(true);
-		System.out.println(client.SignIn(new UserCredentials("adonese","12345678")).getUser().getMobileNumber());
+		UserCredentials credentials = new UserCredentials();
+		credentials.setMobileNumber("0129751986").setPassword("Ramiimar1234.");
+
+		System.out.println(client.Signup(credentials));
 	}
 }

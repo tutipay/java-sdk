@@ -1,4 +1,4 @@
-package com.solus.sdk.util;
+package com.tuti.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,7 +19,7 @@ public class SdkUtil {
 	 
 	 public static String getUuid() {
 		 String string = UUID.randomUUID().toString();
-		 System.out.println(string);
+		 //System.out.println(string);
 		return string;
 	 }
 

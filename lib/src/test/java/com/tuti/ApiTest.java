@@ -4,33 +4,60 @@
 package com.tuti;
 
 import com.tuti.api.TutiApiClient;
-import com.tuti.api.authentication.UserCredentials;
+import com.tuti.api.authentication.*;
 
 
-import com.tuti.api.authentication.AuthenticationResponse;
-import com.tuti.api.authentication.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class ApiTest {
      static TutiApiClient client;
 
     @BeforeAll
     static void setup(){
         client = new TutiApiClient(true);
+        client.setTest(true);
     }
     @Test
      void testSignInApi(){
-        UserCredentials credentials = new UserCredentials();
+        SignInInfo credentials = new SignInInfo();
         credentials.setUsername("adonese").setPassword("12345678");
 
-        AuthenticationResponse response = client.SignIn(credentials);
-        User user = response.getUser();
-        assertEquals("adonese",user.getUsername());
-        assertEquals("Mohamed Yousif",user.getFullname());
-        assertEquals("mmbusif@gmail.com",user.getEmail());
-        assertEquals("0925343834",user.getMobileNumber());
-        assertEquals(true,user.getIsMerchant());
-        assertEquals(0,user.getId());
+        client.SignIn(credentials,(SignInResponse response) -> {
+
+            User user = response.getUser();
+            assertEquals("adonese",user.getUsername());
+            assertEquals("Mohamed Yousif",user.getFullname());
+            assertEquals("mmbusif@gmail.com",user.getEmail());
+            assertEquals("0925343834",user.getMobileNumber());
+            assertEquals(true,user.getIsMerchant());
+            assertEquals(0,user.getId());
+        },(Exception e) -> {fail();});
+        //
+
+    }
+
+    @Test void testSignUpApi(){
+        SignUpInfo info = new SignUpInfo();
+
+        info.setMobileNumber("0129751986");
+        info.setPassword("Ramiimar1234.");
+        info.setUsername("rami3sam");
+        info.setFullname("Rami Essamedeen");
+        info.setEmail("rami3sam@gmail.com");
+        info.setMerchant(true);
+
+        client.Signup(info,(SignUpResponse response) -> {
+            User user = response.getUser();
+            assertEquals("rami3sam",user.getUsername());
+            assertEquals("Rami Essamedeen",user.getFullname());
+            assertEquals("rami3sam@gmail.com",user.getEmail());
+            assertEquals("0129751986",user.getMobileNumber());
+            assertEquals(true,user.getIsMerchant());
+        },(Exception e) -> {fail();} );
+
+
     }
 }

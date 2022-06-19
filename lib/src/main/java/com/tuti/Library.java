@@ -4,14 +4,13 @@
 package com.tuti;
 
 import com.tuti.api.TutiApiClient;
-import com.tuti.api.authentication.UserCredentials;
+import com.tuti.api.authentication.SignInInfo;
+import com.tuti.api.authentication.SignInResponse;
+
+import java.util.concurrent.TimeUnit;
 
 public class Library {
     public static void main(String[] args) {
-		TutiApiClient client = new TutiApiClient(true);
-		UserCredentials credentials = new UserCredentials();
-		credentials.setMobileNumber("0129751986").setPassword("Ramiimar1234.");
 
-		System.out.println(client.Signup(credentials));
 	}
 }

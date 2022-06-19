@@ -1,14 +1,16 @@
 package com.tuti.api;
 
 import com.google.gson.Gson;
-import com.tuti.api.authentication.AuthenticationResponse;
-import com.tuti.api.authentication.User;
-import com.tuti.api.authentication.UserCredentials;
+import com.tuti.api.authentication.SignInResponse;
+import com.tuti.api.authentication.SignUpInfo;
+import com.tuti.api.authentication.SignUpResponse;
+import com.tuti.api.authentication.SignInInfo;
 import com.tuti.model.Operations;
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 public class TutiApiClient {
@@ -19,13 +21,26 @@ public class TutiApiClient {
 
     private static volatile Gson gson = null;
 
+
+
+    private boolean isTest = false;
+
+
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
+    }
+
     public TutiApiClient(boolean isDevelopment){
         serverURL = getServerURL(isDevelopment);
     }
 
     private static synchronized OkHttpClient getOkHttpInstance(){
         if (okHttpClient==null){
-            okHttpClient= new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).build();
+            okHttpClient= new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
         }
         return okHttpClient;
     }
@@ -42,39 +57,62 @@ public class TutiApiClient {
         return development ? developmentHost : productionHost;
     }
 
-    public AuthenticationResponse SignIn(UserCredentials credentials){
-        return (AuthenticationResponse) request(Operations.SIGN_IN,credentials,AuthenticationResponse.class);
+    public void SignIn(SignInInfo credentials,ResponseCallable<SignInResponse> onResponse,ErrorCallable onError){
+        request(serverURL + Operations.SIGN_IN,credentials, SignInResponse.class,onResponse,onError);
     }
 
-    public String Signup(UserCredentials credentials){
-        return (String) request(Operations.SIGN_UP,credentials,String.class);
+    public void Signup(SignUpInfo signUpInfo,ResponseCallable<SignUpResponse> onResponse,ErrorCallable onError){
+        request( serverURL + Operations.SIGN_UP,signUpInfo,SignUpResponse.class,onResponse,onError);
     }
 
 
-    public Object request(String operation, Object toBeSent,Type toBeReceived ){
+    public void request(String URL, Object JSONToBeSent, Type ClassExpectedToBeReceived,  ResponseCallable onResponse,ErrorCallable onError ){
 
-        String url = serverURL + operation;
-        OkHttpClient okHttpClient = getOkHttpInstance();
-        Gson gson = getGsonInstance();
+        // create a runnable to run it in a new thread (so main thread never hangs)
+        Runnable runnable = () ->{
+                Object finalResponse  = null;
+                OkHttpClient okHttpClient = getOkHttpInstance();
+                Gson gson = getGsonInstance();
 
-        RequestBody requestBody = RequestBody.create(new Gson().toJson(toBeSent),JSON);
+                RequestBody requestBody = RequestBody.create(new Gson().toJson(JSONToBeSent),JSON);
 
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
+                Request request = new Request.Builder()
+                        .url(URL)
+                        .post(requestBody)
+                        .build();
 
-        try (Response response = okHttpClient.newCall(request).execute()) {
-            if (toBeReceived != String.class) {
-                return gson.fromJson(response.body().string(), toBeReceived);
-            }else{
-                return response.body().string();
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
+                try (Response response = okHttpClient.newCall(request).execute()) {
+                    // check what format is expected to be returned
+                    if (ClassExpectedToBeReceived == String.class || ClassExpectedToBeReceived == null) {
+                        finalResponse = response.body().string();
+                    }else{
+                        finalResponse =  gson.fromJson(response.body().string(), ClassExpectedToBeReceived);
+                    }
+
+                    // call onResponse if request has succeeded
+                    if(onResponse != null) { onResponse.call(finalResponse); }
+
+                }catch(Exception e){
+                    // call onError if request has failed
+                    if(onError != null){ onError.call(e); }
+                }
+        };
+
+        // unit testing concurrent code on multiple threads is hard
+        if (isTest == true){
+            new Thread(runnable).run();
+        }else {
+            new Thread(runnable).start();
         }
+
     }
 
+    public interface ResponseCallable<T> {
+        public void call(T param);
+    }
 
+    public interface ErrorCallable {
+        public void call(Exception param);
+    }
 }
+

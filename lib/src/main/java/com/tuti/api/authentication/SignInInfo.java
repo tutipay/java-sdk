@@ -8,6 +8,11 @@ public class SignInInfo {
         return username;
     }
 
+    public SignInInfo(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public SignInInfo setUsername(String username) {
         this.username = username;
         return this;

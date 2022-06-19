@@ -18,7 +18,7 @@ public class ApiTest {
     @BeforeAll
     static void setup(){
         client = new TutiApiClient(true);
-        client.setTest(true);
+        client.setSingleThreaded(true);
     }
     @Test
      void testSignInApi(){
@@ -34,7 +34,7 @@ public class ApiTest {
             assertEquals("0925343834",user.getMobileNumber());
             assertEquals(true,user.getIsMerchant());
             assertEquals(0,user.getId());
-        },(Exception e) -> {fail();});
+        },(String error,Exception e) -> {fail();});
         //
 
     }
@@ -56,8 +56,7 @@ public class ApiTest {
             assertEquals("rami3sam@gmail.com",user.getEmail());
             assertEquals("0129751986",user.getMobileNumber());
             assertEquals(true,user.getIsMerchant());
-        },(Exception e) -> {fail();} );
-
+        },(String error,Exception e ) -> {fail();} );
 
     }
 }

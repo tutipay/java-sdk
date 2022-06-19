@@ -5,12 +5,23 @@ package com.tuti;
 
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInInfo;
-import com.tuti.api.authentication.SignInResponse;
-
-import java.util.concurrent.TimeUnit;
 
 public class Library {
-    public static void main(String[] args) {
 
+    public static String jwt;
+    public static void main(String[] args) {
+        TutiApiClient client = new TutiApiClient(true);
+        client.setSingleThreaded(true);
+
+        client.SignIn(new SignInInfo("adonese","12345678"),
+                param -> {
+                    jwt=param.getAuthorizationJWT();
+                },(param, e,res) -> {
+                });
+        client.setAuthToken(jwt);
+        client.getCards(param -> {
+            System.out.println(param.getCards().get(3).getName());
+        },(param, e,res) -> {
+        });
 	}
 }

@@ -22,11 +22,10 @@ public class ApiTest {
     }
     @Test
      void testSignInApi(){
-        SignInInfo credentials = new SignInInfo();
-        credentials.setUsername("adonese").setPassword("12345678");
+        SignInInfo credentials = new SignInInfo("adonese","12345678");
 
         client.SignIn(credentials,(SignInResponse response) -> {
-
+            client.setAuthToken(response.getAuthorizationJWT());
             User user = response.getUser();
             assertEquals("adonese",user.getUsername());
             assertEquals("Mohamed Yousif",user.getFullname());
@@ -34,7 +33,9 @@ public class ApiTest {
             assertEquals("0925343834",user.getMobileNumber());
             assertEquals(true,user.getIsMerchant());
             assertEquals(0,user.getId());
-        },(String error,Exception e) -> {fail();});
+        },(String error,Exception e,int responseCode) -> {fail("sign in failed");});
+
+
         //
 
     }
@@ -56,7 +57,23 @@ public class ApiTest {
             assertEquals("rami3sam@gmail.com",user.getEmail());
             assertEquals("0129751986",user.getMobileNumber());
             assertEquals(true,user.getIsMerchant());
-        },(String error,Exception e ) -> {fail();} );
+        },(String error,Exception e, int responseCode ) -> {fail("sign up failed");} );
 
     }
+
+
+    @Test void testGetCards(){
+        SignInInfo credentials = new SignInInfo("adonese","12345678");
+
+        client.SignIn(credentials,(SignInResponse response) -> {
+                    client.setAuthToken(response.getAuthorizationJWT());
+                },(param, exception, responseCode) -> {fail("Sign in failed");});
+
+        client.getCards(cards -> {
+            assertEquals("adonese",cards.getCards().get(0).getName());
+            assertEquals("22222222222222222",cards.getCards().get(0).getPAN());
+
+        } , (param, exception, responseCode) -> {fail();});
+    }
+
 }

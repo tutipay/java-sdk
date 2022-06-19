@@ -5,6 +5,7 @@ import com.tuti.api.authentication.SignInResponse;
 import com.tuti.api.authentication.SignUpInfo;
 import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInInfo;
+import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
@@ -72,13 +73,16 @@ public class TutiApiClient {
     }
 
     public void sendEBSRequest(String URL,EBSRequest ebsRequest, ResponseCallable<EBSResponse> onResponse, ErrorCallable onError){
-        sendPostRequest( URL,ebsRequest,EBSResponse.class,null,onResponse,onError);
+        sendPostRequest( URL,ebsRequest,EBSResponse.class,EBSResponse.class,onResponse,onError);
     }
 
     public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable onError){
-        sendGetRequest( serverURL + Operations.GET_CARDS, Cards.class,onResponse,onError);
+        sendGetRequest( serverURL + Operations.GET_CARDS, Cards.class,String.class,onResponse,onError);
     }
 
+    public void addCard(Card card, ResponseCallable<String> onResponse, ErrorCallable onError){
+        sendPostRequest( serverURL + Operations.ADD_CARD,card,String.class,String.class,onResponse,onError);
+    }
     public void sendPostRequest(String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError ){
 
         // create a runnable to run it in a new thread (so main thread never hangs)
@@ -97,17 +101,17 @@ public class TutiApiClient {
                         .build();
 
                 try (Response response = okHttpClient.newCall(request).execute()) {
-                    // check what format is expected to be returned
+                    // check for http errors
                     if (response.code() >= 400 && response.code() < 600){
                         // call onError if request has failed
-                        if(onError != null) { onError.call(processResponse(response,ErrorType),null,response); }
+                        if(onError != null) { onError.call(processResponse(response,ErrorType),null,response.code()); }
                     }else{
                         // call onResponse if request has succeeded
                         if(onResponse != null) { onResponse.call(processResponse(response,ResponseType)); }
                     }
 
-                }catch(Exception e){
-                    onError.call(null,e,null);
+                }catch(Exception exception){
+                    onError.call(null,exception,-1);
                 }
         };
 
@@ -119,7 +123,7 @@ public class TutiApiClient {
         }
     }
 
-    public void sendGetRequest(String URL, Type ResponseType, ResponseCallable onResponse, ErrorCallable onError ){
+    public void sendGetRequest(String URL, Type ResponseType,Type ErrorType, ResponseCallable onResponse, ErrorCallable onError ){
 
         // create a runnable to run it in a new thread (so main thread never hangs)
         Runnable runnable = () ->{
@@ -133,17 +137,20 @@ public class TutiApiClient {
                     .build();
 
             try (Response response = okHttpClient.newCall(request).execute()) {
-                // check what format is expected to be returned
+                // check for http errors
                 if (response.code() >= 400 && response.code() < 600){
                     // call onError if request has failed
-                    if(onError != null) { onError.call(response.code(),null,response); }
+                    if(onError != null) { onError.call(processResponse(response,ErrorType),null,response.code()); }
+
                 }else{
                     // call onResponse if request has succeeded
                     if(onResponse != null) { onResponse.call(processResponse(response,ResponseType)); }
                 }
 
-            }catch(Exception e){
-                onError.call(null,e,null);
+            }catch(Exception exception){
+                exception.printStackTrace();
+                // call on error in case of exception
+                onError.call(null,exception,-1);
             }
         };
 
@@ -170,7 +177,7 @@ public class TutiApiClient {
     }
 
     public interface ErrorCallable<T> {
-         void call(T param,Exception e,Response response);
+         void call(T param,Exception exception,int responseCode);
     }
 }
 

@@ -16,12 +16,17 @@ public class Library {
         client.SignIn(new SignInInfo("adonese","12345678"),
                 param -> {
                     jwt=param.getAuthorizationJWT();
+                    System.out.println(jwt);
+
                 },(param, e,res) -> {
+                    System.out.println(param);
+
                 });
         client.setAuthToken(jwt);
         client.getCards(param -> {
-            System.out.println(param.getCards().get(3).getName());
+            System.out.println(param.getCards().get(0).getPAN());
         },(param, e,res) -> {
+            System.out.println(param);
         });
 	}
 }

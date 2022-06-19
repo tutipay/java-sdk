@@ -1,8 +1,12 @@
 package com.tuti.api.data;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Card {
     private String name;
+    @SerializedName("exp_date")
     private String expiryDate;
+    @SerializedName("pan")
     private String PAN;
 
     public String getName() {

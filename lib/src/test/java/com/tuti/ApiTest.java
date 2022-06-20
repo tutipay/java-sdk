@@ -6,74 +6,142 @@ package com.tuti;
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.*;
 
+import com.tuti.api.data.Card;
+import com.tuti.api.data.Cards;
+import com.tuti.model.IPIN;
+import com.tuti.util.Utils;
+import okhttp3.internal.Util;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.Random;
+import java.util.UUID;
 
+import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+@RunWith(JUnit4.class)
 public class ApiTest {
      static TutiApiClient client;
 
-    @BeforeAll
-    static void setup(){
+    @BeforeClass public static void setup(){
         client = new TutiApiClient(true);
         client.setSingleThreaded(true);
     }
-    @Test
-     void testSignInApi(){
-        SignInInfo credentials = new SignInInfo("adonese","12345678");
 
-        client.SignIn(credentials,(SignInResponse response) -> {
-            client.setAuthToken(response.getAuthorizationJWT());
-            User user = response.getUser();
+    @Before public void  signIn(){
+        SignInRequest credentials = new SignInRequest("0999999999","Testtest1234.");
+
+        client.SignIn(credentials,( signInResponse , rawResponse) -> {
+            client.setAuthToken(signInResponse.getAuthorizationJWT());
+        },(objectReceived, exception, rawResponse) -> {fail("sign in failed for @BeforeClass");});
+    }
+    @Test public void testSignInApi(){
+        SignInRequest credentials = new SignInRequest("adonese","12345678");
+        client.setAuthToken(null);
+
+        client.SignIn(credentials,( signInResponse , rawResponse) -> {
+            User user = signInResponse.getUser();
+
+            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
             assertEquals("adonese",user.getUsername());
             assertEquals("Mohamed Yousif",user.getFullname());
             assertEquals("mmbusif@gmail.com",user.getEmail());
             assertEquals("0925343834",user.getMobileNumber());
             assertEquals(true,user.getIsMerchant());
             assertEquals(0,user.getId());
-        },(String error,Exception e,int responseCode) -> {fail("sign in failed");});
+        },( error, exception, rawResponse) -> {fail("sign in failed");});
 
+        credentials = new SignInRequest("non_existent_user" + Utils.generateRandomAlphanumericString(8),"asjfkdlj");
+        client.SignIn(credentials,( signInResponse , rawResponse) -> {
+            fail("sign in failed because the user is non existent");
+        },( error, exception, rawResponse) -> {
+            if (error != null) System.out.println("\nNon existent user case:\n"+error);
+            if (exception != null ) fail("exception in sign in");
+        });
+    }
 
-        //
+    @Test public void testSignUpApi(){
+        SignUpRequest info = new SignUpRequest();
+
+        String tag = Utils.generateRandomNumericString(8);
+
+        String mobileNumber = "02" + Utils.generateRandomNumericString(8);
+        String username = "test_" + tag;
+        String email = "test_" + tag +"@test.com";
+        String fullname = Utils.generateARandomName() + " " + Utils.generateARandomName();
+        String password = Utils.generateRandomAlphanumericString(12)+"A1.";
+        boolean isMerchant = new Random().nextBoolean();
+        info.setMobileNumber(mobileNumber);
+        info.setPassword(password);
+        info.setUsername(username);
+        info.setFullname(fullname);
+        info.setEmail(email);
+        info.setMerchant(isMerchant);
+        client.Signup(info,( signUpResponse, rawResponse) -> {
+
+            User user = signUpResponse.getUser();
+            System.out.println("User information from signup endpoint:\n"+user);
+
+            assertEquals(username,user.getUsername());
+            assertEquals(fullname,user.getFullname());
+            assertEquals(email,user.getEmail());
+            assertEquals(mobileNumber,user.getMobileNumber());
+            assertEquals(isMerchant,user.getIsMerchant());
+
+        },( error, exception, rawResponse ) -> {
+            fail("sign up failed");} );
+
+        SignInRequest creds = new SignInRequest(username,password);
+        client.SignIn(creds , (objectReceived, rawResponse) -> {
+                    User user = objectReceived.getUser();
+                    System.out.println("User information from sign in endpoint:\n"+user);
+
+                    assertEquals(username,user.getUsername());
+                    assertEquals(fullname,user.getFullname());
+                    assertEquals(email,user.getEmail());
+                    assertEquals(mobileNumber,user.getMobileNumber());
+                    assertEquals(isMerchant,user.getIsMerchant());
+
+                } ,
+                (errorReceived, exception, rawResponse) -> {fail("sign in failed!");} );
 
     }
 
-    @Test void testSignUpApi(){
-        SignUpInfo info = new SignUpInfo();
+    @Test public void testAddCardAndGetCard(){
+        String name = Utils.generateRandomAlphanumericString(16);
+        String PAN = Utils.generateRandomNumericString(16);
+        String expiryDate = Utils.generateRandomNumericString(4);
 
-        info.setMobileNumber("0129751986");
-        info.setPassword("Ramiimar1234.");
-        info.setUsername("rami3sam");
-        info.setFullname("Rami Essamedeen");
-        info.setEmail("rami3sam@gmail.com");
-        info.setMerchant(true);
+        Card cardToAdd = new Card();
+        cardToAdd.setName(name);
+        cardToAdd.setExpiryDate(expiryDate);
+        cardToAdd.setPAN(PAN);
 
-        client.Signup(info,(SignUpResponse response) -> {
-            User user = response.getUser();
-            assertEquals("rami3sam",user.getUsername());
-            assertEquals("Rami Essamedeen",user.getFullname());
-            assertEquals("rami3sam@gmail.com",user.getEmail());
-            assertEquals("0129751986",user.getMobileNumber());
-            assertEquals(true,user.getIsMerchant());
-        },(String error,Exception e, int responseCode ) -> {fail("sign up failed");} );
+        client.addCard(cardToAdd,(objectReceived, rawResponse) -> {},
+                (errorReceived, exception, rawResponse) -> {fail("adding a card failed");});
 
+        client.getCards((cards,response) -> {
+            outputCardsInfo(cards);
+
+            assertThat(cards.getCards()).extracting("name").contains(name);
+            assertThat(cards.getCards()).extracting("PAN").contains(PAN);
+            assertThat(cards.getCards()).extracting("expiryDate").contains(expiryDate);
+        } , (objectReceived, exception, rawResponse) -> {fail();});
     }
 
-
-    @Test void testGetCards(){
-        SignInInfo credentials = new SignInInfo("adonese","12345678");
-
-        client.SignIn(credentials,(SignInResponse response) -> {
-                    client.setAuthToken(response.getAuthorizationJWT());
-                },(param, exception, responseCode) -> {fail("Sign in failed");});
-
-        client.getCards(cards -> {
-            assertEquals("adonese",cards.getCards().get(0).getName());
-            assertEquals("22222222222222222",cards.getCards().get(0).getPAN());
-
-        } , (param, exception, responseCode) -> {fail();});
+    public void outputCardsInfo(Cards cards){
+        System.out.println("Cards associated with the account");
+        for (Card card : cards.getCards()){
+            System.out.println(card);
+        }
+    }
+    @Test public void testIPINBlockGenerator(){
+        //System.out.println(new IPIN().getIPINBlock("0000","MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ4HwthfqXiK09AgShnnLqAqMyT5VUV0hvSdG+ySMx+a54Ui5EStkmO8iOdVG9DlWv55eLBoodjSfd0XRxN7an0CAwEAAQ==", UUID.randomUUID().toString()));
     }
 
 }

@@ -2,7 +2,7 @@ package com.tuti.api.authentication;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SignUpInfo {
+public class SignUpRequest {
     private String username;
     private String password;
 

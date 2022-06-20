@@ -11,5 +11,6 @@ local.properties
 # idea stuff
 .idea
 .settings
+.idea/*
 
 lib/.settings

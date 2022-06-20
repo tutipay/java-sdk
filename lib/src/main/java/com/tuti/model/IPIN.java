@@ -69,7 +69,10 @@ public class IPIN {
         }
         return encryptedIPIN;
     }
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> c4110956f3279116b914dceac561840ea4b49d79
 }

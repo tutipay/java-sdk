@@ -1,6 +1,6 @@
 # Noebs Java Client        
 
-[![](https://jitpack.io/v/tutipay/java-sdk.svg)](https://jitpack.io/#tutipay/java-sdk)
+[![](https://jitpack.io/v/sd.noebs/java-sdk.svg)](https://jitpack.io/#sd.noebs/java-sdk)
 
 ### Add it in your root build.gradle
 
@@ -16,6 +16,6 @@
   
    ```sh
 dependencies {
-	        implementation 'sd.noebs:java-sdk:LATEST_VERSION' # check latest version
+	        implementation 'sd.noebs:java-sdk:TAG' # check latest version
 	}
  ```

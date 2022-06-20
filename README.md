@@ -1,6 +1,6 @@
-# solussdk            
+# Noebs Java Client        
 
-[![](https://jitpack.io/v/fakhrisati/solussdk.svg)](https://jitpack.io/#fakhrisati/solussdk)
+[![](https://jitpack.io/v/tutipay/java-sdk.svg)](https://jitpack.io/#tutipay/java-sdk)
 
 ### Add it in your root build.gradle
 
@@ -10,10 +10,12 @@
 			maven { url 'https://jitpack.io' }
 		}
   ```
+
+
   ### Add the dependency
   
    ```sh
-	dependencies {
-	        implementation 'com.github.fakhrisati:solussdk:1.0.0'
+dependencies {
+	        implementation 'sd.noebs:java-sdk:LATEST_VERSION' # check latest version
 	}
  ```

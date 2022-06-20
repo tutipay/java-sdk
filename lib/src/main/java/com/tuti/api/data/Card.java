@@ -32,4 +32,13 @@ public class Card {
     public void setPAN(String PAN) {
         this.PAN = PAN;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "name='" + name + '\'' +
+                ", expiryDate='" + expiryDate + '\'' +
+                ", PAN='" + PAN + '\'' +
+                '}';
+    }
 }

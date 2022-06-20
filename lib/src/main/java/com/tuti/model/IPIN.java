@@ -70,9 +70,6 @@ public class IPIN {
         return encryptedIPIN;
     }
 
-//    public static void main(String[] args) {
-    //remember to move to a unit test
-//        System.out.println(new IPINBlockGenerator().getIPINBlock("0000","MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ4HwthfqXiK09AgShnnLqAqMyT5VUV0hvSdG+ySMx+a54Ui5EStkmO8iOdVG9DlWv55eLBoodjSfd0XRxN7an0CAwEAAQ==", UUID.randomUUID().toString()));
-//    }
+
 
 }

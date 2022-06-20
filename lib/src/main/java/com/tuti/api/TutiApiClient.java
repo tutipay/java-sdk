@@ -80,7 +80,7 @@ public class TutiApiClient {
         sendGetRequest( serverURL + Operations.GET_CARDS, Cards.class,String.class,onResponse,onError);
     }
 
-    public void addCard(Card card, ResponseCallable<String> onResponse, ErrorCallable onError){
+    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable onError){
         sendPostRequest( serverURL + Operations.ADD_CARD,card,String.class,String.class,onResponse,onError);
     }
     public void sendPostRequest(String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError ){

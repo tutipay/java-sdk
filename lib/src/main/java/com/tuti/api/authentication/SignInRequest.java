@@ -1,6 +1,6 @@
 package com.tuti.api.authentication;
 
-public class SignInInfo {
+public class SignInRequest {
     private String username;
     private String password;
 
@@ -8,12 +8,12 @@ public class SignInInfo {
         return username;
     }
 
-    public SignInInfo(String username, String password) {
+    public SignInRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public SignInInfo setUsername(String username) {
+    public SignInRequest setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -22,7 +22,7 @@ public class SignInInfo {
         return password;
     }
 
-    public SignInInfo setPassword(String password) {
+    public SignInRequest setPassword(String password) {
         this.password = password;
         return this;
     }

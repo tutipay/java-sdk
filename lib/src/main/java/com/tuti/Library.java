@@ -4,7 +4,8 @@
 package com.tuti;
 
 import com.tuti.api.TutiApiClient;
-import com.tuti.api.authentication.SignInInfo;
+import com.tuti.api.authentication.SignInRequest;
+import com.tuti.api.data.Card;
 
 public class Library {
 
@@ -13,8 +14,8 @@ public class Library {
         TutiApiClient client = new TutiApiClient(true);
         client.setSingleThreaded(true);
 
-        client.SignIn(new SignInInfo("adonese","12345678"),
-                param -> {
+        client.SignIn(new SignInRequest("adonese","12345678"),
+                (param,response) -> {
                     jwt=param.getAuthorizationJWT();
                     System.out.println(jwt);
 
@@ -23,10 +24,16 @@ public class Library {
 
                 });
         client.setAuthToken(jwt);
-        client.getCards(param -> {
-            System.out.println(param.getCards().get(0).getPAN());
-        },(param, e,res) -> {
-            System.out.println(param);
-        });
+
+        Card card = new Card();
+        card.setName("JAVA SDK");
+        card.setExpiryDate("2020");
+        card.setPAN("1111222233334444");
+        client.addCard(card,(objectReceived, rawResponse) -> {
+            System.out.println(objectReceived);
+                } ,
+                (errorReceived, exception, rawResponse) -> {
+                    System.out.println(errorReceived);
+                });
 	}
 }

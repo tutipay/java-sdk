@@ -98,4 +98,19 @@ public class User {
         this.isMerchant = isMerchant;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", createdAt='" + createdAt + '\'' +
+                ", updateAt='" + updateAt + '\'' +
+                ", DeletedAt='" + DeletedAt + '\'' +
+                ", username='" + username + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", isMerchant=" + isMerchant +
+                '}';
+    }
 }

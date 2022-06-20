@@ -83,7 +83,7 @@ public class TutiApiClient {
     }
 
 
-    public void addCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<String> onError) {
+    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<String> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, String.class, onResponse, onError, null);
     }
 

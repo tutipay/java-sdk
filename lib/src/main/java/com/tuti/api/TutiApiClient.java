@@ -43,8 +43,13 @@ public class TutiApiClient {
         isSingleThreaded = singleThreaded;
     }
 
+    @Deprecated(since = "Avoid using this constructor", forRemoval = true)
     public TutiApiClient(boolean isDevelopment){
         serverURL = getServerURL(isDevelopment);
+    }
+
+    public TutiApiClient(String token){
+        this.authToken = token;
     }
 
     private static synchronized OkHttpClient getOkHttpInstance(){

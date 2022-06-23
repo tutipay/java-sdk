@@ -5,39 +5,36 @@ package com.tuti;
 
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.*;
-
 import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
-import com.tuti.model.IPIN;
 import com.tuti.util.Utils;
-import okhttp3.internal.Util;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.util.Random;
 import static org.junit.Assert.*;
 
 
-@RunWith(JUnit4.class)
 public class ApiTest {
      static TutiApiClient client;
 
-    @BeforeClass public static void setup(){
-        client = new TutiApiClient(true);
+    @BeforeAll
+    public static void setup(){
+        client = new TutiApiClient();
         client.setSingleThreaded(true);
     }
 
-    @Before public void  signIn(){
+    @BeforeEach
+    public void  signIn(){
         SignInRequest credentials = new SignInRequest("0999999999","Testtest1234.");
 
         client.SignIn(credentials,( signInResponse , rawResponse) -> {
             client.setAuthToken(signInResponse.getAuthorizationJWT());
         },(objectReceived, exception, rawResponse) -> {fail("sign in failed for @BeforeClass");});
     }
-    @Test public void testSignInApi(){
+    @Test
+    public void testSignInApi(){
         SignInRequest credentials = new SignInRequest("adonese","12345678");
         client.setAuthToken(null);
 
@@ -118,6 +115,8 @@ public class ApiTest {
         cardToAdd.setName(name);
         cardToAdd.setExpiryDate(expiryDate);
         cardToAdd.setPAN(PAN);
+
+        System.out.println("Card to add" + cardToAdd);
 
         client.addCard(cardToAdd,(objectReceived, rawResponse) -> {},
                 (errorReceived, exception, rawResponse) -> {fail("adding a card failed");});

@@ -11,11 +11,14 @@ import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
 import com.tuti.model.Operations;
 import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
+import timber.log.Timber;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class TutiApiClient {
     public static final MediaType JSON
@@ -25,15 +28,15 @@ public class TutiApiClient {
     private String serverURL;
     private boolean isSingleThreaded = false;
     private String authToken = null;
-
     public String getAuthToken() {
         return authToken;
     }
+    private final static Logger LOGGER =
+            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
     public boolean isSingleThreaded() {
         return isSingleThreaded;
     }
@@ -51,9 +54,15 @@ public class TutiApiClient {
         this.authToken = token;
     }
 
+    private static HttpLoggingInterceptor getLogger() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return logging;
+    }
+
     private static synchronized OkHttpClient getOkHttpInstance(){
         if (okHttpClient==null){
-            okHttpClient= new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
+            okHttpClient= new OkHttpClient.Builder().addInterceptor(getLogger()).connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
         }
         return okHttpClient;
     }
@@ -120,13 +129,13 @@ public class TutiApiClient {
                 }
 
                 Request request = requestBuilder.build();
-
                 try (Response rawResponse = okHttpClient.newCall(request).execute()) {
-
                     // check for http errors
                     if (rawResponse.code() >= 400 && rawResponse.code() < 600){
                         // call onError if request has failed
-                        if(onError != null) { onError.call(parseResponse(rawResponse,ErrorType),null,rawResponse); }
+                        if(onError != null) {
+                            onError.call(parseResponse(rawResponse,ErrorType),null,rawResponse);
+                        }
                     }else{
                         // call onResponse if request has succeeded
                         if(onResponse != null) { onResponse.call(parseResponse(rawResponse,ResponseType),rawResponse); }

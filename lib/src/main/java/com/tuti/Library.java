@@ -21,14 +21,12 @@ public class Library {
 
                 },(param, e,res) -> {
                     System.out.println(param);
-
                 });
         client.setAuthToken(jwt);
-
         Card card = new Card();
         card.setName("JAVA SDK");
         card.setExpiryDate("2020");
-        card.setPAN("1111222233334444");
+        card.setPAN("");
         client.addCard(card,(objectReceived, rawResponse) -> {
             System.out.println(objectReceived);
                 } ,

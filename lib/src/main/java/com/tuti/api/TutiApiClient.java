@@ -12,7 +12,6 @@ import com.tuti.api.ebs.EBSResponse;
 import com.tuti.model.Operations;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
-import timber.log.Timber;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

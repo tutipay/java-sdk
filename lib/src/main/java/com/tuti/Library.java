@@ -11,7 +11,7 @@ public class Library {
 
     public static String jwt;
     public static void main(String[] args) {
-        TutiApiClient client = new TutiApiClient(true);
+        TutiApiClient client = new TutiApiClient();
         client.setSingleThreaded(true);
 
         client.SignIn(new SignInRequest("adonese","12345678"),

@@ -12,6 +12,8 @@ import com.tuti.util.Utils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 import java.util.Random;
 import static org.junit.Assert.*;
 
@@ -107,10 +109,12 @@ public class ApiTest {
     }
 
     @Test public void testAddCardAndGetCard(){
+        //generate random values for the tets
         String name = Utils.generateRandomAlphanumericString(16);
         String PAN = Utils.generateRandomNumericString(16);
         String expiryDate = Utils.generateRandomNumericString(4);
 
+        //create a card object to hold the cards data
         Card cardToAdd = new Card();
         cardToAdd.setName(name);
         cardToAdd.setExpiryDate(expiryDate);
@@ -121,12 +125,18 @@ public class ApiTest {
         client.addCard(cardToAdd,(objectReceived, rawResponse) -> {},
                 (errorReceived, exception, rawResponse) -> {fail("adding a card failed");});
 
+        //get the cards from the api to assert that it was added successfully
         client.getCards((cards,response) -> {
             outputCardsInfo(cards);
 
-//            assertEquals(cards.getCards().get("name"), name);
-//            assertThat(cards.getCards()).extracting("PAN").contains(PAN);
-//            assertThat(cards.getCards()).extracting("expiryDate").contains(expiryDate);
+            boolean fail = true;
+            for (Card card : cards.getCards()){
+                if (card.equals(cardToAdd)){
+                    fail = false;
+                }
+            }
+            if (fail) fail("card was not found!");
+
         } , (objectReceived, exception, rawResponse) -> {fail();});
     }
 
@@ -139,5 +149,6 @@ public class ApiTest {
     @Test public void testIPINBlockGenerator(){
         //System.out.println(new IPIN().getIPINBlock("0000","MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ4HwthfqXiK09AgShnnLqAqMyT5VUV0hvSdG+ySMx+a54Ui5EStkmO8iOdVG9DlWv55eLBoodjSfd0XRxN7an0CAwEAAQ==", UUID.randomUUID().toString()));
     }
+
 
 }

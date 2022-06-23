@@ -42,7 +42,7 @@ public class TutiApiClient {
         isSingleThreaded = singleThreaded;
     }
 
-    @Deprecated(since = "Avoid using this constructor", forRemoval = true)
+    @Deprecated
     public TutiApiClient(boolean isDevelopment){
         serverURL = getServerURL(isDevelopment);
     }

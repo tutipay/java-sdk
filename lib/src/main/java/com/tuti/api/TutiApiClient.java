@@ -57,6 +57,10 @@ public class TutiApiClient {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         return logging;
     }
+  
+    public TutiApiClient(){
+        serverURL = getServerURL(false);
+    }
 
     private static synchronized OkHttpClient getOkHttpInstance(){
         if (okHttpClient==null){

@@ -29,8 +29,7 @@ public class TutiApiClient {
     public String getAuthToken() {
         return authToken;
     }
-    private final static Logger LOGGER =
-            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;

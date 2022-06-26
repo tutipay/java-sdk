@@ -5,9 +5,8 @@ import com.tuti.api.ebs.EBSResponse;
 
 public class TutiResponse {
     private String message;
-
     private String code;
-
+    private Fees fees;
     @SerializedName("ebs_response")
     private EBSResponse ebsResponse;
     public String getMessage() {
@@ -32,5 +31,13 @@ public class TutiResponse {
 
     public void setEbsResponse(EBSResponse ebsResponse) {
         this.ebsResponse = ebsResponse;
+    }
+
+    public Fees getFees() {
+        return fees;
+    }
+
+    public void setFees(Fees fees) {
+        this.fees = fees;
     }
 }

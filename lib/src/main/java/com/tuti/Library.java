@@ -6,6 +6,7 @@ package com.tuti;
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Card;
+import com.tuti.api.ebs.EBSRequest;
 
 public class Library {
 
@@ -14,24 +15,10 @@ public class Library {
         TutiApiClient client = new TutiApiClient();
         client.setSingleThreaded(true);
 
-        client.SignIn(new SignInRequest("adonese","12345678"),
-                (param,response) -> {
-                    jwt=param.getAuthorizationJWT();
-                    System.out.println(jwt);
+        client.getPublicKey(new EBSRequest(),(objectReceived, rawResponse) ->  {
+            System.out.println(objectReceived.getEbsResponse().getPubKeyValue());
+        },(errorReceived, exception, rawResponse) -> {
 
-                },(param, e,res) -> {
-                    System.out.println(param);
-                });
-        client.setAuthToken(jwt);
-        Card card = new Card();
-        card.setName("JAVA SDK");
-        card.setExpiryDate("2020");
-        card.setPAN("");
-        client.addCard(card,(objectReceived, rawResponse) -> {
-            System.out.println(objectReceived);
-                } ,
-                (errorReceived, exception, rawResponse) -> {
-                    System.out.println(errorReceived);
-                });
+        });
 	}
 }

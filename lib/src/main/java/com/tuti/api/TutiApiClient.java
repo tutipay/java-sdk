@@ -6,7 +6,7 @@ import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Cards;
-import com.tuti.api.data.FailureMessage;
+import com.tuti.api.data.TutiResponse;
 import com.tuti.api.data.RequestMethods;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class TutiApiClient {
     public static final MediaType JSON
@@ -81,25 +80,28 @@ public class TutiApiClient {
         return development ? developmentHost : productionHost;
     }
 
-    public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<FailureMessage> onError){
-        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_IN,credentials, SignInResponse.class,FailureMessage.class,onResponse,onError,null);
+    public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError){
+        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_IN,credentials, SignInResponse.class, TutiResponse.class,onResponse,onError,null);
     }
 
-    public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<FailureMessage> onError){
-        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_UP, signUpRequest,SignUpResponse.class, FailureMessage.class,onResponse,onError,null);
+    public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<TutiResponse> onError){
+        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_UP, signUpRequest,SignUpResponse.class, TutiResponse.class,onResponse,onError,null);
     }
 
     public void sendEBSRequest(String URL,EBSRequest ebsRequest, ResponseCallable<EBSResponse> onResponse, ErrorCallable<EBSResponse> onError){
         sendRequest(RequestMethods.POST, URL,ebsRequest,EBSResponse.class,EBSResponse.class,onResponse,onError,null);
     }
 
-    public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable<FailureMessage> onError){
-        sendRequest(RequestMethods.GET,serverURL + Operations.GET_CARDS, null,Cards.class,FailureMessage.class,onResponse,onError,null);
+    public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable<TutiResponse> onError){
+        sendRequest(RequestMethods.GET,serverURL + Operations.GET_CARDS, null,Cards.class, TutiResponse.class,onResponse,onError,null);
     }
 
+    public void getPublicKey(EBSRequest ebsRequest, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError){
+        sendRequest(RequestMethods.POST, serverURL + Operations.PUBLIC_KEY,ebsRequest,TutiResponse.class,TutiResponse.class,onResponse,onError,null);
+    }
 
-    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<FailureMessage> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, FailureMessage.class, onResponse, onError, null);
+    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
     }
 
         public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String,String> headers){
@@ -165,6 +167,7 @@ public class TutiApiClient {
     private Object parseResponse(Response rawResponse, Type ResponseType) throws IOException {
         Gson gson = getGsonInstance();
         String responseAsString = rawResponse.body().string();
+
         return isTypeStringOrNull(ResponseType) ? responseAsString : gson.fromJson(responseAsString, ResponseType);
     }
 

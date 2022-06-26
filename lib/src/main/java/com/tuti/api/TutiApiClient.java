@@ -13,7 +13,6 @@ import com.tuti.api.ebs.EBSResponse;
 import com.tuti.model.Operations;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -31,8 +30,7 @@ public class TutiApiClient {
     public String getAuthToken() {
         return authToken;
     }
-    private final static Logger LOGGER =
-            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
@@ -45,7 +43,7 @@ public class TutiApiClient {
         isSingleThreaded = singleThreaded;
     }
 
-    @Deprecated(since = "Avoid using this constructor", forRemoval = true)
+    @Deprecated
     public TutiApiClient(boolean isDevelopment){
         serverURL = getServerURL(isDevelopment);
     }

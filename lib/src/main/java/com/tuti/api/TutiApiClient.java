@@ -6,6 +6,7 @@ import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Cards;
+import com.tuti.api.data.FailureMessage;
 import com.tuti.api.data.RequestMethods;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
@@ -83,11 +84,11 @@ public class TutiApiClient {
     }
 
     public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<String> onError){
-        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_IN,credentials, SignInResponse.class,String.class,onResponse,onError,null);
+        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_IN,credentials, SignInResponse.class,FailureMessage.class,onResponse,onError,null);
     }
 
     public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<String> onError){
-        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_UP, signUpRequest,SignUpResponse.class,String.class,onResponse,onError,null);
+        sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_UP, signUpRequest,SignUpResponse.class, FailureMessage.class,onResponse,onError,null);
     }
 
     public void sendEBSRequest(String URL,EBSRequest ebsRequest, ResponseCallable<EBSResponse> onResponse, ErrorCallable<EBSResponse> onError){
@@ -95,12 +96,12 @@ public class TutiApiClient {
     }
 
     public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable<String> onError){
-        sendRequest(RequestMethods.GET,serverURL + Operations.GET_CARDS, null,Cards.class,String.class,onResponse,onError,null);
+        sendRequest(RequestMethods.GET,serverURL + Operations.GET_CARDS, null,Cards.class,FailureMessage.class,onResponse,onError,null);
     }
 
 
     public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<String> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, String.class, onResponse, onError, null);
+        sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, FailureMessage.class, onResponse, onError, null);
     }
 
         public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String,String> headers){

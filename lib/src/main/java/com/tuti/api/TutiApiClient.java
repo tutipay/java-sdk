@@ -83,11 +83,11 @@ public class TutiApiClient {
         return development ? developmentHost : productionHost;
     }
 
-    public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<String> onError){
+    public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<FailureMessage> onError){
         sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_IN,credentials, SignInResponse.class,FailureMessage.class,onResponse,onError,null);
     }
 
-    public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<String> onError){
+    public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<FailureMessage> onError){
         sendRequest(RequestMethods.POST,serverURL + Operations.SIGN_UP, signUpRequest,SignUpResponse.class, FailureMessage.class,onResponse,onError,null);
     }
 
@@ -95,12 +95,12 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, URL,ebsRequest,EBSResponse.class,EBSResponse.class,onResponse,onError,null);
     }
 
-    public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable<String> onError){
+    public void getCards( ResponseCallable<Cards> onResponse, ErrorCallable<FailureMessage> onError){
         sendRequest(RequestMethods.GET,serverURL + Operations.GET_CARDS, null,Cards.class,FailureMessage.class,onResponse,onError,null);
     }
 
 
-    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<String> onError) {
+    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<FailureMessage> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, FailureMessage.class, onResponse, onError, null);
     }
 

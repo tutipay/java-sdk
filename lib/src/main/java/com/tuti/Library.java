@@ -5,8 +5,10 @@ package com.tuti;
 
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInRequest;
+import com.tuti.api.authentication.User;
 import com.tuti.api.data.Card;
 import com.tuti.api.ebs.EBSRequest;
+import com.tuti.util.Utils;
 
 public class Library {
 
@@ -15,10 +17,16 @@ public class Library {
         TutiApiClient client = new TutiApiClient();
         client.setSingleThreaded(true);
 
-        client.getPublicKey(new EBSRequest(),(objectReceived, rawResponse) ->  {
-            System.out.println(objectReceived.getEbsResponse().getPubKeyValue());
-        },(errorReceived, exception, rawResponse) -> {
+        SignInRequest credentials = new SignInRequest("adonese1","12345678");
+        client.setAuthToken(null);
 
-        });
+        client.SignIn(credentials,( signInResponse , rawResponse) -> {
+            User user = signInResponse.getUser();
+
+            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
+        },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
+            System.out.println(rawResponse.getHeaders());});
+
+
 	}
 }

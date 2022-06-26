@@ -6,6 +6,7 @@ import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Cards;
+import com.tuti.api.data.ResponseData;
 import com.tuti.api.data.TutiResponse;
 import com.tuti.api.data.RequestMethods;
 import com.tuti.api.ebs.EBSRequest;
@@ -135,14 +136,18 @@ public class TutiApiClient {
                 Request request = requestBuilder.build();
                 try (Response rawResponse = okHttpClient.newCall(request).execute()) {
                     // check for http errors
-                    if (rawResponse.code() >= 400 && rawResponse.code() < 600){
+                    int responseCode = rawResponse.code();
+                    String responseBody = rawResponse.body().string();
+
+                    ResponseData responseData = new ResponseData(responseCode,responseBody,rawResponse.headers());
+                    if (responseCode >= 400 && responseCode < 600){
                         // call onError if request has failed
                         if(onError != null) {
-                            onError.call(parseResponse(rawResponse,ErrorType),null,rawResponse);
+                            onError.call(parseResponse(responseBody,rawResponse,ErrorType),null,responseData);
                         }
                     }else{
                         // call onResponse if request has succeeded
-                        if(onResponse != null) { onResponse.call(parseResponse(rawResponse,ResponseType),rawResponse); }
+                        if(onResponse != null) { onResponse.call(parseResponse(responseBody,rawResponse,ResponseType),responseData); }
                     }
 
                 }catch(Exception exception){
@@ -164,10 +169,8 @@ public class TutiApiClient {
         return thread;
     }
 
-    private Object parseResponse(Response rawResponse, Type ResponseType) throws IOException {
+    private Object parseResponse(String  responseAsString,Response rawResponse, Type ResponseType) throws IOException {
         Gson gson = getGsonInstance();
-        String responseAsString = rawResponse.body().string();
-
         return isTypeStringOrNull(ResponseType) ? responseAsString : gson.fromJson(responseAsString, ResponseType);
     }
 
@@ -176,11 +179,11 @@ public class TutiApiClient {
     }
 
     public interface ResponseCallable<T> {
-         void call(T objectReceived,Response rawResponse);
+         void call(T objectReceived,ResponseData rawResponse);
     }
 
     public interface ErrorCallable<T> {
-         void call(T errorReceived,Exception exception,Response rawResponse);
+         void call(T errorReceived,Exception exception,ResponseData rawResponse);
     }
 }
 

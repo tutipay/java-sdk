@@ -31,6 +31,9 @@ public class TutiApiClient {
         return authToken;
     }
 
+    public String getServerURL() {
+        return serverURL;
+    }
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;

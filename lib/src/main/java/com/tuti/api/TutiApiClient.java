@@ -113,7 +113,7 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void billInquiry(Object request, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+    public void billInquiry(Object request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.BILL_INQUIRY, request, String.class, TutiResponse.class, onResponse, onError, null);
     }
 

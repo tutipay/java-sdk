@@ -113,6 +113,10 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    public void billInquiry(Object request, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_INQUIRY, request, String.class, TutiResponse.class, onResponse, onError, null);
+    }
+
     public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers) {
 
         // create a runnable to run it in a new thread (so main thread never hangs)

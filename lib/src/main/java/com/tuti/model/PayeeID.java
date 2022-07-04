@@ -28,6 +28,11 @@ public enum PayeeID {
     MoheArab("0010030004"),
     Customs("0010030003");
 
+    private final String name;
     PayeeID(String s) {
+        this.name = s;
+    }
+    public String getName() {
+        return name;
     }
 }

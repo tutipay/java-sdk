@@ -5,6 +5,7 @@ import com.tuti.api.authentication.SignInResponse;
 import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInRequest;
+import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
 import com.tuti.api.data.ResponseData;
 import com.tuti.api.data.TutiResponse;
@@ -109,8 +110,16 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.PUBLIC_KEY, ebsRequest, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+    public void addCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void editCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.PUT, serverURL + Operations.EDIT_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void deleteCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.DELETE, serverURL + Operations.DELETE_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public void billInquiry(Object request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
@@ -141,7 +150,11 @@ public class TutiApiClient {
             //check for http method set by the user
             if (method == RequestMethods.POST) {
                 requestBuilder.post(requestBody);
-            } else {
+            }else if (method == RequestMethods.DELETE) {
+                requestBuilder.delete(requestBody);
+            } else if (method == RequestMethods.PUT) {
+                requestBuilder.put(requestBody);
+            }else {
                 requestBuilder.get();
             }
 

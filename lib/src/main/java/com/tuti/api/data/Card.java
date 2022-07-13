@@ -10,6 +10,38 @@ public class Card {
     @SerializedName("pan")
     private String PAN;
 
+    public String getNewPan() {
+        return newPan;
+    }
+
+    public void setNewPan(String newPan) {
+        this.newPan = newPan;
+    }
+
+    public String getNewExpDate() {
+        return newExpDate;
+    }
+
+    public void setNewExpDate(String newExpDate) {
+        this.newExpDate = newExpDate;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
+    }
+
+    // new_* are for editing_card api
+    @SerializedName("new_pan")
+    private String newPan;
+    @SerializedName("new_expdate")
+    private String newExpDate;
+    @SerializedName("new_name")
+    private String newName;
+
     public String getName() {
         return name;
     }

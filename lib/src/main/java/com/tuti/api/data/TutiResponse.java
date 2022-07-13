@@ -6,6 +6,17 @@ import com.tuti.api.ebs.EBSResponse;
 public class TutiResponse {
     private String message;
     private String code;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
+
     private Fees fees;
     @SerializedName("ebs_response")
     private EBSResponse ebsResponse;

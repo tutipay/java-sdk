@@ -110,7 +110,7 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.PUBLIC_KEY, ebsRequest, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void addCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
+    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
     }
 

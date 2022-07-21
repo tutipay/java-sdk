@@ -3,6 +3,10 @@ package com.tuti.api.data;
 import com.google.gson.annotations.SerializedName;
 import com.tuti.api.ebs.EBSResponse;
 
+/**
+ * TutiResponse class the encapsulates all noebs responses. Reference class to get
+ * values for about any field
+ */
 public class TutiResponse {
     private String message;
     private String code;
@@ -10,6 +14,19 @@ public class TutiResponse {
     public String getStatus() {
         return status;
     }
+
+    // get EBS public key for IPIN generation
+    public String getiPINKey() {
+        return this.getEbsResponse().getPubKeyValue();
+    }
+
+    /**
+     * get EBS public key for encryption (used throughout the code to encrypt all transactions except for IPIN generation. Check {@link #getiPINKey()} instead
+     */
+    public String getKey() {
+        return this.getEbsResponse().getPubKeyValue();
+    }
+
 
     public void setStatus(String status) {
         this.status = status;

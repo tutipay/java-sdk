@@ -11,6 +11,17 @@ public class TutiResponse {
     private String message;
     private String code;
 
+    public String getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
+    }
+
+    private String authorization;
+
+
     public String getStatus() {
         return status;
     }

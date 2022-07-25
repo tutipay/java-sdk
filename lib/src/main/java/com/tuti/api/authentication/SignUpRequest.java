@@ -16,6 +16,17 @@ public class SignUpRequest {
 
     @SerializedName("user_pubkey")
     private String userPubKey;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    @SerializedName("device_id")
+    private String deviceId;
     private String fullname;
     private String birthday;
     private String email;

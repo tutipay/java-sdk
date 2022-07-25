@@ -97,14 +97,20 @@ public class TutiApiClient {
     /**
      * RefreshToken used to refresh an existing token to keep user's session valid.
      * @param credentials
-     * @param onResponse
-     * @param onError
+     * @param onResponse a method that is used to handle successful cases
+     * @param onError a method to handle on error cases
      */
     public void RefreshToken(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.REFRESH_TOKEN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
 
+    /**
+     *
+     * @param signUpRequest
+     * @param onResponse
+     * @param onError
+     */
     public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
     }

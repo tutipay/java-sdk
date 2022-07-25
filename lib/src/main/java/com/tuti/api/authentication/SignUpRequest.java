@@ -6,6 +6,16 @@ public class SignUpRequest {
     private String username;
     private String password;
 
+    public String getUserPubKey() {
+        return userPubKey;
+    }
+
+    public void setUserPubKey(String userPubKey) {
+        this.userPubKey = userPubKey;
+    }
+
+    @SerializedName("user_pubkey")
+    private String userPubKey;
     private String fullname;
     private String birthday;
     private String email;

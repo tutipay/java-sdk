@@ -6,6 +6,25 @@ public class SignInRequest {
     private String username;
     private String password;
 
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private String signature;
+    private String message;
+
     public String getOldToken() {
         return oldToken;
     }

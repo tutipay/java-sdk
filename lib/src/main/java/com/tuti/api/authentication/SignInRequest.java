@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class SignInRequest {
     private String username;
     private String password;
+    private String mobile;
 
     public String getSignature() {
         return signature;
@@ -40,10 +41,17 @@ public class SignInRequest {
         return username;
     }
 
-    public SignInRequest(String username, String password) {
-        this.username = username;
+    /**
+     * Use to sign in a user given their mobile number and password.
+     * @param mobile
+     * @param password
+     */
+    public SignInRequest(String mobile, String password) {
+        this.username = mobile;
         this.password = password;
+        this.mobile = mobile;
     }
+
 
     public SignInRequest setUsername(String username) {
         this.username = username;

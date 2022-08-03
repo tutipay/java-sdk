@@ -8,6 +8,8 @@ public class Operations {
     public static final String ACCOUNT_TRANSFER = "account";
     public static final String CHANGE_IPIN = "ipin";
     public static final String SIGN_IN = "login";
+    public static final String SINGLE_SIGN_IN = "otp/login";
+    public static final String GENERATE_LOGIN_OTP = "otp";
     public static final String SIGN_UP = "register";
     public static final String GET_CARDS = "get_cards";
     public static final String ADD_CARD = "add_card";

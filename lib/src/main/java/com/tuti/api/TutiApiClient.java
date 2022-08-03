@@ -95,6 +95,30 @@ public class TutiApiClient {
     }
 
     /**
+     * OneTimeSignIn allows tutipay users to sign in via a code we send to their phone numbers
+     * Notice: this method ONLY works for tutipay registered devices, at the moment
+     * it doesn't support a sign in from a new device, as it relies on the user
+     * signing a message via their private key
+     * @param credentials
+     * @param onResponse
+     * @param onError
+     */
+    public void OneTimeSignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.SINGLE_SIGN_IN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    /**
+     * GenerateOtpSignIn service used to request an otp to be sent to the user's registered sms phone number
+     *
+     * @param credentials
+     * @param onResponse
+     * @param onError
+     */
+    public void GenerateOtpSignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.GENERATE_LOGIN_OTP, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    /**
      * RefreshToken used to refresh an existing token to keep user's session valid.
      * @param credentials
      * @param onResponse a method that is used to handle successful cases

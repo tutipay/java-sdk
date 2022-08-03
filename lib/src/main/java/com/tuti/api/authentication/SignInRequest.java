@@ -5,6 +5,15 @@ import com.google.gson.annotations.SerializedName;
 public class SignInRequest {
     private String username;
     private String password;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     private String mobile;
 
     public String getSignature() {

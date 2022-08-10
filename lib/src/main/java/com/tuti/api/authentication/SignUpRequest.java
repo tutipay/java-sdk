@@ -14,6 +14,7 @@ public class SignUpRequest {
         this.firebaseVerificationID = firebaseVerificationID;
     }
 
+    @SerializedName("firebase_token")
     private String firebaseVerificationID;
 
     public String getUserPubKey() {

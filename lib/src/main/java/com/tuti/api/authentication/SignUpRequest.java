@@ -6,6 +6,16 @@ public class SignUpRequest {
     private String username;
     private String password;
 
+    public String getFirebaseVerificationID() {
+        return firebaseVerificationID;
+    }
+
+    public void setFirebaseVerificationID(String firebaseVerificationID) {
+        this.firebaseVerificationID = firebaseVerificationID;
+    }
+
+    private String firebaseVerificationID;
+
     public String getUserPubKey() {
         return userPubKey;
     }

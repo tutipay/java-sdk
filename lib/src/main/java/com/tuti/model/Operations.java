@@ -33,4 +33,5 @@ public class Operations {
     public static final String IPIN_key = "ipin_key";
     public static final String QR_STATUS = "qr_status";
     public static final String QR_COMPLETE = "qr_complete";
+    public static final String VERIFY_FIREBASE = "verify_firebase";
 }

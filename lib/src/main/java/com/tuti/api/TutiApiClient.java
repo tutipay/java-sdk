@@ -139,6 +139,18 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    /**
+     * VerifyFirebase used to verify a verification ID token that was sent to a user. It sets is_activiated
+     * flag as true for the selected user. This is basically an in-background operation, and as though it shouldn't
+     * block the UI, nor does the implementation should care too much about the returned object.
+     * @param signUpRequest
+     * @param onResponse
+     * @param onError
+     */
+    public void VerifyFirebase(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.VERIFY_FIREBASE, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
     public void sendEBSRequest(String URL, EBSRequest ebsRequest, ResponseCallable<EBSResponse> onResponse, ErrorCallable<EBSResponse> onError) {
         sendRequest(RequestMethods.POST, URL, ebsRequest, EBSResponse.class, EBSResponse.class, onResponse, onError, null);
     }

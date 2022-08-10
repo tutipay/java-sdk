@@ -85,8 +85,8 @@ public class TutiApiClient {
     }
 
     private String getServerURL(boolean development) {
-        String developmentHost = "https://beta.app.2t.sd/consumer/";
-        String productionHost = "https://beta.app.2t.sd/consumer/";
+        String developmentHost = "https://staging.app.2t.sd/consumer/";
+        String productionHost = "https://staging.app.2t.sd/consumer/";
         return development ? developmentHost : productionHost;
     }
 

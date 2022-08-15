@@ -3,13 +3,10 @@
  */
 package com.tuti;
 
+
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInRequest;
-import com.tuti.api.authentication.User;
-import com.tuti.api.data.Card;
 import com.tuti.api.data.PaymentToken;
-import com.tuti.api.ebs.EBSRequest;
-import com.tuti.util.Utils;
 
 public class Library {
 

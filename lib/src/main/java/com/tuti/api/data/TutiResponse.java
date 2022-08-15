@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.tuti.api.ebs.EBSResponse;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Base64;

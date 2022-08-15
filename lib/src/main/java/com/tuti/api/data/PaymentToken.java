@@ -43,10 +43,17 @@ public class PaymentToken implements Serializable {
         this.paymentNote = paymentNote;
     }
 
+    /**
+     * Use getTransaction to get the inner transaction response we get from EBS
+     * @return
+     */
     public EBSResponse getTransaction() {
         return transaction;
     }
 
+    public boolean isPaymentSuccessful() {
+        return isPaid;
+    }
     public void setTransaction(EBSResponse transaction) {
         this.transaction = transaction;
     }
@@ -71,5 +78,8 @@ public class PaymentToken implements Serializable {
     @SerializedName("toCard")
     private String cardTobePaid;
     private EBSResponse transaction;
+
+    @SerializedName("is_paid")
+    private boolean isPaid;
 
 }

@@ -2,6 +2,7 @@ package com.tuti.api.data;
 
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Fees implements Serializable {

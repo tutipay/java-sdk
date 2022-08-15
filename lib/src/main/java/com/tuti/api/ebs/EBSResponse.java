@@ -1,8 +1,8 @@
 package com.tuti.api.ebs;
+
 import com.tuti.model.PayeeID;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class EBSResponse implements Serializable {
 
@@ -217,20 +216,20 @@ public class EBSResponse implements Serializable {
     public String getDueAmount(PayeeID payeeId) {
         switch (payeeId){
             case Zain: // zain
-                return billInfo.get("totalAmount").toString(); // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
+                return billInfo.get("totalAmount"); // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
             case MTN: // mtn
-                return billInfo.get("unbilledAmount").toString(); // FIXME(adonese): This doesn't seem to be correct..
+                return billInfo.get("unbilledAmount"); // FIXME(adonese): This doesn't seem to be correct..
             case Sudani: //sudani
-                return billInfo.get("billAmount").toString();
+                return billInfo.get("billAmount");
             case Invoice: // e-invoice
-                return billInfo.get("amount_due").toString();
+                return billInfo.get("amount_due");
             case Mohe: // mohe
             case MoheArab: // mohe-arab
-                return billInfo.get("dueAmount").toString();
+                return billInfo.get("dueAmount");
             case Customs: // Customs
-                return billInfo.get("AmountToBePaid").toString();
+                return billInfo.get("AmountToBePaid");
             case E15: // e-15
-                return billInfo.get("TotalAmount").toString();
+                return billInfo.get("TotalAmount");
             default:
                 return "";
         }

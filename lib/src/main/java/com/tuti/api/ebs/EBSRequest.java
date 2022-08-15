@@ -2,10 +2,7 @@ package com.tuti.api.ebs;
 
 import com.google.gson.annotations.SerializedName;
 
-
-
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,27 +1,31 @@
 package com.tuti.api;
 
 import com.google.gson.Gson;
+import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.authentication.SignInResponse;
 import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
-import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
 import com.tuti.api.data.PaymentToken;
+import com.tuti.api.data.RequestMethods;
 import com.tuti.api.data.ResponseData;
 import com.tuti.api.data.TutiResponse;
-import com.tuti.api.data.RequestMethods;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
 import com.tuti.model.Operations;
-
-import okhttp3.*;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class TutiApiClient {
     public static final MediaType JSON
@@ -193,7 +197,7 @@ public class TutiApiClient {
         sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void quickPayment(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+    public void quickPayment(EBSRequest request, ResponseCallable<PaymentToken> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.QuickPayment, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 

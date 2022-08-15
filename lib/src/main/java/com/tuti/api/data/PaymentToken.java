@@ -43,14 +43,6 @@ public class PaymentToken implements Serializable {
         this.paymentNote = paymentNote;
     }
 
-    public String getToCard() {
-        return toCard;
-    }
-
-    public void setToCard(String toCard) {
-        this.toCard = toCard;
-    }
-
     public EBSResponse getTransaction() {
         return transaction;
     }
@@ -67,7 +59,17 @@ public class PaymentToken implements Serializable {
 
     @SerializedName("note")
     private String paymentNote;
-    private String toCard;
+
+    public String getCardTobePaid() {
+        return cardTobePaid;
+    }
+
+    public void setCardTobePaid(String cardTobePaid) {
+        this.cardTobePaid = cardTobePaid;
+    }
+
+    @SerializedName("toCard")
+    private String cardTobePaid;
     private EBSResponse transaction;
 
 }

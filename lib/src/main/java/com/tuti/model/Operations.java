@@ -9,7 +9,7 @@ public class Operations {
     public static final String CHANGE_IPIN = "ipin";
     public static final String SIGN_IN = "login";
     public static final String SINGLE_SIGN_IN = "otp/login";
-    public static final String GENERATE_LOGIN_OTP = "otp";
+    public static final String GENERATE_LOGIN_OTP = "otp/generate";
     public static final String SIGN_UP = "register";
     public static final String GET_CARDS = "get_cards";
     public static final String ADD_CARD = "add_card";
@@ -34,4 +34,8 @@ public class Operations {
     public static final String QR_STATUS = "qr_status";
     public static final String QR_COMPLETE = "qr_complete";
     public static final String VERIFY_FIREBASE = "verify_firebase";
+
+    public static final String GeneratePaymentToken = "payment_token";
+    public static final String QuickPayment = "payment_token/quick_pay";
+    public static final String GetPaymentToken = "payment_token/";
 }

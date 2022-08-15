@@ -7,6 +7,7 @@ import com.tuti.api.authentication.SignUpResponse;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
+import com.tuti.api.data.PaymentToken;
 import com.tuti.api.data.ResponseData;
 import com.tuti.api.data.TutiResponse;
 import com.tuti.api.data.RequestMethods;
@@ -182,6 +183,18 @@ public class TutiApiClient {
 
     public void billInquiry(Object request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.BILL_INQUIRY, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void generatePaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void getPaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void quickPayment(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.QuickPayment, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers) {

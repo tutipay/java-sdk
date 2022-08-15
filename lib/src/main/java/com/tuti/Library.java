@@ -7,6 +7,7 @@ import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.authentication.User;
 import com.tuti.api.data.Card;
+import com.tuti.api.data.PaymentToken;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.util.Utils;
 
@@ -17,16 +18,21 @@ public class Library {
         TutiApiClient client = new TutiApiClient();
         client.setSingleThreaded(true);
 
-        SignInRequest credentials = new SignInRequest("adonese1","12345678");
-        client.setAuthToken(null);
+        SignInRequest credentials = new SignInRequest("0111493885","Adonese=1994");
+        client.setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjYwNTIzMjIxLCJpc3MiOiJub2VicyJ9.ldFjkNHDGFtC9N-oSG9lIwEOQBlLNQ6ud_q9EIC3nvY");
 
-        client.SignIn(credentials,( signInResponse , rawResponse) -> {
-            User user = signInResponse.getUser();
-
-            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
-        },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
+//        client.SignIn(credentials,( signInResponse , rawResponse) -> {
+//            User user = signInResponse.getUser();
+//
+//            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
+//        },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
+//            System.out.println(rawResponse.getHeaders());});
+        PaymentToken paymentToken = new PaymentToken();
+        paymentToken.setAmount(100);
+        paymentToken.setPaymentNote("This is working");
+        client.generatePaymentToken(paymentToken, (res, rawRes)-> {
+                System.out.println(res.getQRToken().getAmount());
+        }, ( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
             System.out.println(rawResponse.getHeaders());});
-
-
 	}
 }

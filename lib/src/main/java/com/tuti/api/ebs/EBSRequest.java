@@ -181,6 +181,18 @@ public class EBSRequest implements Serializable {
     private String serviceProviderId;
     private String merchantID;
 
+
+    public String getQuickPayToken() {
+        return quickPayToken;
+    }
+
+    public void setQuickPayToken(String quickPayToken) {
+        this.quickPayToken = quickPayToken;
+    }
+
+    @SerializedName("token")
+    private String quickPayToken;
+
     public List<PaymentDetails> getPaymentDetailsList() {
         return paymentDetailsList;
     }

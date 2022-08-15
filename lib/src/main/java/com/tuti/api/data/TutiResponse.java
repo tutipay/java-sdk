@@ -1,7 +1,13 @@
 package com.tuti.api.data;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.tuti.api.ebs.EBSResponse;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.Base64;
 
 /**
  * TutiResponse class the encapsulates all noebs responses. Reference class to get
@@ -9,7 +15,67 @@ import com.tuti.api.ebs.EBSResponse;
  */
 public class TutiResponse {
     private String message;
-    private String code;
+    private String code, uuid;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    // getEncodedQRToken returns a base64 encode of a generated
+    public byte[] getEncodedQRToken() {
+        return Base64.getDecoder().decode(result);
+    }
+
+    //getRawPaymentToken returns a base64 encoded representation for the payment token.
+    // a user can either decode to extract payment info, or use GET /payment_token with
+    // the companion uuid to get server's inquiry about the id
+    public String getRawPaymentToken() {
+        return result;
+    }
+
+    // getPaymentTokenUUID in payment token api, we use uuid field to denote
+    // the payment token
+    public String getPaymentTokenUUID() {
+        return uuid;
+    }
+
+    public PaymentToken getQRToken() {
+        Gson gson = new Gson();
+        byte[] initialArray =this.getEncodedQRToken();
+        Reader targetReader = new StringReader(new String(initialArray));
+        try {
+            targetReader.close();
+        } catch (Exception e) {
+            return null;
+        }
+
+        return gson.fromJson(targetReader, PaymentToken.class);
+    }
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public PaymentToken getToken() {
+        return token;
+    }
+
+    public void setToken(PaymentToken token) {
+        this.token = token;
+    }
+
+    private PaymentToken token;
+
+    private String result;
 
     public String getAuthorization() {
         return authorization;
@@ -20,7 +86,6 @@ public class TutiResponse {
     }
 
     private String authorization;
-
 
     public String getStatus() {
         return status;

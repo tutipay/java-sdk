@@ -462,7 +462,7 @@ class TutiApiClient {
                     val responseCode = rawResponse.code
                     val responseBody = rawResponse.body!!.string()
                     val responseData = ResponseData(responseCode, responseBody, rawResponse.headers)
-                    if (responseCode >= 400 && responseCode < 600) {
+                    if (responseCode in 400..599) {
                         // call onError if request has failed
                         onError?.call(
                             parseResponse(responseBody, rawResponse, ErrorType),

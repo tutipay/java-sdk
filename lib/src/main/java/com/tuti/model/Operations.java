@@ -38,4 +38,5 @@ public class Operations {
     public static final String GeneratePaymentToken = "payment_token";
     public static final String QuickPayment = "payment_token/quick_pay";
     public static final String GetPaymentToken = "payment_token/";
+    public static final String ChangePassword = "change_password/";
 }

@@ -6,6 +6,21 @@ public class SignInRequest {
     private String username;
     private String password;
 
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    /**
+     * the update new password to be used for password change api
+     * @param newPassword
+     */
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    private String newPassword;
+
+
     public String getMobile() {
         return mobile;
     }

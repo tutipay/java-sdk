@@ -99,6 +99,10 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_IN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    public void ChangePassword(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.ChangePassword, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
     /**
      * OneTimeSignIn allows tutipay users to sign in via a code we send to their phone numbers
      * Notice: this method ONLY works for tutipay registered devices, at the moment

@@ -57,8 +57,6 @@ public class TutiResponse {
         } catch (Exception e) {
             return null;
         }
-
-
     }
     private int count;
 

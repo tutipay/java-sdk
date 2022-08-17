@@ -1,7 +1,10 @@
 package com.tuti.api.data;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.sun.jersey.spi.StringReader;
 import com.tuti.api.ebs.EBSResponse;
+import java.util.Base64;
 
 import java.io.Serializable;
 
@@ -10,6 +13,24 @@ import java.io.Serializable;
  */
 public class PaymentToken implements Serializable {
     private int amount;
+    private String token;
+
+    private byte[] getEncodedQRToken() {
+        return Base64.getDecoder().decode(result);
+    }
+
+    public static PaymentToken ParseQRToken(String b64Token) {
+        byte[] parsedToken = Base64.getDecoder().decode(b64Token);
+        Gson gson = new Gson();
+        Reader targetReader = new StringReader(new String(parsedToken));
+        try {
+            PaymentToken pt =  gson.fromJson(targetReader, PaymentToken.class);
+            targetReader.close();
+            return pt;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public int getAmount() {
         return amount;

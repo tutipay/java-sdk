@@ -64,15 +64,15 @@ public class TutiResponse {
         this.count = count;
     }
 
-    public PaymentToken getToken() {
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getToken() {
         return token;
     }
 
-    public void setToken(PaymentToken token) {
-        this.token = token;
-    }
-
-    private PaymentToken token;
+    private String token;
 
     private String result;
 

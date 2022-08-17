@@ -5,6 +5,7 @@ package com.tuti;
 
 import com.tuti.api.TutiApiClient;
 import com.tuti.api.authentication.SignInRequest;
+import com.tuti.api.authentication.User;
 import com.tuti.api.data.PaymentToken;
 
 public class Library {
@@ -15,19 +16,19 @@ public class Library {
         client.setSingleThreaded(true);
 
         SignInRequest credentials = new SignInRequest("0111493885","Adonese=1994");
-        client.setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjYwNTIzMjIxLCJpc3MiOiJub2VicyJ9.ldFjkNHDGFtC9N-oSG9lIwEOQBlLNQ6ud_q9EIC3nvY");
+        client.setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjYwNzYyNjYzLCJpc3MiOiJub2VicyJ9.Dtxwa4oCO5ZLJ6ZuZWtwoOpepUKy8GArUINRIXxxiU4");
 
-//        client.SignIn(credentials,( signInResponse , rawResponse) -> {
-//            User user = signInResponse.getUser();
-//
-//            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
-//        },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
-//            System.out.println(rawResponse.getHeaders());});
+        client.SignIn(credentials,(signInResponse , rawResponse) -> {
+            User user = signInResponse.getUser();
+
+            System.out.println("User information from sign in endpoint (adonese case):\n"+user);
+        },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
+            System.out.println(rawResponse.getHeaders());});
         PaymentToken paymentToken = new PaymentToken();
         paymentToken.setAmount(100);
         paymentToken.setPaymentNote("This is working");
         client.generatePaymentToken(paymentToken, (res, rawRes)-> {
-                System.out.println(res.getQRToken().getAmount());
+                System.out.println(res.getRawPaymentToken());
         }, ( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
             System.out.println(rawResponse.getHeaders());});
 	}

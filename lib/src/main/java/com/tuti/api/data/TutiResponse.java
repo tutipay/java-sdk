@@ -42,17 +42,23 @@ public class TutiResponse {
         return uuid;
     }
 
+    /**
+     *  getQRToken is a helper method to parse `result` or payment token `token` into a PaymentToken
+     *     class that can be used to inquire about the payment details.
+     */
     public PaymentToken getQRToken() {
         Gson gson = new Gson();
         byte[] initialArray =this.getEncodedQRToken();
         Reader targetReader = new StringReader(new String(initialArray));
         try {
+            PaymentToken pt =  gson.fromJson(targetReader, PaymentToken.class);
             targetReader.close();
+            return pt;
         } catch (Exception e) {
             return null;
         }
 
-        return gson.fromJson(targetReader, PaymentToken.class);
+
     }
     private int count;
 

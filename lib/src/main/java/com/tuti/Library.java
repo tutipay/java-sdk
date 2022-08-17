@@ -25,10 +25,10 @@ public class Library {
         },( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
             System.out.println(rawResponse.getHeaders());});
         PaymentToken paymentToken = new PaymentToken();
-        paymentToken.setAmount(100);
+        paymentToken.setAmount(1000);
         paymentToken.setPaymentNote("This is working");
         client.generatePaymentToken(paymentToken, (res, rawRes)-> {
-                System.out.println(res.getRawPaymentToken());
+                System.out.println(res.getQRToken().getAmount());
         }, ( error, exception, rawResponse) -> {System.out.println(rawResponse.getHeaders());
             System.out.println(rawResponse.getHeaders());});
 	}

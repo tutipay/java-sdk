@@ -18,7 +18,9 @@ public class PaymentToken implements Serializable {
     private String token;
 
     /**
-     *
+     * ParseQRToken creates a PaymentToken object from a base64 encoded QR code. This is method
+     * can be used when showing a tuti encoded QR token to a user, the user can then scan that
+     * and creates a [PaymentToken] object from the QR.
      * @param b64Token
      * @return
      */

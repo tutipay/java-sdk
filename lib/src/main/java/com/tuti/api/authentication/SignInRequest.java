@@ -18,6 +18,7 @@ public class SignInRequest {
         this.newPassword = newPassword;
     }
 
+    @SerializedName("new_password")
     private String newPassword;
 
 

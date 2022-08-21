@@ -183,6 +183,10 @@ public class EBSRequest implements Serializable {
         return quickPayToken;
     }
 
+    /**
+     * This is used to pass-on a payment token (scanned via eg QR)
+     * @param quickPayToken
+     */
     public void setQuickPayToken(String quickPayToken) {
         this.quickPayToken = quickPayToken;
     }

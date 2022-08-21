@@ -31,8 +31,9 @@ public class EBSRequest implements Serializable {
 
     private String pubKey;
 
-    public EBSRequest(String pubKey) {
+    public EBSRequest(String pubKey, String ipin) {
         this.pubKey = pubKey;
+        this.IPIN = ipin;
         setEncryptedIPIN(pubKey);
     }
 
@@ -152,7 +153,7 @@ public class EBSRequest implements Serializable {
     @SerializedName("PAN")
     private String pan;
 
-    private String expDate, IPIN, newIPIN, originalTranUUID, otp, ipin,  entityId, voucherNumber;
+    private String expDate, IPIN, newIPIN, originalTranUUID, otp, entityId, voucherNumber;
     private Float tranAmount;
     private String tranCurrencyCode;
 
@@ -369,13 +370,6 @@ public class EBSRequest implements Serializable {
         this.otp = otp;
     }
 
-    public String getIpin() {
-        return ipin;
-    }
-
-    public void setIpin(String ipin) {
-        this.ipin = ipin;
-    }
 
     public String getPhoneNo() {
         return phoneNo;
@@ -426,7 +420,7 @@ public class EBSRequest implements Serializable {
     }
 
     public void setEncryptedIPIN(String pubKey) {
-        this.IPIN = getIPINBlock(ipin, pubKey, this.uuid);
+        this.IPIN = getIPINBlock(IPIN, pubKey, this.uuid);
     }
 
         private String getIPINBlock(String ipin,

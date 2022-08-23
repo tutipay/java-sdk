@@ -15,6 +15,10 @@ public class Card {
     }
 
     public void setCardIndex(String cardIndex) {
+        if (!PAN.isEmpty()) {
+            this.cardIndex = PAN;
+            return;
+        }
         this.cardIndex = cardIndex;
     }
 

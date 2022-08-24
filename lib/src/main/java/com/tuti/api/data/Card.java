@@ -46,6 +46,7 @@ public class Card {
 
     public void setPAN(String PAN) {
         this.PAN = PAN;
+        this.cardIndex = PAN;
     }
 
     @Override

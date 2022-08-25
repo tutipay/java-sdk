@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -90,8 +91,8 @@ public class TutiApiClient {
     }
 
     private String getServerURL(boolean development) {
-        String developmentHost = "https://staging.app.2t.sd/consumer/";
-        String productionHost = "https://staging.app.2t.sd/consumer/";
+        String developmentHost = "staging.app.2t.sd/consumer/";
+        String productionHost = "staging.app.2t.sd/consumer/";
         return development ? developmentHost : productionHost;
     }
 
@@ -197,26 +198,32 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void getPaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    public void getPaymentToken(String uuid, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, null, TutiResponse.class, TutiResponse.class, onResponse, onError, null, "uuid", uuid);
     }
 
     public void quickPayment(EBSRequest request, ResponseCallable<PaymentToken> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.QuickPayment, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers) {
+    public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers, String ...params) {
 
         // create a runnable to run it in a new thread (so main thread never hangs)
         Runnable runnable = () -> {
 
             OkHttpClient okHttpClient = getOkHttpInstance();
-            Gson gson = getGsonInstance();
 
+            Gson gson = getGsonInstance();
             RequestBody requestBody = RequestBody.create(gson.toJson(requestToBeSent), JSON);
 
-            Request.Builder requestBuilder = new Request.Builder().url(URL);
+            HttpUrl url;
+            if (params != null) {
+                url = new HttpUrl.Builder().scheme("https").host(URL).addQueryParameter(params[0], params[1]).build();
+            }else {
+                url = new HttpUrl.Builder().scheme("https").host(URL).build();
+            }
 
+            Request.Builder requestBuilder = new Request.Builder().url(url);
             if (authToken != null) requestBuilder.header("Authorization", authToken);
 
             //add additional headers set by the user
@@ -234,10 +241,12 @@ public class TutiApiClient {
             } else if (method == RequestMethods.PUT) {
                 requestBuilder.put(requestBody);
             }else {
+
                 requestBuilder.get();
             }
 
             Request request = requestBuilder.build();
+
             try (Response rawResponse = okHttpClient.newCall(request).execute()) {
                 // check for http errors
                 int responseCode = rawResponse.code();

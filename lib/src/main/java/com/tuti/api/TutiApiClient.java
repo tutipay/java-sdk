@@ -198,8 +198,8 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
-    public void getPaymentToken(String uuid, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, null, TutiResponse.class, TutiResponse.class, onResponse, onError, null, "uuid", uuid);
+    public void getPaymentToken(String uuid, ResponseCallable<PaymentToken> onResponse, ErrorCallable<PaymentToken> onError) {
+        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, null, PaymentToken.class, PaymentToken.class, onResponse, onError, null, "uuid", uuid);
     }
 
     public void quickPayment(EBSRequest request, ResponseCallable<PaymentToken> onResponse, ErrorCallable<PaymentToken> onError) {

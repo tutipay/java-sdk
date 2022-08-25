@@ -216,7 +216,7 @@ public class TutiApiClient {
             Gson gson = getGsonInstance();
             RequestBody requestBody = RequestBody.create(gson.toJson(requestToBeSent), JSON);
 
-            if (params != null) {
+            if (params != null && params.length > 1) {
                 URL += "?uuid="+params[1];
             }
             Request.Builder requestBuilder = new Request.Builder().url(URL);

@@ -15,9 +15,14 @@ class TutiApiClientTest {
     void getPaymentToken() {
         TutiApiClient tutiApiClient = new TutiApiClient();
         UUID uuid = UUID.randomUUID();
-        tutiApiClient.getPaymentToken(uuid.toString(),null, null );
+        tutiApiClient.getPaymentToken(uuid.toString(), null, null);
+
+    }
+    @Test
     void quickPayment() {
         EBSRequest req = new EBSRequest();
 
     }
 }
+
+

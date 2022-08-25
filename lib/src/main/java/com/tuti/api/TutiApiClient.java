@@ -91,8 +91,8 @@ public class TutiApiClient {
     }
 
     private String getServerURL(boolean development) {
-        String developmentHost = "staging.app.2t.sd/consumer/";
-        String productionHost = "staging.app.2t.sd/consumer/";
+        String developmentHost = "https://staging.app.2t.sd/consumer/";
+        String productionHost = "https://staging.app.2t.sd/consumer/";
         return development ? developmentHost : productionHost;
     }
 
@@ -208,22 +208,18 @@ public class TutiApiClient {
 
     public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers, String ...params) {
 
-        // create a runnable to run it in a new thread (so main thread never hangs)
-        Runnable runnable = () -> {
+//        // create a runnable to run it in a new thread (so main thread never hangs)
+//        Runnable runnable = () -> {
 
             OkHttpClient okHttpClient = getOkHttpInstance();
 
             Gson gson = getGsonInstance();
             RequestBody requestBody = RequestBody.create(gson.toJson(requestToBeSent), JSON);
 
-            HttpUrl url;
             if (params != null) {
-                url = new HttpUrl.Builder().scheme("https").host(URL).addQueryParameter(params[0], params[1]).build();
-            }else {
-                url = new HttpUrl.Builder().scheme("https").host(URL).build();
+                URL += "?uuid="+params[1];
             }
-
-            Request.Builder requestBuilder = new Request.Builder().url(url);
+            Request.Builder requestBuilder = new Request.Builder().url(URL);
             if (authToken != null) requestBuilder.header("Authorization", authToken);
 
             //add additional headers set by the user
@@ -241,17 +237,14 @@ public class TutiApiClient {
             } else if (method == RequestMethods.PUT) {
                 requestBuilder.put(requestBody);
             }else {
-
                 requestBuilder.get();
             }
 
             Request request = requestBuilder.build();
-
             try (Response rawResponse = okHttpClient.newCall(request).execute()) {
                 // check for http errors
                 int responseCode = rawResponse.code();
                 String responseBody = rawResponse.body().string();
-
                 ResponseData responseData = new ResponseData(responseCode, responseBody, rawResponse.headers());
                 if (responseCode >= 400 && responseCode < 600) {
                     // call onError if request has failed
@@ -269,11 +262,11 @@ public class TutiApiClient {
                 exception.printStackTrace();
                 if (onError != null) onError.call(null, exception, null);
             }
-        };
+//        };
 
         // unit testing concurrent code on multiple threads is hard
 
-        Thread thread = new Thread(runnable);
+        Thread thread = new Thread((Runnable) null);
 
         if (isSingleThreaded) {
             thread.run();

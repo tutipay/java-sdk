@@ -208,18 +208,20 @@ public class TutiApiClient {
 
     public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers, String ...params) {
 
-//        // create a runnable to run it in a new thread (so main thread never hangs)
-//        Runnable runnable = () -> {
+        if (params != null && params.length > 1) {
+            URL += "?uuid="+params[1];
+        }
+        // create a runnable to run it in a new thread (so main thread never hangs)
+        String finalURL = URL;
+        Runnable runnable = () -> {
 
             OkHttpClient okHttpClient = getOkHttpInstance();
 
             Gson gson = getGsonInstance();
             RequestBody requestBody = RequestBody.create(gson.toJson(requestToBeSent), JSON);
 
-            if (params != null && params.length > 1) {
-                URL += "?uuid="+params[1];
-            }
-            Request.Builder requestBuilder = new Request.Builder().url(URL);
+
+            Request.Builder requestBuilder = new Request.Builder().url(finalURL);
             if (authToken != null) requestBuilder.header("Authorization", authToken);
 
             //add additional headers set by the user
@@ -262,11 +264,11 @@ public class TutiApiClient {
                 exception.printStackTrace();
                 if (onError != null) onError.call(null, exception, null);
             }
-//        };
+        };
 
         // unit testing concurrent code on multiple threads is hard
 
-        Thread thread = new Thread((Runnable) null);
+        Thread thread = new Thread(runnable);
 
         if (isSingleThreaded) {
             thread.run();

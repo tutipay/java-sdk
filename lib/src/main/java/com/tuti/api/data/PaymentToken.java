@@ -102,6 +102,7 @@ public class PaymentToken implements Serializable {
 
     @SerializedName("toCard")
     private String cardTobePaid;
+
     private EBSResponse transaction;
 
     @SerializedName("is_paid")

@@ -10,38 +10,20 @@ public class Card {
     @SerializedName("pan")
     private String PAN;
 
-    public String getNewPan() {
-        return newPan;
+    public String getCardIndex() {
+        return cardIndex;
     }
 
-    public void setNewPan(String newPan) {
-        this.newPan = newPan;
+    public void setCardIndex(String cardIndex) {
+        if (!PAN.isEmpty()) {
+            this.cardIndex = PAN;
+            return;
+        }
+        this.cardIndex = cardIndex;
     }
 
-    public String getNewExpDate() {
-        return newExpDate;
-    }
-
-    public void setNewExpDate(String newExpDate) {
-        this.newExpDate = newExpDate;
-    }
-
-    public String getNewName() {
-        return newName;
-    }
-
-    public void setNewName(String newName) {
-        this.newName = newName;
-    }
-
-    // new_* are for editing_card api
-    @SerializedName("new_pan")
-    private String newPan;
-    @SerializedName("new_expdate")
-    private String newExpDate;
-    @SerializedName("new_name")
-    private String newName;
-
+    @SerializedName("card_index")
+    private String cardIndex;
     public String getName() {
         return name;
     }
@@ -64,6 +46,7 @@ public class Card {
 
     public void setPAN(String PAN) {
         this.PAN = PAN;
+        this.cardIndex = PAN;
     }
 
     @Override

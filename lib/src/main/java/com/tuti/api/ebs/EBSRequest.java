@@ -1,8 +1,15 @@
 package com.tuti.api.ebs;
 
 import com.google.gson.annotations.SerializedName;
+import com.sun.jersey.core.util.Base64;
 
 import java.io.Serializable;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,12 +17,29 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 public class EBSRequest implements Serializable {
 
     @SerializedName("UUID")
     private final String uuid = generateUUID();
     private final String tranDateTime = getDate();
     private final String applicationId = "TutiPay";
+
+    private String pubKey;
+
+    public EBSRequest(String pubKey, String ipin) {
+        this.pubKey = pubKey;
+        this.IPIN = ipin;
+        setEncryptedIPIN(pubKey);
+    }
+
+    public EBSRequest() {
+
+    }
 
     public String getAuthenticationType() {
         return authenticationType;
@@ -129,7 +153,7 @@ public class EBSRequest implements Serializable {
     @SerializedName("PAN")
     private String pan;
 
-    private String expDate, IPIN, newIPIN, originalTranUUID, otp, ipin,  entityId, voucherNumber;
+    private String expDate, IPIN, newIPIN, originalTranUUID, otp, entityId, voucherNumber;
     private Float tranAmount;
     private String tranCurrencyCode;
 
@@ -183,6 +207,10 @@ public class EBSRequest implements Serializable {
         return quickPayToken;
     }
 
+    /**
+     * This is used to pass-on a payment token (scanned via eg QR)
+     * @param quickPayToken
+     */
     public void setQuickPayToken(String quickPayToken) {
         this.quickPayToken = quickPayToken;
     }
@@ -342,13 +370,6 @@ public class EBSRequest implements Serializable {
         this.otp = otp;
     }
 
-    public String getIpin() {
-        return ipin;
-    }
-
-    public void setIpin(String ipin) {
-        this.ipin = ipin;
-    }
 
     public String getPhoneNo() {
         return phoneNo;
@@ -397,6 +418,61 @@ public class EBSRequest implements Serializable {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public void setEncryptedIPIN(String pubKey) {
+        this.IPIN = getIPINBlock(IPIN, pubKey, this.uuid);
+    }
+
+        private String getIPINBlock(String ipin,
+                                          String publicKey, String uuid) {
+            // clear ipin = uuid +  IPIN
+            String cleraIpin = uuid + ipin;
+
+            // prepare public key, get public key from its String representation as
+            // base64
+            byte[] keyByte = Base64.decode(publicKey);
+            // generate public key
+            X509EncodedKeySpec s = new X509EncodedKeySpec(keyByte);
+            KeyFactory factory = null;
+            try {
+                factory = KeyFactory.getInstance("RSA");
+            } catch (NoSuchAlgorithmException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Key pubKey = null;
+            try {
+                pubKey = factory.generatePublic(s);
+            } catch (InvalidKeySpecException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            try {
+                // construct Cipher with encryption algrithm:RSA, cipher mode:ECB and padding:PKCS1Padding
+                Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+                // calculate ipin, encryption then encoding to base64
+                ipin = (new String(Base64.encode(cipher.doFinal(cleraIpin
+                        .getBytes()))));
+            } catch (NoSuchAlgorithmException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return ipin;
+        }
+
 }
 
 

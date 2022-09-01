@@ -40,3 +40,33 @@ fun E15(isPayment: Boolean, invoice: String, phone: String?=""): String {
 fun Customs(bank: String, id: String): String {
     return "BANKCODE=$bank/DECLARANTCODE=$id"
 }
+
+
+enum class CourseID(val courseID: Int) {
+    Academic(1),
+    Agricultural(2),
+    Commercial(3),
+    Industrial(4),
+    Womanly(5),
+    Ahlia(6),
+    Readings(7)
+}
+
+enum class AdmissionType(val id: Int) {
+    GeneralAdmission(1),
+    SpecialAdmission(2),
+    SonsOfHigherEducation(3),
+    GeneralAdmissionSecondRound(6),
+    AdmissionVacantSeats(7),
+    PrivateInstitutionDirectAdmission(8),
+    Diploma(9)
+}
+
+
+fun MOHEArab(name: String?="mohamed ahmed", phone: String?="0912222222", id: CourseID, type: AdmissionType): String {
+    return "STUCNAME=$name/STUCPHONE=$phone/STUDCOURSEID=${id.courseID}/STUDFORMKIND=${type.id}"
+}
+
+fun MOHE(seatNumber: String, id: CourseID, type: AdmissionType): String {
+    return "SETNUMBER=$seatNumber/STUDCOURSEID=${id.courseID}/STUDFORMKIND=${type.id}"
+}

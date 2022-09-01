@@ -5,9 +5,11 @@ import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.authentication.SignInResponse;
 import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
+import com.tuti.api.data.AdmissionType;
 import com.tuti.api.data.BashairTypes;
 import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
+import com.tuti.api.data.CourseID;
 import com.tuti.api.data.HelpersKt;
 import com.tuti.api.data.PaymentToken;
 import com.tuti.api.data.RequestMethods;
@@ -23,7 +25,6 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -234,7 +235,27 @@ public class TutiApiClient {
             operator = Operations.BILL_INQUIRY;
         }
         request.setPaymentInfo(HelpersKt.Customs(bankCode, declarantCode));
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void moheArab(EBSRequest request, CourseID courseId, AdmissionType admissionType, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        request.setPaymentInfo(HelpersKt.MOHEArab("", "", courseId, admissionType));
+        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void mohe(EBSRequest request, String seatNumber, CourseID courseId, AdmissionType admissionType, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        request.setPaymentInfo(HelpersKt.MOHE(seatNumber,  courseId, admissionType));
+        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public void einvoice(EBSRequest request, String customerRef, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {

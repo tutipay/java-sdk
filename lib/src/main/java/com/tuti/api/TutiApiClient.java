@@ -194,6 +194,16 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.BILL_INQUIRY, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    /**
+     *
+     * @param request
+     * @param onResponse
+     * @param onError
+     */
+    public void balanceInquiry(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.GET_BALANCE, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
     public void generatePaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }

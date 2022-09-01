@@ -246,6 +246,10 @@ public class EBSResponse implements Serializable {
         return balance;
     }
 
+    /**
+     * get the current balance available to noebs user
+     * @return
+     */
     public String getAvailableBalance() {
         NumberFormat formatter = new DecimalFormat("#0.00");
         try {
@@ -253,8 +257,19 @@ public class EBSResponse implements Serializable {
         }catch (Exception e) {
             return "0";
         }
+    }
 
-
+    /**
+     * getLeger or the balance that is yet to be reconciled with noebs user
+     * @return
+     */
+    public String getLeger() {
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        try {
+            return formatter.format(this.getBalance().get("leger"));
+        }catch (Exception e) {
+            return "0";
+        }
     }
 
     public String getPaymentInfo() {

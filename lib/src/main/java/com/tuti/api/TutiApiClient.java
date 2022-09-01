@@ -5,11 +5,14 @@ import com.tuti.api.authentication.SignInRequest;
 import com.tuti.api.authentication.SignInResponse;
 import com.tuti.api.authentication.SignUpRequest;
 import com.tuti.api.authentication.SignUpResponse;
+import com.tuti.api.data.BashairTypes;
 import com.tuti.api.data.Card;
 import com.tuti.api.data.Cards;
+import com.tuti.api.data.HelpersKt;
 import com.tuti.api.data.PaymentToken;
 import com.tuti.api.data.RequestMethods;
 import com.tuti.api.data.ResponseData;
+import com.tuti.api.data.TelecomIDs;
 import com.tuti.api.data.TutiResponse;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
@@ -202,6 +205,84 @@ public class TutiApiClient {
      */
     public void balanceInquiry(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.GET_BALANCE, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void cardTransfer(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.CARD_TRANSFER, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void bashair(EBSRequest request, BashairTypes bashairType, String paymentValue, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.Bashair.getPayeeID());
+        request.setPaymentInfo(HelpersKt.bashairInfo(bashairType, paymentValue));
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void e15(EBSRequest request, String invoice, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.E15.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        request.setPaymentInfo(HelpersKt.E15(request.getTranAmount()!=0, invoice, ""));
+        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void customs(EBSRequest request, String bankCode, String declarantCode, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        request.setPaymentInfo(HelpersKt.Customs(bankCode, declarantCode));
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void einvoice(EBSRequest request, String customerRef, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.Einvoice.getPayeeID());
+        request.setPaymentInfo("customerBillerRef="+customerRef);
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+    public void mtnTopup(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.MTN.getPayeeID());
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void zainTopup(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.ZAIN.getPayeeID());
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void sudaniTopup(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.SUDANI.getPayeeID());
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+
+    public void mtnBill(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.MTN_BILL.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void zainBill(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.ZAIN_BILL.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    public void sudaniBill(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.SUDANI_BILL.getPayeeID());
+        String operator = Operations.BILL_PAYMENT;
+        if (request.getTranAmount() == 0) {
+            operator = Operations.BILL_INQUIRY;
+        }
+        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public void generatePaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {

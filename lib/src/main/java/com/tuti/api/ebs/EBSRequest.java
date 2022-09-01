@@ -154,6 +154,11 @@ public class EBSRequest implements Serializable {
     private String pan;
 
     private String expDate, IPIN, newIPIN, originalTranUUID, otp, entityId, voucherNumber;
+
+    public Float getTranAmount() {
+        return tranAmount;
+    }
+
     private Float tranAmount;
     private String tranCurrencyCode;
 

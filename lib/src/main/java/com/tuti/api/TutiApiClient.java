@@ -278,6 +278,12 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    public void nec(EBSRequest request, String meterNumber, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        request.setPayeeId(TelecomIDs.NEC.getPayeeID());
+        request.setPaymentInfo("METER="+meterNumber);
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
 
     public void mtnBill(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         request.setPayeeId(TelecomIDs.MTN_BILL.getPayeeID());

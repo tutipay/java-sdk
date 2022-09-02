@@ -6,10 +6,23 @@
  * User Manual available at https://docs.gradle.org/6.7.1/userguide/building_java_projects.html
  */
 
-plugins {
-    // Apply the java-library plugin for API and implementation separation.
-    id 'java-library'
+buildscript {
+    ext.kotlin_version = "1.7.10"
+    ext.supportLibVersion = "25.3.0"
+    repositories {
+        jcenter()
+    }
+    dependencies {
+
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
 }
+
+apply plugin: 'kotlin'
+apply plugin: 'java-library'
+
 
 repositories {
     // Use JCenter for resolving dependencies.
@@ -40,6 +53,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation("org.assertj:assertj-core:3.23.1")
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
 }
 
 test {

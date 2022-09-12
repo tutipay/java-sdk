@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
+import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -383,10 +384,9 @@ public class TutiApiClient {
                         onResponse.call(parseResponse(responseBody, rawResponse, ResponseType), responseData);
                     }
                 }
-
-            } catch (Exception exception) {
+            } catch (IOException exception) {
                 exception.printStackTrace();
-                if (onError != null) onError.call(null, exception, null);
+                if (onError != null) onError.call(exception, exception, null);
             }
         };
 

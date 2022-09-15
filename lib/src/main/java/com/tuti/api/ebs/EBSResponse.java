@@ -41,6 +41,16 @@ public class EBSResponse implements Serializable {
     private String pubKeyValue;
     private String tranCurrency;
     private String paymentInfo;
+
+    public String getPayeeId() {
+        return payeeId;
+    }
+
+    public void setPayeeId(String payeeId) {
+        this.payeeId = payeeId;
+    }
+
+    private String payeeId;
     private String fromAccount;
     private String financialInstitutionId;
 

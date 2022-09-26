@@ -222,7 +222,7 @@ public class TutiApiClient {
      * @param onError
      */
     public void billInquiry(BillInfo billInfo, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, billInfo, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        sendRequest(RequestMethods.POST, serverURL + Operations.Get_Bills, billInfo, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public void bashair(EBSRequest request, BashairTypes bashairType, String paymentValue, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {

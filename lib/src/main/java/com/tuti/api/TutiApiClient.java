@@ -18,6 +18,7 @@ import com.tuti.api.data.TelecomIDs;
 import com.tuti.api.data.TutiResponse;
 import com.tuti.api.ebs.EBSRequest;
 import com.tuti.api.ebs.EBSResponse;
+import com.tuti.model.BillInfo;
 import com.tuti.model.Operations;
 
 import java.io.IOException;
@@ -211,6 +212,17 @@ public class TutiApiClient {
 
     public void cardTransfer(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.CARD_TRANSFER, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
+    /**
+     * billInfo gets a bill from EBS using a pre-stored data, only send applicable bill fields
+     * plus the type of transaction
+     * @param billInfo
+     * @param onResponse
+     * @param onError
+     */
+    public void billInquiry(BillInfo billInfo, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, billInfo, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
     public void bashair(EBSRequest request, BashairTypes bashairType, String paymentValue, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {

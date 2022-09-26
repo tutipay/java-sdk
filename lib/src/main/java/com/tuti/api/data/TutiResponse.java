@@ -113,6 +113,12 @@ public class TutiResponse {
 
     private String status;
 
+    public String getDueAmount() {
+        return dueAmount;
+    }
+
+    private String dueAmount;
+
     private Fees fees;
     @SerializedName("ebs_response")
     private EBSResponse ebsResponse;

@@ -21,14 +21,6 @@ public class BillInfo implements Serializable {
         this.ref = ref;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getSeatNumber() {
         return seatNumber;
     }
@@ -116,7 +108,6 @@ public class BillInfo implements Serializable {
     */
     private String phone;
     private String ref;
-    private String code;
 
     @SerializedName("seat_number")
     private String seatNumber;
@@ -125,7 +116,7 @@ public class BillInfo implements Serializable {
     private String courseId;
     private String bank;
 
-    @SerializedName("code")
+    @SerializedName("declarant_code")
     private String declarantCode;
 
     @SerializedName("service_id")

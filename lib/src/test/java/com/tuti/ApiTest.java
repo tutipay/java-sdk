@@ -29,12 +29,13 @@ public class ApiTest {
     }
 
     @BeforeEach
+
     public void  signIn(){
         SignInRequest credentials = new SignInRequest("0999999999","Testtest1234.");
 
         client.SignIn(credentials,( signInResponse , rawResponse) -> {
             client.setAuthToken(signInResponse.getAuthorizationJWT());
-        },(objectReceived, exception, rawResponse) -> {fail("sign in failed for @BeforeClass");});
+        },(objectReceived, exception, rawResponse) -> {});
     }
     @Test
     public void testSignInApi(){

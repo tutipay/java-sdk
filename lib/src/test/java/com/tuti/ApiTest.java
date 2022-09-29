@@ -45,12 +45,12 @@ public class ApiTest {
             User user = signInResponse.getUser();
 
             System.out.println("User information from sign in endpoint (adonese case):\n"+user);
-//            assertEquals("adonese",user.getUsername());
-//            assertEquals("Mohamed Yousif",user.getFullname());
-//            assertEquals("mmbusif@gmail.com",user.getEmail());
-//            assertEquals("0925343834",user.getMobileNumber());
-//            assertTrue(user.getIsMerchant());
-//            assertEquals(0,user.getId());
+            assertEquals("adonese",user.getUsername());
+            assertEquals("Mohamed Yousif",user.getFullname());
+            assertEquals("mmbusif@gmail.com",user.getEmail());
+            assertEquals("0925343834",user.getMobileNumber());
+            assertTrue(user.getIsMerchant());
+            assertEquals(0,user.getId());
         },( error, exception, rawResponse) -> {fail("sign in failed");});
 
         credentials = new SignInRequest("non_existent_user" + Utils.generateRandomAlphanumericString(8),"asjfkdlj");

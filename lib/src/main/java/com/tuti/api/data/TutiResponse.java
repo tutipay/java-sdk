@@ -117,6 +117,7 @@ public class TutiResponse {
         return dueAmount;
     }
 
+    @SerializedName("due_amount")
     private String dueAmount;
 
     private Fees fees;

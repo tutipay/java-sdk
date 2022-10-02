@@ -398,7 +398,7 @@ public class TutiApiClient {
                 }
             } catch (IOException exception) {
                 exception.printStackTrace();
-                if (onError != null) onError.call(exception, exception, null);
+                if (onError != null) onError.call(null, exception, null);
             }
         };
 

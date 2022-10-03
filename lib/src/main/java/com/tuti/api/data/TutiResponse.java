@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.tuti.api.ebs.EBSResponse;
 
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.Base64;
 
@@ -113,12 +114,12 @@ public class TutiResponse {
 
     private String status;
 
-    public String getDueAmount() {
+    public dueAmount getDueAmount() {
         return dueAmount;
     }
 
     @SerializedName("due_amount")
-    private String dueAmount;
+    private dueAmount dueAmount;
 
     private Fees fees;
     @SerializedName("ebs_response")
@@ -154,4 +155,15 @@ public class TutiResponse {
     public void setFees(Fees fees) {
         this.fees = fees;
     }
+}
+
+class dueAmount implements Serializable {
+    @SerializedName("due_amount")
+    String dueAmount;
+    @SerializedName("total_amount")
+    String totalAmount;
+    @SerializedName("min_amount")
+    String minAmount;
+    @SerializedName("paid_amount")
+    String paidAmount;
 }

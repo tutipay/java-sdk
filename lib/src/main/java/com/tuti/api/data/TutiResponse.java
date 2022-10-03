@@ -121,6 +121,8 @@ public class TutiResponse {
     @SerializedName("due_amount")
     private dueAmount dueAmount;
 
+
+
     private Fees fees;
     @SerializedName("ebs_response")
     private EBSResponse ebsResponse;
@@ -155,50 +157,37 @@ public class TutiResponse {
     public void setFees(Fees fees) {
         this.fees = fees;
     }
+
+    static class dueAmount implements Serializable {
+        public String getDueAmount() {
+            return dueAmount;
+        }
+
+        public String getTotalAmount() {
+            return totalAmount;
+        }
+
+        public String getMinAmount() {
+            return minAmount;
+        }
+
+        public String getPaidAmount() {
+            return paidAmount;
+        }
+
+        @SerializedName("due_amount")
+        String dueAmount;
+
+        @SerializedName("total_amount")
+        String totalAmount;
+
+        @SerializedName("min_amount")
+        String minAmount;
+
+        @SerializedName("paid_amount")
+        String paidAmount;
+    }
+
+
 }
 
-class dueAmount implements Serializable {
-    public String getDueAmount() {
-        return dueAmount;
-    }
-
-    public void setDueAmount(String dueAmount) {
-        this.dueAmount = dueAmount;
-    }
-
-    public String getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getMinAmount() {
-        return minAmount;
-    }
-
-    public void setMinAmount(String minAmount) {
-        this.minAmount = minAmount;
-    }
-
-    public String getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void setPaidAmount(String paidAmount) {
-        this.paidAmount = paidAmount;
-    }
-
-    @SerializedName("due_amount")
-    String dueAmount;
-
-    @SerializedName("total_amount")
-    String totalAmount;
-
-    @SerializedName("min_amount")
-    String minAmount;
-
-    @SerializedName("paid_amount")
-    String paidAmount;
-}

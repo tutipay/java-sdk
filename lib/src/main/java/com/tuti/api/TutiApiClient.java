@@ -350,7 +350,7 @@ public class TutiApiClient {
     public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers, String ...params) {
 
         if (params != null && params.length > 1) {
-            URL += "?uuid="+params[1];
+            URL += "?" + params[0] + "=" +params[1];
         }
         // create a runnable to run it in a new thread (so main thread never hangs)
         String finalURL = URL;

@@ -331,6 +331,10 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    public void guessBillerId(String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.GUESS_Biller, null, TutiResponse.class, TutiResponse.class, onResponse, onError, null, "mobile", mobile);
+    }
+
     public void generatePaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
         sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
     }

@@ -17,6 +17,13 @@ public class TutiResponse {
     private String message;
     private String code, uuid;
 
+    public String getBillerId() {
+        return billerId;
+    }
+
+    @SerializedName("biller_id")
+    private String billerId;
+
     public String getResult() {
         return result;
     }
@@ -121,8 +128,6 @@ public class TutiResponse {
     @SerializedName("due_amount")
     private DueAmount dueAmount;
 
-
-
     private Fees fees;
     @SerializedName("ebs_response")
     private EBSResponse ebsResponse;
@@ -158,5 +163,3 @@ public class TutiResponse {
         this.fees = fees;
     }
 }
-
-

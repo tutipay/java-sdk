@@ -10,6 +10,16 @@ public class Card {
     @SerializedName("pan")
     private String PAN;
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    private String mobile;
+
     public String getCardIndex() {
         return cardIndex;
     }

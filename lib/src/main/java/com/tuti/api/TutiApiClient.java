@@ -155,6 +155,10 @@ public class TutiApiClient {
         sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
     }
 
+    public void SignupWithCard(Card signUpRequest, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
+        sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP_WITH_CARD, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
+    }
+
     /**
      * VerifyFirebase used to verify a verification ID token that was sent to a user. It sets is_activiated
      * flag as true for the selected user. This is basically an in-background operation, and as though it shouldn't

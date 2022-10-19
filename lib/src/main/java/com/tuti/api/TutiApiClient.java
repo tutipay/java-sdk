@@ -99,6 +99,7 @@ public class TutiApiClient {
     private String getServerURL(boolean development) {
         String developmentHost = "https://staging.app.2t.sd/api/consumer/";
         String productionHost = "https://staging.app.2t.sd/api/consumer/";
+        return development ? developmentHost : productionHost;
     }
 
     public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {

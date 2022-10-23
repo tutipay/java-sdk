@@ -26,9 +26,9 @@ class ApiTest {
         val credentials = SignInRequest("0999999999", "Testtest1234.")
         client!!.SignIn(
             credentials,
-            { signInResponse: SignInResponse, rawResponse: ResponseData? ->
+            { signInResponse: SignInResponse ->
                 client.authToken = signInResponse.authorizationJWT
-            }) { objectReceived: TutiResponse?, exception: Exception?, rawResponse: ResponseData? ->
+            }) { objectReceived: TutiResponse?, exception: Exception? ->
 
         }
     }
@@ -36,7 +36,7 @@ class ApiTest {
     @Test
     fun testSignInApi() {
         var credentials = SignInRequest("adonese", "12345678")
-        client!!.SignIn(credentials, { signInResponse: SignInResponse, rawResponse: ResponseData? ->
+        client!!.SignIn(credentials, { signInResponse: SignInResponse ->
             val user = signInResponse.user
             println("User information from sign in endpoint (adonese case):\n$user")
             Assert.assertEquals("adonese", user.username)
@@ -45,11 +45,11 @@ class ApiTest {
             Assert.assertEquals("0925343834", user.mobileNumber)
             Assert.assertTrue(user.isMerchant)
             Assert.assertEquals(0, user.id.toLong())
-        }) { error: TutiResponse?, exception: Exception?, rawResponse: ResponseData? -> Assert.fail("sign in failed") }
+        }) { error: TutiResponse?, exception: Exception? -> Assert.fail("sign in failed") }
         credentials = SignInRequest("non_existent_user" + Utils.generateRandomAlphanumericString(8), "asjfkdlj")
         client.SignIn(
             credentials,
-            { signInResponse: SignInResponse?, rawResponse: ResponseData? -> Assert.fail("sign in failed because the user is non existent") }) { error: TutiResponse?, exception: Exception?, rawResponse: ResponseData? ->
+            { signInResponse: SignInResponse? -> Assert.fail("sign in failed because the user is non existent") }) { error: TutiResponse?, exception: Exception? ->
             if (error != null) println(
                 "\nNon existent user case:\n$error"
             )
@@ -73,7 +73,7 @@ class ApiTest {
         info.fullname = fullname
         info.email = email
         info.isMerchant = isMerchant
-        client!!.Signup(info, { signUpResponse: SignUpResponse, rawResponse: ResponseData? ->
+        client!!.Signup(info, { signUpResponse: SignUpResponse ->
             val user = signUpResponse.user
             println("User information from signup endpoint:\n$user")
             Assert.assertEquals(username, user.username)
@@ -81,9 +81,9 @@ class ApiTest {
             Assert.assertEquals(email, user.email)
             Assert.assertEquals(mobileNumber, user.mobileNumber)
             Assert.assertEquals(isMerchant, user.isMerchant)
-        }) { error: TutiResponse?, exception: Exception?, rawResponse: ResponseData? -> Assert.fail("sign up failed") }
+        }) { error: TutiResponse?, exception: Exception? -> Assert.fail("sign up failed") }
         val creds = SignInRequest(username, password)
-        client!!.SignIn(creds, { objectReceived: SignInResponse, rawResponse: ResponseData? ->
+        client!!.SignIn(creds, { objectReceived: SignInResponse ->
             val user = objectReceived.user
             println("User information from sign in endpoint:\n$user")
             Assert.assertEquals(username, user.username)
@@ -93,7 +93,7 @@ class ApiTest {
             Assert.assertEquals(isMerchant, user.isMerchant)
             null
         }
-        ) { errorReceived: TutiResponse?, exception: Exception?, rawResponse: ResponseData? -> Assert.fail("sign in failed!") }
+        ) { errorReceived: TutiResponse?, exception: Exception? -> Assert.fail("sign in failed!") }
     }
 
     @Test
@@ -109,11 +109,11 @@ class ApiTest {
         cardToAdd.expiryDate = expiryDate
         cardToAdd.pan = PAN
         println("Card to add$cardToAdd")
-        client!!.addCard(cardToAdd, { objectReceived: TutiResponse?, rawResponse: ResponseData? -> }
-        ) { errorReceived: TutiResponse?, exception: Exception?, rawResponse: ResponseData? -> Assertions.fail<Any>("adding a card failed") }
+        client!!.addCard(cardToAdd, { objectReceived: TutiResponse? -> }
+        ) { errorReceived: TutiResponse?, exception: Exception? -> Assertions.fail<Any>("adding a card failed") }
 
         //get the cards from the api to assert that it was added successfully
-        client!!.getCards({ cards: Cards, response: ResponseData? ->
+        client!!.getCards({ cards: Cards ->
             outputCardsInfo(cards)
             var fail = true
             for (card in cards.cards) {
@@ -122,7 +122,7 @@ class ApiTest {
                 }
             }
             if (fail) Assert.fail("card was not found!")
-        }) { objectReceived: TutiResponse?, exception: Exception?, rawResponse: ResponseData? -> Assert.fail() }
+        }) { objectReceived: TutiResponse?, exception: Exception? -> Assert.fail() }
     }
 
     fun outputCardsInfo(cards: Cards) {

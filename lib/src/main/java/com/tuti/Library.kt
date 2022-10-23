@@ -19,13 +19,13 @@ object Library {
         val credentials = SignInRequest("0129751986", "Rami1111.")
         client!!.SignIn(
             credentials,
-            { signInResponse: SignInResponse, rawResponse: ResponseData? ->
+            { signInResponse: SignInResponse ->
                 run {
                     println(signInResponse.user.mobileNumber)
                 }
-            }) { objectReceived: TutiResponse?, exception: Exception?, rawResponse: ResponseData? ->
+            }) { objectReceived: TutiResponse?, exception: Exception? ->
             run {
-                println(rawResponse)
+
             }
 
         }

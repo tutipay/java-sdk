@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
+import kotlin.math.exp
 
 class ApiTest {
     @BeforeEach
@@ -104,10 +105,8 @@ class ApiTest {
         val expiryDate = Utils.generateRandomNumericString(4)
 
         //create a card object to hold the cards data
-        val cardToAdd = Card()
-        cardToAdd.name = name
-        cardToAdd.expiryDate = expiryDate
-        cardToAdd.pan = PAN
+        val cardToAdd = Card(name = name,expiryDate= expiryDate,PAN = PAN)
+
         println("Card to add$cardToAdd")
         client!!.addCard(cardToAdd, { objectReceived: TutiResponse? -> }
         ) { errorReceived: TutiResponse?, exception: Exception? -> Assertions.fail<Any>("adding a card failed") }

@@ -10,6 +10,7 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.BillInfo
 import com.tuti.model.Operations
+import com.tuti.util.IPINBlockGenerator
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -671,11 +672,25 @@ class TutiApiClient {
     }
 
     fun changeIPIN(
-        request: EBSRequest?,
+        card: Card,
+        oldIPIN:String,
+        newIPIN:String,
+        ebsPublicKey:String,
         onResponse: (EBSResponse) -> Unit,
         onError: (EBSResponse?, Exception?) -> Unit
     ) {
-        sendRequest<EBSResponse, EBSResponse>(
+
+        val request = EBSRequest()
+
+        val oldIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(oldIPIN, ebsPublicKey, request.uuid)
+        val newIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(newIPIN, ebsPublicKey, request.uuid)
+
+        request.expDate = card.expiryDate
+        request.setIPIN(oldIPINEncrypted)
+        request.setNewIPIN(newIPINEncrypted)
+        request.pan = card.PAN
+
+        sendRequest(
             RequestMethods.POST,
             serverURL + Operations.CHANGE_IPIN,
             request as Any,

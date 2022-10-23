@@ -424,6 +424,12 @@ public class EBSRequest implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPan() {
+        return pan;
+    }
+
+
+
     public void setEncryptedIPIN(String pubKey) {
         this.IPIN = getIPINBlock(IPIN, pubKey, this.uuid);
     }

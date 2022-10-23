@@ -24,14 +24,15 @@ import kotlin.math.exp
 class ApiTest {
     @BeforeEach
     fun signIn() {
-        val credentials = SignInRequest("0999999999", "Testtest1234.")
-        client!!.SignIn(
+        val credentials = SignInRequest("0923377628", "Rami1111.")
+        client.SignIn(
             credentials,
             { signInResponse: SignInResponse ->
                 client.authToken = signInResponse.authorizationJWT
             }) { objectReceived: TutiResponse?, exception: Exception? ->
 
         }
+
     }
 
     @Test
@@ -108,14 +109,14 @@ class ApiTest {
         val cardToAdd = Card(name = name,expiryDate= expiryDate,PAN = PAN)
 
         println("Card to add$cardToAdd")
-        client!!.addCard(cardToAdd, { objectReceived: TutiResponse? -> }
+        client.addCard(cardToAdd, { objectReceived: TutiResponse? -> }
         ) { errorReceived: TutiResponse?, exception: Exception? -> Assertions.fail<Any>("adding a card failed") }
 
         //get the cards from the api to assert that it was added successfully
-        client!!.getCards({ cards: Cards ->
+        client.getCards({ cards: Cards ->
             outputCardsInfo(cards)
             var fail = true
-            for (card in cards.cards) {
+            for (card in cards.cards!!) {
                 if (card == cardToAdd) {
                     fail = false
                 }
@@ -126,7 +127,7 @@ class ApiTest {
 
     fun outputCardsInfo(cards: Cards) {
         println("Cards associated with the account")
-        for (card in cards.cards) {
+        for (card in cards.cards!!) {
             println(card)
         }
     }

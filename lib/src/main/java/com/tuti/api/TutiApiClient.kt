@@ -12,9 +12,9 @@ import com.tuti.model.BillInfo
 import com.tuti.model.Operations
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
-import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
 class TutiApiClient {
@@ -695,10 +695,8 @@ class TutiApiClient {
     ): Thread {
         // create a runnable to run it in a new thread (so main thread never hangs)
         val finalURL = if (params.isEmpty()) URL else URL + "?" + params[0] + "=" + params[1]
-        val okHttpClient = okHttpInstance
-        val runnable = Runnable {
-
-            val requestBody: RequestBody = RequestBody.create(JSON, gson.toJson(requestToBeSent))
+        val runnable = {
+            val requestBody: RequestBody = gson.toJson(requestToBeSent).toRequestBody(JSON)
             val requestBuilder: Request.Builder = Request.Builder().url(finalURL)
             requestBuilder.header("Authorization", authToken)
 
@@ -710,15 +708,13 @@ class TutiApiClient {
             }
 
             //check for http method set by the user
-            if (method == RequestMethods.POST) {
-                requestBuilder.post(requestBody)
-            } else if (method == RequestMethods.DELETE) {
-                requestBuilder.delete(requestBody)
-            } else if (method == RequestMethods.PUT) {
-                requestBuilder.put(requestBody)
-            } else {
-                requestBuilder.get()
+            when (method) {
+                RequestMethods.POST -> requestBuilder.post(requestBody)
+                RequestMethods.DELETE -> requestBuilder.delete(requestBody)
+                RequestMethods.PUT -> requestBuilder.put(requestBody)
+                else -> requestBuilder.get()
             }
+
             val request: Request = requestBuilder.build()
             try {
                 okHttpClient.newCall(request).execute().use { rawResponse ->
@@ -727,13 +723,10 @@ class TutiApiClient {
                     val responseBody = rawResponse.body?.string() ?: ""
                     if (responseCode in 400..599) {
                         // call onError if request has failed
-
                         onError(parseResponse(responseBody), null)
                     } else {
                         // call onResponse if request has succeeded
-//                        if (onResponse != null) {
                         onResponse(parseResponse(responseBody))
-//                        }
                     }
                 }
             } catch (exception: IOException) {
@@ -777,7 +770,7 @@ class TutiApiClient {
                 return logging
             }
 
-        val okHttpInstance: OkHttpClient =
+        val okHttpClient: OkHttpClient =
             OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
         val gson = Gson()

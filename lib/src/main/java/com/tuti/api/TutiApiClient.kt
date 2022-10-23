@@ -264,7 +264,7 @@ class TutiApiClient {
 
     fun editCard(
         card: Card?,
-        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onResponse: (String, ResponseData) -> Unit,
         onError: (TutiResponse?, Exception?, ResponseData?) -> Unit) {
         sendRequest(
             RequestMethods.PUT,

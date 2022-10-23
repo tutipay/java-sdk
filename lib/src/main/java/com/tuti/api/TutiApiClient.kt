@@ -277,7 +277,7 @@ class TutiApiClient {
 
     fun deleteCard(
         card: Card?,
-        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onResponse: (String, ResponseData) -> Unit,
         onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
     ) {
         sendRequest(

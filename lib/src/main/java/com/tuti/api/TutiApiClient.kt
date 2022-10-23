@@ -1,113 +1,73 @@
-package com.tuti.api;
+package com.tuti.api
 
-import com.google.gson.Gson;
-import com.tuti.api.authentication.SignInRequest;
-import com.tuti.api.authentication.SignInResponse;
-import com.tuti.api.authentication.SignUpRequest;
-import com.tuti.api.authentication.SignUpResponse;
-import com.tuti.api.data.AdmissionType;
-import com.tuti.api.data.BashairTypes;
-import com.tuti.api.data.Card;
-import com.tuti.api.data.Cards;
-import com.tuti.api.data.CourseID;
-import com.tuti.api.data.HelpersKt;
-import com.tuti.api.data.PaymentToken;
-import com.tuti.api.data.RequestMethods;
-import com.tuti.api.data.ResponseData;
-import com.tuti.api.data.TelecomIDs;
-import com.tuti.api.data.TutiResponse;
-import com.tuti.api.ebs.EBSRequest;
-import com.tuti.api.ebs.EBSResponse;
-import com.tuti.model.BillInfo;
-import com.tuti.model.Operations;
+import com.google.gson.Gson
+import com.tuti.api.authentication.SignInRequest
+import com.tuti.api.authentication.SignInResponse
+import com.tuti.api.authentication.SignUpRequest
+import com.tuti.api.authentication.SignUpResponse
+import com.tuti.api.data.*
+import com.tuti.api.ebs.EBSRequest
+import com.tuti.api.ebs.EBSResponse
+import com.tuti.model.BillInfo
+import com.tuti.model.Operations
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.logging.HttpLoggingInterceptor
+import java.io.IOException
+import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+class TutiApiClient {
+    var serverURL: String? = null
+        private set
+    var isSingleThreaded = false
+    var authToken: String = ""
 
-import okhttp3.MediaType;
-import okhttp3.OkHttp;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
-
-public class TutiApiClient {
-    public static final MediaType JSON
-            = MediaType.get("application/json; charset=utf-8");
-    private static volatile OkHttpClient okHttpClient = null;
-    private static volatile Gson gson = null;
-    private String serverURL;
-    private boolean isSingleThreaded = false;
-    private String authToken = null;
-
-    public String getAuthToken() {
-        return authToken;
+    @Deprecated("")
+    constructor(isDevelopment: Boolean) {
+        serverURL = getServerURL(isDevelopment)
     }
 
-    public String getServerURL() {
-        return serverURL;
+    constructor(token: String) {
+        authToken = token
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    constructor() {
+        serverURL = getServerURL(false)
     }
 
-    public boolean isSingleThreaded() {
-        return isSingleThreaded;
+    private fun getServerURL(development: Boolean): String {
+        val developmentHost = "https://staging.app.2t.sd/api/consumer/"
+        val productionHost = "https://staging.app.2t.sd/api/consumer/"
+        return if (development) developmentHost else productionHost
     }
 
-    public void setSingleThreaded(boolean singleThreaded) {
-        isSingleThreaded = singleThreaded;
+    fun SignIn(
+        credentials: SignInRequest,
+        onResponse: (SignInResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SIGN_IN,
+            credentials,
+            onResponse,
+            onError
+        )
     }
 
-    @Deprecated
-    public TutiApiClient(boolean isDevelopment) {
-        serverURL = getServerURL(isDevelopment);
-    }
-
-    public TutiApiClient(String token) {
-        this.authToken = token;
-    }
-
-    private static HttpLoggingInterceptor getLogger() {
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return logging;
-    }
-
-    public TutiApiClient() {
-        serverURL = getServerURL(false);
-    }
-
-    private static synchronized OkHttpClient getOkHttpInstance() {
-        if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient.Builder().addInterceptor(getLogger()).connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
-        }
-        return okHttpClient;
-    }
-
-    private static synchronized Gson getGsonInstance() {
-        if (gson == null) {
-            gson = new Gson();
-        }
-        return gson;
-    }
-
-    private String getServerURL(boolean development) {
-        String developmentHost = "https://staging.app.2t.sd/api/consumer/";
-        String productionHost = "https://staging.app.2t.sd/api/consumer/";
-        return development ? developmentHost : productionHost;
-    }
-
-    public void SignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_IN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
-    }
-
-    public void ChangePassword(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.ChangePassword, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun ChangePassword(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.ChangePassword,
+            credentials,
+            onResponse,
+            onError,
+        )
     }
 
     /**
@@ -115,12 +75,23 @@ public class TutiApiClient {
      * Notice: this method ONLY works for tutipay registered devices, at the moment
      * it doesn't support a sign in from a new device, as it relies on the user
      * signing a message via their private key
+     *
      * @param credentials
      * @param onResponse
      * @param onError
      */
-    public void OneTimeSignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.SINGLE_SIGN_IN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun OneTimeSignIn(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SINGLE_SIGN_IN,
+            credentials,
+            onResponse,
+            onError
+        )
     }
 
     /**
@@ -130,314 +101,690 @@ public class TutiApiClient {
      * @param onResponse
      * @param onError
      */
-    public void GenerateOtpSignIn(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.GENERATE_LOGIN_OTP, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun GenerateOtpSignIn(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.GENERATE_LOGIN_OTP,
+            credentials,
+            onResponse,
+            onError
+        )
     }
 
     /**
      * RefreshToken used to refresh an existing token to keep user's session valid.
+     *
      * @param credentials
-     * @param onResponse a method that is used to handle successful cases
-     * @param onError a method to handle on error cases
+     * @param onResponse  a method that is used to handle successful cases
+     * @param onError     a method to handle on error cases
      */
-    public void RefreshToken(SignInRequest credentials, ResponseCallable<SignInResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.REFRESH_TOKEN, credentials, SignInResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun RefreshToken(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.REFRESH_TOKEN,
+            credentials,
+            onResponse,
+            onError
+        )
     }
 
-
     /**
-     *
      * @param signUpRequest
      * @param onResponse
      * @param onError
      */
-    public void Signup(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun Signup(
+        signUpRequest: SignUpRequest?,
+        onResponse: (SignUpResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SIGN_UP,
+            signUpRequest,
+            onResponse,
+            onError
+        )
     }
 
-    public void SignupWithCard(Card signUpRequest, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.SIGN_UP_WITH_CARD, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun SignupWithCard(
+        signUpRequest: Card?,
+        onResponse: (SignUpResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SIGN_UP_WITH_CARD,
+            signUpRequest,
+            onResponse,
+            onError,
+        )
     }
 
     /**
      * VerifyFirebase used to verify a verification ID token that was sent to a user. It sets is_activiated
      * flag as true for the selected user. This is basically an in-background operation, and as though it shouldn't
      * block the UI, nor does the implementation should care too much about the returned object.
+     *
      * @param signUpRequest
      * @param onResponse
      * @param onError
      */
-    public void VerifyFirebase(SignUpRequest signUpRequest, ResponseCallable<SignUpResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.VERIFY_FIREBASE, signUpRequest, SignUpResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun VerifyFirebase(
+        signUpRequest: SignUpRequest?,
+        onResponse: (SignUpResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.VERIFY_FIREBASE,
+            signUpRequest,
+            onResponse,
+            onError,
+        )
     }
 
-    public void sendEBSRequest(String URL, EBSRequest ebsRequest, ResponseCallable<EBSResponse> onResponse, ErrorCallable<EBSResponse> onError) {
-        sendRequest(RequestMethods.POST, URL, ebsRequest, EBSResponse.class, EBSResponse.class, onResponse, onError, null);
+    fun sendEBSRequest(
+        URL: String,
+        ebsRequest: EBSRequest?,
+        onResponse: (EBSResponse, ResponseData) -> Unit,
+        onError: (EBSResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            URL,
+            ebsRequest,
+            onResponse,
+            onError,
+        )
     }
 
-    public void getCards(ResponseCallable<Cards> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.GET, serverURL + Operations.GET_CARDS, null, Cards.class, TutiResponse.class, onResponse, onError, null);
+    fun getCards(
+        onResponse: (Cards, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.GET_CARDS,
+            null,
+            onResponse,
+            onError,
+        )
     }
 
-    public void getPublicKey(EBSRequest ebsRequest, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.PUBLIC_KEY, ebsRequest, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun getPublicKey(
+        ebsRequest: EBSRequest?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.PUBLIC_KEY,
+            ebsRequest,
+            onResponse,
+            onError,
+        )
     }
 
-    public void getIpinPublicKey(Object ebsRequest, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.IPIN_key, ebsRequest, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun getIpinPublicKey(
+        ebsRequest: Any?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.IPIN_key,
+            ebsRequest,
+            onResponse,
+            onError
+        )
     }
 
-
-    public void addCard(Object card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.ADD_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
+    fun addCard(
+        card: Any?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.ADD_CARD,
+            card,
+            onResponse,
+            onError,
+        )
     }
 
-    public void editCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.PUT, serverURL + Operations.EDIT_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
+    fun editCard(
+        card: Card?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit) {
+        sendRequest(
+            RequestMethods.PUT,
+            serverURL + Operations.EDIT_CARD,
+            card,
+            onResponse,
+            onError,
+        )
     }
 
-    public void deleteCard(Card card, ResponseCallable<String> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.DELETE, serverURL + Operations.DELETE_CARD, card, String.class, TutiResponse.class, onResponse, onError, null);
+    fun deleteCard(
+        card: Card?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.DELETE,
+            serverURL + Operations.DELETE_CARD,
+            card,
+            onResponse,
+            onError,
+        )
     }
 
-    public void billInquiry(Object request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_INQUIRY, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun billInquiry(
+        request: Any?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_INQUIRY,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
     /**
-     *
      * @param request
      * @param onResponse
      * @param onError
      */
-    public void balanceInquiry(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.GET_BALANCE, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun balanceInquiry(
+        request: EBSRequest?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.GET_BALANCE,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void cardTransfer(EBSRequest request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.CARD_TRANSFER, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun cardTransfer(
+        request: EBSRequest?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.CARD_TRANSFER,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
     /**
      * billInfo gets a bill from EBS using a pre-stored data, only send applicable bill fields
      * plus the type of transaction
+     *
      * @param billInfo
      * @param onResponse
      * @param onError
      */
-    public void billInquiry(BillInfo billInfo, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.Get_Bills, billInfo, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun billInquiry(
+        billInfo: BillInfo?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.Get_Bills,
+            billInfo,
+            onResponse,
+            onError,
+        )
     }
 
-    public void bashair(EBSRequest request, BashairTypes bashairType, String paymentValue, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.Bashair.getPayeeID());
-        request.setPaymentInfo(HelpersKt.bashairInfo(bashairType, paymentValue));
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun bashair(
+        request: EBSRequest,
+        bashairType: BashairTypes,
+        paymentValue: String?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.Bashair.payeeID)
+        request.setPaymentInfo(bashairType.bashairInfo(paymentValue!!))
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void e15(EBSRequest request, String invoice, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.E15.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun e15(
+        request: EBSRequest,
+        invoice: String?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.E15.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo(HelpersKt.E15(request.getTranAmount()!=0, invoice, ""));
-        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo(E15(request.tranAmount != 0f, invoice!!, ""))
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError
+        )
     }
 
-    public void customs(EBSRequest request, String bankCode, String declarantCode, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun customs(
+        request: EBSRequest,
+        bankCode: String?,
+        declarantCode: String?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo(HelpersKt.Customs(bankCode, declarantCode));
-        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo(Customs(bankCode!!, declarantCode!!))
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void moheArab(EBSRequest request, CourseID courseId, AdmissionType admissionType, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun moheArab(
+        request: EBSRequest,
+        courseId: CourseID?,
+        admissionType: AdmissionType?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo(HelpersKt.MOHEArab("", "", courseId, admissionType));
-        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo(MOHEArab("", "", courseId!!, admissionType!!))
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void mohe(EBSRequest request, String seatNumber, CourseID courseId, AdmissionType admissionType, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.CUSTOMS.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun mohe(
+        request: EBSRequest,
+        seatNumber: String?,
+        courseId: CourseID?,
+        admissionType: AdmissionType?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo(HelpersKt.MOHE(seatNumber,  courseId, admissionType));
-        sendRequest(RequestMethods.POST, serverURL + operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo(MOHE(seatNumber!!, courseId!!, admissionType!!))
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError
+        )
     }
 
-    public void einvoice(EBSRequest request, String customerRef, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.Einvoice.getPayeeID());
-        request.setPaymentInfo("customerBillerRef="+customerRef);
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
-    }
-    public void mtnTopup(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.MTN.getPayeeID());
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
-    }
-
-    public void zainTopup(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.ZAIN.getPayeeID());
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
-    }
-
-    public void sudaniTopup(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.SUDANI.getPayeeID());
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun einvoice(
+        request: EBSRequest,
+        customerRef: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.Einvoice.payeeID)
+        request.setPaymentInfo("customerBillerRef=$customerRef")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError
+        )
     }
 
-    public void nec(EBSRequest request, String meterNumber, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.NEC.getPayeeID());
-        request.setPaymentInfo("METER="+meterNumber);
-        sendRequest(RequestMethods.POST, serverURL + Operations.BILL_PAYMENT, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun mtnTopup(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.MTN.payeeID)
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
+    fun zainTopup(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.ZAIN.payeeID)
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError,
+        )
+    }
 
-    public void mtnBill(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.MTN_BILL.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun sudaniTopup(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.SUDANI.payeeID)
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError
+        )
+    }
+
+    fun nec(
+        request: EBSRequest,
+        meterNumber: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.NEC.payeeID)
+        request.setPaymentInfo("METER=$meterNumber")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BILL_PAYMENT,
+            request,
+            onResponse,
+            onError,
+        )
+    }
+
+    fun mtnBill(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.MTN_BILL.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void zainBill(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.ZAIN_BILL.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun zainBill(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.ZAIN_BILL.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void sudaniBill(EBSRequest request, String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        request.setPayeeId(TelecomIDs.SUDANI_BILL.getPayeeID());
-        String operator = Operations.BILL_PAYMENT;
-        if (request.getTranAmount() == 0) {
-            operator = Operations.BILL_INQUIRY;
+    fun sudaniBill(
+        request: EBSRequest,
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        request.setPayeeId(TelecomIDs.SUDANI_BILL.payeeID)
+        var operator = Operations.BILL_PAYMENT
+        if (request.tranAmount == 0f) {
+            operator = Operations.BILL_INQUIRY
         }
-        request.setPaymentInfo("MPHONE="+ mobile);
-        sendRequest(RequestMethods.POST, serverURL+ operator, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+        request.setPaymentInfo("MPHONE=$mobile")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + operator,
+            request,
+            onResponse,
+            onError
+        )
     }
 
-    public void guessBillerId(String mobile, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.GET, serverURL + Operations.GUESS_Biller, null, TutiResponse.class, TutiResponse.class, onResponse, onError, null, "mobile", mobile);
+    fun guessBillerId(
+        mobile: String,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.GUESS_Biller,
+            null,
+            onResponse,
+            onError,
+            null,
+            "mobile",
+            mobile
+        )
     }
 
-    public void generatePaymentToken(PaymentToken request, ResponseCallable<TutiResponse> onResponse, ErrorCallable<TutiResponse> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.GeneratePaymentToken, request, TutiResponse.class, TutiResponse.class, onResponse, onError, null);
+    fun generatePaymentToken(
+        request: PaymentToken?,
+        onResponse: (TutiResponse, ResponseData) -> Unit,
+        onError: (TutiResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.GeneratePaymentToken,
+            request,
+            onResponse,
+            onError,
+        )
     }
 
-    public void getPaymentToken(String uuid, ResponseCallable<PaymentToken> onResponse, ErrorCallable<PaymentToken> onError) {
-        sendRequest(RequestMethods.GET, serverURL + Operations.GetPaymentToken, null, PaymentToken.class, PaymentToken.class, onResponse, onError, null, "uuid", uuid);
+    fun getPaymentToken(
+        uuid: String,
+        onResponse: (PaymentToken, ResponseData) -> Unit,
+        onError: (PaymentToken?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.GetPaymentToken,
+            null,
+            onResponse,
+            onError,
+            null,
+            "uuid", uuid
+        )
     }
 
-    public void quickPayment(EBSRequest request, ResponseCallable<PaymentToken> onResponse, ErrorCallable<PaymentToken> onError) {
-        sendRequest(RequestMethods.POST, serverURL + Operations.QuickPayment, request, PaymentToken.class, PaymentToken.class, onResponse, onError, null);
+    fun quickPayment(
+        request: EBSRequest?,
+        onResponse: (PaymentToken, ResponseData) -> Unit,
+        onError: (PaymentToken?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.QuickPayment,
+            request as Any,
+            onResponse,
+            onError,
+        )
     }
 
-    public Thread sendRequest(RequestMethods method, String URL, Object requestToBeSent, Type ResponseType, Type ErrorType, ResponseCallable onResponse, ErrorCallable onError, Map<String, String> headers, String ...params) {
+    fun changeIPIN(
+        request: EBSRequest?,
+        onResponse: (EBSResponse, ResponseData) -> Unit,
+        onError: (EBSResponse?, Exception?, ResponseData?) -> Unit
+    ) {
+        sendRequest<EBSResponse, EBSResponse>(
+            RequestMethods.POST,
+            serverURL + Operations.CHANGE_IPIN,
+            request as Any,
+            onResponse,
+            onError
+        )
+    }
 
-        if (params != null && params.length > 1) {
-            URL += "?" + params[0] + "=" +params[1];
-        }
+    inline fun <reified ResponseType, reified ErrorType> sendRequest(
+        method: RequestMethods,
+        URL: String,
+        requestToBeSent: Any?,
+        crossinline onResponse: (ResponseType, ResponseData) -> Unit,
+        crossinline onError: (ErrorType?, Exception?, ResponseData?) -> Unit,
+        headers: Map<String, String>? = null,
+        vararg params: String
+    ): Thread {
         // create a runnable to run it in a new thread (so main thread never hangs)
-        String finalURL = URL;
-        Runnable runnable = () -> {
+        val finalURL = if (params.isEmpty()) URL else URL + "?" + params[0] + "=" + params[1]
+        val okHttpClient = okHttpInstance
+        val runnable = Runnable {
 
-            OkHttpClient okHttpClient = getOkHttpInstance();
-
-            Gson gson = getGsonInstance();
-            RequestBody requestBody = RequestBody.create(gson.toJson(requestToBeSent), JSON);
-
-
-            Request.Builder requestBuilder = new Request.Builder().url(finalURL);
-            if (authToken != null) requestBuilder.header("Authorization", authToken);
+            val requestBody: RequestBody = RequestBody.create(JSON, gson.toJson(requestToBeSent))
+            val requestBuilder: Request.Builder = Request.Builder().url(finalURL)
+            requestBuilder.header("Authorization", authToken)
 
             //add additional headers set by the user
             if (headers != null) {
-                for (String key : headers.keySet()) {
-                    requestBuilder.header(key, headers.get(key));
+                for (key in headers.keys) {
+                    headers[key]?.let { requestBuilder.header(key, it) }
                 }
             }
 
             //check for http method set by the user
             if (method == RequestMethods.POST) {
-                requestBuilder.post(requestBody);
-            }else if (method == RequestMethods.DELETE) {
-                requestBuilder.delete(requestBody);
+                requestBuilder.post(requestBody)
+            } else if (method == RequestMethods.DELETE) {
+                requestBuilder.delete(requestBody)
             } else if (method == RequestMethods.PUT) {
-                requestBuilder.put(requestBody);
-            }else {
-                requestBuilder.get();
+                requestBuilder.put(requestBody)
+            } else {
+                requestBuilder.get()
             }
+            val request: Request = requestBuilder.build()
+            try {
+                okHttpClient.newCall(request).execute().use { rawResponse ->
+                    // check for http errors
+                    val responseCode = rawResponse.code
+                    val responseBody = rawResponse.body?.string() ?: ""
+                    val responseData = ResponseData(responseCode, responseBody, rawResponse.headers)
+                    if (responseCode in 400..599) {
+                        // call onError if request has failed
 
-            Request request = requestBuilder.build();
-            try (Response rawResponse = okHttpClient.newCall(request).execute()) {
-                // check for http errors
-                int responseCode = rawResponse.code();
-                String responseBody = rawResponse.body().string();
-                ResponseData responseData = new ResponseData(responseCode, responseBody, rawResponse.headers());
-                if (responseCode >= 400 && responseCode < 600) {
-                    // call onError if request has failed
-                    if (onError != null) {
-                        onError.call(parseResponse(responseBody, rawResponse, ErrorType), null, responseData);
-                    }
-                } else {
-                    // call onResponse if request has succeeded
-                    if (onResponse != null) {
-                        onResponse.call(parseResponse(responseBody, rawResponse, ResponseType), responseData);
+                        onError(parseResponse(responseBody), null, responseData)
+                    } else {
+                        // call onResponse if request has succeeded
+//                        if (onResponse != null) {
+                        onResponse(parseResponse(responseBody), responseData)
+//                        }
                     }
                 }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-                if (onError != null) onError.call(null, exception, null);
+            } catch (exception: IOException) {
+                exception.printStackTrace()
+                onError(null, exception, null)
             }
-        };
-
-        // unit testing concurrent code on multiple threads is hard
-
-        Thread thread = new Thread(runnable);
-
-        if (isSingleThreaded) {
-            thread.run();
-        } else {
-            thread.start();
         }
 
-        return thread;
+        // unit testing concurrent code on multiple threads is hard
+        val thread = Thread(runnable)
+        if (isSingleThreaded) {
+            thread.run()
+        } else {
+            thread.start()
+        }
+        return thread
     }
 
-    private Object parseResponse(String responseAsString, Response rawResponse, Type ResponseType) throws IOException {
-        Gson gson = getGsonInstance();
-        return isTypeStringOrNull(ResponseType) ? responseAsString : gson.fromJson(responseAsString, ResponseType);
+    @Throws(IOException::class)
+    inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
+        return when (ResponseType::class.java) {
+            String::class.java -> {
+                responseAsString as ResponseType
+            }
+            else -> {
+                gson.fromJson(
+                    responseAsString,
+                    ResponseType::class.java
+                )
+            }
+        }
+
     }
 
-    private boolean isTypeStringOrNull(Type type) {
-        return (type == String.class || type == null);
-    }
+    companion object {
+        val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
+        private val logger: HttpLoggingInterceptor
+            get() {
+                val logging = HttpLoggingInterceptor()
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+                return logging
+            }
 
-    public interface ResponseCallable<T> {
-        void call(T objectReceived, ResponseData rawResponse);
-    }
+        val okHttpInstance: OkHttpClient =
+            OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
+        val gson = Gson()
 
-    public interface ErrorCallable<T> {
-        void call(T errorReceived, Exception exception, ResponseData rawResponse);
     }
 }
-

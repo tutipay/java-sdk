@@ -309,7 +309,6 @@ class TutiApiClient {
      */
     fun balanceInquiry(
         card: Card,
-        card: Card,
         ipin: String,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit

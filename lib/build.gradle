@@ -7,10 +7,10 @@
  */
 
 
-
 buildscript {
     ext.kotlin_version = "1.7.10"
     ext.supportLibVersion = "25.3.0"
+
     repositories {
         jcenter()
     }
@@ -21,6 +21,8 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+
+
 
 apply plugin: 'kotlin'
 apply plugin: 'java-library'
@@ -80,4 +82,6 @@ publishing {
             from(components.java)
         }
     }
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }

@@ -660,7 +660,7 @@ class TutiApiClient {
     fun quickPayment(
         request: EBSRequest?,
         onResponse: (PaymentToken) -> Unit,
-        onError: (PaymentToken?, Exception?) -> Unit
+        onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
             RequestMethods.POST,

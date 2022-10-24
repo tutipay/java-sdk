@@ -25,7 +25,7 @@ class TutiApiClient {
         private set
     var isSingleThreaded = false
     var authToken: String = ""
-    var ebsKey: String = ""
+    var ebsKey: String = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
 
     @Deprecated("")
     constructor(isDevelopment: Boolean) {
@@ -638,15 +638,14 @@ class TutiApiClient {
         card: Card,
         oldIPIN: String,
         newIPIN: String,
-        ebsPublicKey: String,
         onResponse: (EBSResponse) -> Unit,
         onError: (EBSResponse?, Exception?) -> Unit
     ) {
 
         val request = EBSRequest()
 
-        val oldIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(oldIPIN, ebsPublicKey, request.uuid)
-        val newIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(newIPIN, ebsPublicKey, request.uuid)
+        val oldIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(oldIPIN, ebsKey, request.uuid)
+        val newIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(newIPIN, ebsKey, request.uuid)
 
         request.expDate = card.expiryDate
         request.setIPIN(oldIPINEncrypted)

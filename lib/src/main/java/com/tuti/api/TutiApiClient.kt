@@ -25,7 +25,8 @@ class TutiApiClient {
         private set
     var isSingleThreaded = false
     var authToken: String = ""
-    var ebsKey: String = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
+    var ebsKey: String =
+        "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
 
     @Deprecated("")
     constructor(isDevelopment: Boolean) {
@@ -638,8 +639,8 @@ class TutiApiClient {
         card: Card,
         oldIPIN: String,
         newIPIN: String,
-        onResponse: (EBSResponse) -> Unit,
-        onError: (EBSResponse?, Exception?) -> Unit
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
     ) {
 
         val request = EBSRequest()

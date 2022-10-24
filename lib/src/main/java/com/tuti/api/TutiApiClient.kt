@@ -9,7 +9,9 @@ import com.tuti.api.data.*
 import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.BillInfo
+import com.tuti.model.CarrierPlan
 import com.tuti.model.Operations
+import com.tuti.model.Operator
 import com.tuti.util.IPINBlockGenerator
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -23,6 +25,7 @@ class TutiApiClient {
         private set
     var isSingleThreaded = false
     var authToken: String = ""
+    var ebsKey: String = ""
 
     @Deprecated("")
     constructor(isDevelopment: Boolean) {
@@ -37,6 +40,17 @@ class TutiApiClient {
         val developmentHost = "https://staging.app.2t.sd/api/consumer/"
         val productionHost = "https://staging.app.2t.sd/api/consumer/"
         return if (development) developmentHost else productionHost
+    }
+
+    private fun fillRequestFields(card: Card, ipin: String, amount: Float): EBSRequest {
+        val request = EBSRequest()
+        val encryptedIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, request.uuid)
+        request.tranAmount = amount
+        request.setTranCurrencyCode("SDG")
+        request.pan = card.PAN
+        request.expDate = card.expiryDate
+        request.setIPIN(encryptedIPIN)
+        return request
     }
 
     fun SignIn(
@@ -287,30 +301,23 @@ class TutiApiClient {
         )
     }
 
-    fun billInquiry(
-        request: Any?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_INQUIRY,
-            request,
-            onResponse,
-            onError,
-        )
-    }
-
     /**
      * @param request
      * @param onResponse
      * @param onError
      */
     fun balanceInquiry(
-        request: EBSRequest?,
+        card: Card,
+        ipin: String,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = EBSRequest()
+        val encryptedIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, request.uuid)
+        request.pan = card.PAN
+        request.expDate = card.expiryDate
+        request.setIPIN(encryptedIPIN)
+
         sendRequest(
             RequestMethods.POST,
             serverURL + Operations.GET_BALANCE,
@@ -320,19 +327,6 @@ class TutiApiClient {
         )
     }
 
-    fun cardTransfer(
-        request: EBSRequest?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.CARD_TRANSFER,
-            request,
-            onResponse,
-            onError,
-        )
-    }
 
     /**
      * billInfo gets a bill from EBS using a pre-stored data, only send applicable bill fields
@@ -343,7 +337,7 @@ class TutiApiClient {
      * @param onError
      */
     fun billInquiry(
-        billInfo: BillInfo?,
+        billInfo: BillInfo,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -356,15 +350,37 @@ class TutiApiClient {
         )
     }
 
-    fun bashair(
-        request: EBSRequest,
-        bashairType: BashairTypes,
-        paymentValue: String?,
+    fun cardTransfer(
+        card: Card,
+        ipin: String,
+        receiverCard: Card,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
+        request.setToCard(receiverCard.PAN)
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.CARD_TRANSFER,
+            request,
+            onResponse,
+            onError,
+        )
+    }
+
+    fun purchaseBashairCredit(
+        card: Card,
+        ipin: String,
+        bashairType: BashairTypes,
+        paymentValue: String,
+        amount: Float,
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.Bashair.payeeID)
-        request.setPaymentInfo(bashairType.bashairInfo(paymentValue!!))
+        request.setPaymentInfo(bashairType.bashairInfo(paymentValue))
         sendRequest(
             RequestMethods.POST,
             serverURL + Operations.BILL_PAYMENT,
@@ -374,100 +390,101 @@ class TutiApiClient {
         )
     }
 
-    fun e15(
-        request: EBSRequest,
-        invoice: String?,
+    fun payE15Invoice(
+        card: Card,
+        ipin: String,
+        invoice: String,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.E15.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo(E15(request.tranAmount != 0f, invoice!!, ""))
+        request.setPaymentInfo(E15(true, invoice, ""))
         sendRequest(
             RequestMethods.POST,
-            serverURL + operator,
+            serverURL + Operations.BILL_PAYMENT,
             request,
             onResponse,
             onError
         )
     }
 
-    fun customs(
-        request: EBSRequest,
-        bankCode: String?,
-        declarantCode: String?,
+    fun payCustomsInvoice(
+        card: Card,
+        ipin: String,
+        bankCode: String,
+        declarantCode: String,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo(Customs(bankCode!!, declarantCode!!))
+        request.setPaymentInfo(Customs(bankCode, declarantCode))
+
         sendRequest(
             RequestMethods.POST,
-            serverURL + operator,
+            serverURL + Operations.BILL_PAYMENT,
             request,
             onResponse,
             onError,
         )
     }
 
-    fun moheArab(
-        request: EBSRequest,
-        courseId: CourseID?,
-        admissionType: AdmissionType?,
+    fun payMOHEArabFees(
+        card: Card,
+        ipin: String,
+        courseId: CourseID,
+        admissionType: AdmissionType,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo(MOHEArab("", "", courseId!!, admissionType!!))
+        request.setPaymentInfo(MOHEArab("", "", courseId, admissionType))
         sendRequest(
             RequestMethods.POST,
-            serverURL + operator,
+            serverURL + Operations.BILL_PAYMENT,
             request,
             onResponse,
             onError,
         )
     }
 
-    fun mohe(
-        request: EBSRequest,
-        seatNumber: String?,
-        courseId: CourseID?,
-        admissionType: AdmissionType?,
+    fun payMOHEFees(
+        card: Card,
+        ipin: String,
+        seatNumber: String,
+        courseId: CourseID,
+        admissionType: AdmissionType,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo(MOHE(seatNumber!!, courseId!!, admissionType!!))
+        request.setPaymentInfo(MOHE(seatNumber, courseId, admissionType))
         sendRequest(
             RequestMethods.POST,
-            serverURL + operator,
+            serverURL + Operations.BILL_PAYMENT,
             request,
             onResponse,
             onError
         )
     }
 
-    fun einvoice(
-        request: EBSRequest,
+    fun payEInvoice(
+        card: Card,
+        ipin: String,
         customerRef: String,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.Einvoice.payeeID)
         request.setPaymentInfo("customerBillerRef=$customerRef")
         sendRequest(
@@ -479,13 +496,53 @@ class TutiApiClient {
         )
     }
 
-    fun mtnTopup(
-        request: EBSRequest,
+    fun buyPhoneCredit(
+        card: Card,
+        ipin: String,
         mobile: String,
+        operator: Operator,
+        carrierPlan: CarrierPlan,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
-        request.setPayeeId(TelecomIDs.MTN.payeeID)
+        val request = fillRequestFields(card, ipin, amount)
+
+        when (operator) {
+            Operator.ZAIN -> run {
+                when (carrierPlan) {
+                    CarrierPlan.PREPAID -> run {
+                        request.setPayeeId(TelecomIDs.ZAIN.payeeID)
+                    }
+                    CarrierPlan.POSTPAID -> run {
+                        request.setPayeeId(TelecomIDs.ZAIN_BILL.payeeID)
+                    }
+                }
+            }
+
+            Operator.SUDANI -> run {
+                when (carrierPlan) {
+                    CarrierPlan.PREPAID -> run {
+                        request.setPayeeId(TelecomIDs.SUDANI.payeeID)
+                    }
+                    CarrierPlan.POSTPAID -> run {
+                        request.setPayeeId(TelecomIDs.SUDANI_BILL.payeeID)
+                    }
+                }
+            }
+
+            Operator.MTN -> run {
+                when (carrierPlan) {
+                    CarrierPlan.PREPAID -> run {
+                        request.setPayeeId(TelecomIDs.MTN.payeeID)
+                    }
+                    CarrierPlan.POSTPAID -> run {
+                        request.setPayeeId(TelecomIDs.MTN_BILL.payeeID)
+                    }
+                }
+            }
+        }
+
         request.setPaymentInfo("MPHONE=$mobile")
         sendRequest(
             RequestMethods.POST,
@@ -496,46 +553,15 @@ class TutiApiClient {
         )
     }
 
-    fun zainTopup(
-        request: EBSRequest,
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        request.setPayeeId(TelecomIDs.ZAIN.payeeID)
-        request.setPaymentInfo("MPHONE=$mobile")
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
-        )
-    }
-
-    fun sudaniTopup(
-        request: EBSRequest,
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        request.setPayeeId(TelecomIDs.SUDANI.payeeID)
-        request.setPaymentInfo("MPHONE=$mobile")
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError
-        )
-    }
-
-    fun nec(
-        request: EBSRequest,
+    fun buyNECCredit(
+        card: Card,
+        ipin: String,
         meterNumber: String,
+        amount: Float,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
+        val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.NEC.payeeID)
         request.setPaymentInfo("METER=$meterNumber")
         sendRequest(
@@ -544,69 +570,6 @@ class TutiApiClient {
             request,
             onResponse,
             onError,
-        )
-    }
-
-    fun mtnBill(
-        request: EBSRequest,
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        request.setPayeeId(TelecomIDs.MTN_BILL.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo("MPHONE=$mobile")
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + operator,
-            request,
-            onResponse,
-            onError,
-        )
-    }
-
-    fun zainBill(
-        request: EBSRequest,
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        request.setPayeeId(TelecomIDs.ZAIN_BILL.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo("MPHONE=$mobile")
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + operator,
-            request,
-            onResponse,
-            onError,
-        )
-    }
-
-    fun sudaniBill(
-        request: EBSRequest,
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        request.setPayeeId(TelecomIDs.SUDANI_BILL.payeeID)
-        var operator = Operations.BILL_PAYMENT
-        if (request.tranAmount == 0f) {
-            operator = Operations.BILL_INQUIRY
-        }
-        request.setPaymentInfo("MPHONE=$mobile")
-        sendRequest(
-            RequestMethods.POST,
-            serverURL + operator,
-            request,
-            onResponse,
-            onError
         )
     }
 
@@ -673,9 +636,9 @@ class TutiApiClient {
 
     fun changeIPIN(
         card: Card,
-        oldIPIN:String,
-        newIPIN:String,
-        ebsPublicKey:String,
+        oldIPIN: String,
+        newIPIN: String,
+        ebsPublicKey: String,
         onResponse: (EBSResponse) -> Unit,
         onError: (EBSResponse?, Exception?) -> Unit
     ) {

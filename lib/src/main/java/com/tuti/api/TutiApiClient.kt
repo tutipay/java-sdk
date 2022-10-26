@@ -1,6 +1,7 @@
 package com.tuti.api
 
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.authentication.SignUpRequest
@@ -707,9 +708,16 @@ class TutiApiClient {
                         onResponse(parseResponse(responseBody))
                     }
                 }
-            } catch (exception: IOException) {
-                exception.printStackTrace()
-                onError(null, exception)
+            } catch (exception: Exception) {
+                when (exception) {
+                    is IOException, is JsonSyntaxException -> {
+                        exception.printStackTrace()
+                        onError(null, exception)
+                    }
+                    else -> {
+                        throw exception
+                    }
+                }
             }
         }
 

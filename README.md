@@ -84,3 +84,45 @@ client.getPublicKey(com.tuti.api.ebs.EBSRequest(), { response, _ ->
 ```
 
 Note how the log is running outside the main looper, while the toast runs within the main thread's.
+
+# Deployment notes
+
+We will still be sticking to jitpack, at least for the public builds. However, we are using github package (using gradle repository). 
+
+## noebs sdk versioning
+
+We are using CalVer, it is very convenient as it shows actual progress against time. Seems more concrete than say semver. Jitpack relies on git tags, so the easiest way is to always tag your commits following CalVer semantics (vYY.MM.versionNumber)
+
+## how to deploy noebs to Github Packages
+
+- Update the version number manually in `gradle.properties` version to reflect the new CalVer changes
+- In `lib/build.gradle`, update the username and password with the appropriate Github issues keys (note the password is a a personal access token, and not your password)
+
+```groovy   
+repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/tutipay/java-sdk")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+```
+- That is it actually! 
+
+### how to use noebs published Github Package
+
+- Update your `build.gradle` files to include github package
+
+```groovy
+        maven {
+            url = uri("https://maven.pkg.github.com/tutipay/java-sdk")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+```
+- add to your app's gradle file the implementation, which is `implementation 'noebs:lib:22.10.27'`

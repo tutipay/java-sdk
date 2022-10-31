@@ -6,6 +6,16 @@ public class SignInRequest {
     private String username;
     private String password;
 
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    private String otp;
+
     public String getNewPassword() {
         return newPassword;
     }

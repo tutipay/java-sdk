@@ -149,6 +149,19 @@ class TutiApiClient {
         )
     }
 
+    fun OtpChangePassword(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.GENERATE_LOGIN_OTP_INSECURE,
+            credentials,
+            onResponse,
+            onError
+        )
+    }
 
     /**
      * RefreshToken used to refresh an existing token to keep user's session valid.

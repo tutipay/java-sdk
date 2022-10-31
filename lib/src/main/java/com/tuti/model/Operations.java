@@ -10,6 +10,7 @@ public class Operations {
     public static final String SIGN_IN = "login";
     public static final String SINGLE_SIGN_IN = "otp/login";
     public static final String GENERATE_LOGIN_OTP = "otp/generate";
+    public static final String GENERATE_LOGIN_OTP_INSECURE = "otp/generate_insecure";
     public static final String SIGN_UP = "register";
     public static final String SIGN_UP_WITH_CARD = "register_with_card";
     public static final String GET_CARDS = "get_cards";

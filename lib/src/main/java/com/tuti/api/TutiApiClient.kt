@@ -129,6 +129,28 @@ class TutiApiClient {
     }
 
     /**
+     * GenerateOtpSignIn service used to request an otp to be sent to the user's registered sms phone number
+     *
+     * @param credentials
+     * @param onResponse
+     * @param onError
+     */
+    fun GenerateOtp(
+        credentials: SignInRequest?,
+        onResponse: (SignInResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.GENERATE_LOGIN_OTP_INSECURE,
+            credentials,
+            onResponse,
+            onError
+        )
+    }
+
+
+    /**
      * RefreshToken used to refresh an existing token to keep user's session valid.
      *
      * @param credentials

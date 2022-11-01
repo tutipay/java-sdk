@@ -69,6 +69,9 @@ class TutiApiClient {
         )
     }
 
+    /** ChangePassword changes an existing user password. Should
+     * be accessed behind a jwt active session
+     */
     fun ChangePassword(
         credentials: SignInRequest?,
         onResponse: (SignInResponse) -> Unit,
@@ -135,7 +138,7 @@ class TutiApiClient {
      * @param onResponse
      * @param onError
      */
-    fun GenerateOtp(
+    fun GenerateOtpInsecure(
         credentials: SignInRequest?,
         onResponse: (SignInResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
@@ -149,19 +152,36 @@ class TutiApiClient {
         )
     }
 
-    fun OtpChangePassword(
+
+    fun VerifyOtp(
         credentials: SignInRequest?,
         onResponse: (SignInResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
             RequestMethods.POST,
-            serverURL + Operations.GENERATE_LOGIN_OTP_INSECURE,
+            serverURL + Operations.VERIFY_OTP,
             credentials,
             onResponse,
             onError
         )
     }
+
+    fun Otp2FA(
+        credentials: EBSRequest,
+        onResponse: (SignInResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.OTP_2FA,
+            credentials,
+            onResponse,
+            onError
+        )
+    }
+
+
 
     /**
      * RefreshToken used to refresh an existing token to keep user's session valid.

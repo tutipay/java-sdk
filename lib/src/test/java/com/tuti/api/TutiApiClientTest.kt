@@ -33,6 +33,13 @@ internal class TutiApiClientTest {
         req.mobile = "sdsds"
         tutiApiClient.GenerateOtpInsecure(req, null!!, null!!)
     }
+
+    @Test
+    fun verifyOtp() {
+        val tutiApiClient = TutiApiClient()
+        var req = com.tuti.model.SignInRequest(mobile = "0912144343")
+        tutiApiClient.VerifyOtp(req, null!!, null!!)
+    }
 }
 
 

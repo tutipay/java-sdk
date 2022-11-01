@@ -9,10 +9,7 @@ import com.tuti.api.authentication.SignUpResponse
 import com.tuti.api.data.*
 import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
-import com.tuti.model.BillInfo
-import com.tuti.model.CarrierPlan
-import com.tuti.model.Operations
-import com.tuti.model.Operator
+import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -55,8 +52,23 @@ class TutiApiClient {
         return request
     }
 
+    @Deprecated(message = "Replace with SignIn with new kotlin classes instead.", replaceWith = ReplaceWith("SignIn"))
     fun SignIn(
         credentials: SignInRequest,
+        onResponse: (SignInResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SIGN_IN,
+            credentials,
+            onResponse,
+            onError
+        )
+    }
+
+    fun SignIn(
+        credentials: com.tuti.model.SignInRequest,
         onResponse: (SignInResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -154,7 +166,7 @@ class TutiApiClient {
 
 
     fun VerifyOtp(
-        credentials: SignInRequest?,
+        credentials: com.tuti.model.SignInRequest,
         onResponse: (SignInResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -204,13 +216,28 @@ class TutiApiClient {
         )
     }
 
-    /**
+    @Deprecated(message = "Replace with SignUp with new kotlin classes instead.", replaceWith = ReplaceWith("SignUp"))
+            /**
      * @param signUpRequest
      * @param onResponse
      * @param onError
      */
     fun Signup(
         signUpRequest: SignUpRequest?,
+        onResponse: (SignUpResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.SIGN_UP,
+            signUpRequest,
+            onResponse,
+            onError
+        )
+    }
+
+    fun Signup(
+        signUpRequest: SignupRequest,
         onResponse: (SignUpResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {

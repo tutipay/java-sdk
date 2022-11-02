@@ -42,15 +42,15 @@ public class EBSRequest implements Serializable {
     // mobile used in otp with payment card verification step
     private String mobile;
 
-//    public EBSRequest(String pubKey, String ipin) {
-//        this.pubKey = pubKey;
-//        this.IPIN = ipin;
-//        setEncryptedIPIN(pubKey);
-//    }
-//
-//    public EBSRequest() {
-//
-//    }
+    public EBSRequest(String pubKey, String ipin) {
+        this.pubKey = pubKey;
+        this.IPIN = ipin;
+        setEncryptedIPIN(pubKey);
+    }
+
+    public EBSRequest() {
+
+    }
 
     public String getAuthenticationType() {
         return authenticationType;

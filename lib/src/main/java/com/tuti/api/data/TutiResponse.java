@@ -5,14 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import com.tuti.api.ebs.EBSResponse;
 
 import java.io.Reader;
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.Base64;
+
+import kotlinx.serialization.Serializable;
 
 /**
  * TutiResponse class the encapsulates all noebs responses. Reference class to get
  * values for about any field
  */
+@Serializable
 public class TutiResponse {
     private String message;
     private String code, uuid;

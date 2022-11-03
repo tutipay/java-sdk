@@ -24,13 +24,12 @@ object Library {
             credentials,
             { signInResponse: SignInResponse ->
                 run {
-                    println(signInResponse.user.mobileNumber)
+                    println("mobile number is: " + signInResponse.user.mobileNumber)
                 }
             },  { _: TutiResponse?, _: Exception? ->
             run {
 
             }
-
         })
         addBeneficiary()
 
@@ -50,9 +49,8 @@ private fun addBeneficiary() {
         }
     })
 
-    var res = object : TypeToken<List<NoebsBeneficiary>>() {}.type
     tutiApiClient.getBeneficiaries(beneficiary, { signInResponse: List<NoebsBeneficiary>   ->
-        run { println(signInResponse[3].data) }
+        run { println(signInResponse[0].data) }
     }, { objectReceived: TutiResponse?, _: Exception? ->
         run {
             println(objectReceived.toString())

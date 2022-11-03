@@ -12,6 +12,8 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -365,8 +367,6 @@ class TutiApiClient {
         onResponse: (List<NoebsBeneficiary>) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
-        val type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
-
         sendRequest(
             RequestMethods.GET,
             serverURL + Operations.BENEFICIARY,
@@ -862,15 +862,25 @@ class TutiApiClient {
 
 
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
+        var type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
+
         return when (ResponseType::class.java) {
             String::class.java -> {
                 responseAsString as ResponseType
             }
             else -> {
-                gson.fromJson(
-                    responseAsString,
-                    ResponseType::class.java
-                )
+                try {
+                    gson.fromJson(
+                        responseAsString,
+                        type
+                    )
+                }catch (e: Exception) {
+                    gson.fromJson(
+                        responseAsString,
+                        ResponseType::class.java
+                    )
+                }
+
             }
         }
 

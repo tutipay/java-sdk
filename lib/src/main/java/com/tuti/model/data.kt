@@ -37,6 +37,7 @@ data class SignupRequest (
     val pubkey: String,
 )
 
+@kotlinx.serialization.Serializable
 data class Beneficiary (
     var billType: Int? = 0,
     var operator: Int? = 0,
@@ -47,6 +48,7 @@ data class Beneficiary (
 
 @kotlinx.serialization.Serializable
 data class NoebsBeneficiary (
+
     @SerialName("data") var data: String,
     @SerialName("bill_type") var bill_type: String,
         )

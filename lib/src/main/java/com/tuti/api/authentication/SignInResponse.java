@@ -2,6 +2,9 @@ package com.tuti.api.authentication;
 
 import com.google.gson.annotations.SerializedName;
 
+import kotlinx.serialization.Serializable;
+
+@Serializable
 public class SignInResponse {
     @SerializedName("authorization")
     private String authorizationJWT;

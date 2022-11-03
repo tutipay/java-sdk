@@ -6,6 +6,10 @@ public class SignInRequest {
     private String username;
     private String password;
 
+    public SignInRequest (){
+
+    }
+
     public String getOtp() {
         return otp;
     }

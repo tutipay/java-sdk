@@ -19,6 +19,7 @@ public class Operations {
     public static final String ADD_CARD = "add_card";
     public static final String DELETE_CARD = "delete_card";
     public static final String EDIT_CARD = "edit_card";
+    public static final String BENEFICIARY = "beneficiary";
     public static final String BILL_PAYMENT = "bill_payment";
     public static final String Get_Bills = "bills";
     public static final String GUESS_Biller = "guess_biller";

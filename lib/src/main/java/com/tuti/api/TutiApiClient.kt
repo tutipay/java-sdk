@@ -2,6 +2,7 @@ package com.tuti.api
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.authentication.SignUpRequest
@@ -97,6 +98,7 @@ class TutiApiClient {
             onError,
         )
     }
+
 
     /**
      * OneTimeSignIn allows tutipay users to sign in via a code we send to their phone numbers
@@ -340,6 +342,51 @@ class TutiApiClient {
             ebsRequest,
             onResponse,
             onError
+        )
+    }
+
+    fun addBeneficiary(
+        beneficiary: Beneficiary,
+        onResponse: (TutiResponse?) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.BENEFICIARY,
+            beneficiary.toNoebs(),
+            onResponse,
+            onError,
+        )
+    }
+
+    fun getBeneficiaries(
+        card: Any?,
+        onResponse: (List<NoebsBeneficiary>) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        val type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
+
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.BENEFICIARY,
+            card,
+            onResponse,
+            onError,
+        )
+    }
+
+    fun deleteBeneficiary(
+        card: Any?,
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.DELETE,
+            serverURL + Operations.BENEFICIARY,
+            card,
+            onResponse,
+            onError,
         )
     }
 
@@ -792,7 +839,7 @@ class TutiApiClient {
                 }
             } catch (exception: Exception) {
                 when (exception) {
-                    is IOException, is JsonSyntaxException -> {
+                    is JsonSyntaxException -> {
                         exception.printStackTrace()
                         onError(null, exception)
                     }
@@ -813,7 +860,7 @@ class TutiApiClient {
         return thread
     }
 
-    @Throws(IOException::class)
+
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
         return when (ResponseType::class.java) {
             String::class.java -> {

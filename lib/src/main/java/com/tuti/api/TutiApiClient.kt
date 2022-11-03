@@ -18,7 +18,6 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class TutiApiClient {
@@ -27,7 +26,7 @@ class TutiApiClient {
     var isSingleThreaded = false
     var authToken: String = ""
     var ebsKey: String =
-        "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
+            "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
 
     @Deprecated("")
     constructor(isDevelopment: Boolean) {
@@ -57,30 +56,30 @@ class TutiApiClient {
 
     @Deprecated(message = "Replace with SignIn with new kotlin classes instead.", replaceWith = ReplaceWith("SignIn"))
     fun SignIn(
-        credentials: SignInRequest,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SIGN_IN,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.SIGN_IN,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
     fun SignIn(
-        credentials: com.tuti.model.SignInRequest,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: com.tuti.model.SignInRequest,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SIGN_IN,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.SIGN_IN,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
@@ -88,16 +87,16 @@ class TutiApiClient {
      * be accessed behind a jwt active session
      */
     fun ChangePassword(
-        credentials: SignInRequest?,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest?,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.ChangePassword,
-            credentials,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.ChangePassword,
+                credentials,
+                onResponse,
+                onError,
         )
     }
 
@@ -113,16 +112,16 @@ class TutiApiClient {
      * @param onError
      */
     fun OneTimeSignIn(
-        credentials: SignInRequest?,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest?,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SINGLE_SIGN_IN,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.SINGLE_SIGN_IN,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
@@ -134,16 +133,16 @@ class TutiApiClient {
      * @param onError
      */
     fun GenerateOtpSignIn(
-        credentials: SignInRequest?,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest?,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.GENERATE_LOGIN_OTP,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.GENERATE_LOGIN_OTP,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
@@ -155,48 +154,47 @@ class TutiApiClient {
      * @param onError
      */
     fun GenerateOtpInsecure(
-        credentials: SignInRequest?,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest?,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.GENERATE_LOGIN_OTP_INSECURE,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.GENERATE_LOGIN_OTP_INSECURE,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
 
     fun VerifyOtp(
-        credentials: com.tuti.model.SignInRequest,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: com.tuti.model.SignInRequest,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.VERIFY_OTP,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.VERIFY_OTP,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
     fun Otp2FA(
-        credentials: EBSRequest,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: EBSRequest,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.OTP_2FA,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.OTP_2FA,
+                credentials,
+                onResponse,
+                onError
         )
     }
-
 
 
     /**
@@ -207,64 +205,64 @@ class TutiApiClient {
      * @param onError     a method to handle on error cases
      */
     fun RefreshToken(
-        credentials: SignInRequest?,
-        onResponse: (SignInResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            credentials: SignInRequest?,
+            onResponse: (SignInResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.REFRESH_TOKEN,
-            credentials,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.REFRESH_TOKEN,
+                credentials,
+                onResponse,
+                onError
         )
     }
 
     @Deprecated(message = "Replace with SignUp with new kotlin classes instead.", replaceWith = ReplaceWith("SignUp"))
             /**
-     * @param signUpRequest
-     * @param onResponse
-     * @param onError
-     */
+             * @param signUpRequest
+             * @param onResponse
+             * @param onError
+             */
     fun Signup(
-        signUpRequest: SignUpRequest?,
-        onResponse: (SignUpResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            signUpRequest: SignUpRequest?,
+            onResponse: (SignUpResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SIGN_UP,
-            signUpRequest,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.SIGN_UP,
+                signUpRequest,
+                onResponse,
+                onError
         )
     }
 
     fun Signup(
-        signUpRequest: SignupRequest,
-        onResponse: (SignUpResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            signUpRequest: SignupRequest,
+            onResponse: (SignUpResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SIGN_UP,
-            signUpRequest,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.SIGN_UP,
+                signUpRequest,
+                onResponse,
+                onError
         )
     }
 
     fun SignupWithCard(
-        signUpRequest: Card?,
-        onResponse: (SignUpResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            signUpRequest: Card?,
+            onResponse: (SignUpResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.SIGN_UP_WITH_CARD,
-            signUpRequest,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.SIGN_UP_WITH_CARD,
+                signUpRequest,
+                onResponse,
+                onError,
         )
     }
 
@@ -278,157 +276,157 @@ class TutiApiClient {
      * @param onError
      */
     fun VerifyFirebase(
-        signUpRequest: SignUpRequest?,
-        onResponse: (SignUpResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            signUpRequest: SignUpRequest?,
+            onResponse: (SignUpResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.VERIFY_FIREBASE,
-            signUpRequest,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.VERIFY_FIREBASE,
+                signUpRequest,
+                onResponse,
+                onError,
         )
     }
 
     fun sendEBSRequest(
-        URL: String,
-        ebsRequest: EBSRequest?,
-        onResponse: (EBSResponse) -> Unit,
-        onError: (EBSResponse?, Exception?) -> Unit
+            URL: String,
+            ebsRequest: EBSRequest?,
+            onResponse: (EBSResponse) -> Unit,
+            onError: (EBSResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            URL,
-            ebsRequest,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                URL,
+                ebsRequest,
+                onResponse,
+                onError,
         )
     }
 
     fun getCards(
-        onResponse: (Cards) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            onResponse: (Cards) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.GET_CARDS,
-            null,
-            onResponse,
-            onError,
+                RequestMethods.GET,
+                serverURL + Operations.GET_CARDS,
+                null,
+                onResponse,
+                onError,
         )
     }
 
     fun getPublicKey(
-        ebsRequest: EBSRequest?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            ebsRequest: EBSRequest?,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.PUBLIC_KEY,
-            ebsRequest,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.PUBLIC_KEY,
+                ebsRequest,
+                onResponse,
+                onError,
         )
     }
 
     fun getIpinPublicKey(
-        ebsRequest: Any?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            ebsRequest: Any?,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.IPIN_key,
-            ebsRequest,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.IPIN_key,
+                ebsRequest,
+                onResponse,
+                onError
         )
     }
 
     fun addBeneficiary(
-        beneficiary: Beneficiary,
-        onResponse: (TutiResponse?) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            beneficiary: Beneficiary,
+            onResponse: (TutiResponse?) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
 
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BENEFICIARY,
-            beneficiary.toNoebs(),
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BENEFICIARY,
+                beneficiary.toNoebs(),
+                onResponse,
+                onError,
         )
     }
 
     fun getBeneficiaries(
-        card: Any?,
-        onResponse: (List<NoebsBeneficiary>) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Any?,
+            onResponse: (List<NoebsBeneficiary>) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.BENEFICIARY,
-            card,
-            onResponse,
-            onError,
+                RequestMethods.GET,
+                serverURL + Operations.BENEFICIARY,
+                card,
+                onResponse,
+                onError,
         )
     }
 
     fun deleteBeneficiary(
-        card: Any?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Any?,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.DELETE,
-            serverURL + Operations.BENEFICIARY,
-            card,
-            onResponse,
-            onError,
+                RequestMethods.DELETE,
+                serverURL + Operations.BENEFICIARY,
+                card,
+                onResponse,
+                onError,
         )
     }
 
     fun addCard(
-        card: Any?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Any?,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.ADD_CARD,
-            card,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.ADD_CARD,
+                card,
+                onResponse,
+                onError,
         )
     }
 
     fun editCard(
-        card: Card?,
-        onResponse: (String) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card?,
+            onResponse: (String) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.PUT,
-            serverURL + Operations.EDIT_CARD,
-            card,
-            onResponse,
-            onError,
+                RequestMethods.PUT,
+                serverURL + Operations.EDIT_CARD,
+                card,
+                onResponse,
+                onError,
         )
     }
 
     fun deleteCard(
-        card: Card?,
-        onResponse: (String) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card?,
+            onResponse: (String) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.DELETE,
-            serverURL + Operations.DELETE_CARD,
-            card,
-            onResponse,
-            onError,
+                RequestMethods.DELETE,
+                serverURL + Operations.DELETE_CARD,
+                card,
+                onResponse,
+                onError,
         )
     }
 
@@ -438,10 +436,10 @@ class TutiApiClient {
      * @param onError
      */
     fun balanceInquiry(
-        card: Card,
-        ipin: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = EBSRequest()
         val encryptedIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, request.uuid)
@@ -450,11 +448,11 @@ class TutiApiClient {
         request.setIPIN(encryptedIPIN)
 
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.GET_BALANCE,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.GET_BALANCE,
+                request,
+                onResponse,
+                onError,
         )
     }
 
@@ -468,174 +466,174 @@ class TutiApiClient {
      * @param onError
      */
     fun billInquiry(
-        billInfo: BillInfo,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            billInfo: BillInfo,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.Get_Bills,
-            billInfo,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.Get_Bills,
+                billInfo,
+                onResponse,
+                onError,
         )
     }
 
     fun cardTransfer(
-        card: Card,
-        ipin: String,
-        receiverCard: Card,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            receiverCard: Card,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setToCard(receiverCard.PAN)
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.CARD_TRANSFER,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.CARD_TRANSFER,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun purchaseBashairCredit(
-        card: Card,
-        ipin: String,
-        bashairType: BashairTypes,
-        paymentValue: String,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            bashairType: BashairTypes,
+            paymentValue: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.Bashair.payeeID)
         request.setPaymentInfo(bashairType.bashairInfo(paymentValue))
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun payE15Invoice(
-        card: Card,
-        ipin: String,
-        invoice: String,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            invoice: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
 
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.E15.payeeID)
         request.setPaymentInfo(E15(true, invoice, ""))
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError
         )
     }
 
     fun payCustomsInvoice(
-        card: Card,
-        ipin: String,
-        bankCode: String,
-        declarantCode: String,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            bankCode: String,
+            declarantCode: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
         request.setPaymentInfo(Customs(bankCode, declarantCode))
 
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun payMOHEArabFees(
-        card: Card,
-        ipin: String,
-        courseId: CourseID,
-        admissionType: AdmissionType,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            courseId: CourseID,
+            admissionType: AdmissionType,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
         request.setPaymentInfo(MOHEArab("", "", courseId, admissionType))
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun payMOHEFees(
-        card: Card,
-        ipin: String,
-        seatNumber: String,
-        courseId: CourseID,
-        admissionType: AdmissionType,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            seatNumber: String,
+            courseId: CourseID,
+            admissionType: AdmissionType,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
         request.setPaymentInfo(MOHE(seatNumber, courseId, admissionType))
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError
         )
     }
 
     fun payEInvoice(
-        card: Card,
-        ipin: String,
-        customerRef: String,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            customerRef: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.Einvoice.payeeID)
         request.setPaymentInfo("customerBillerRef=$customerRef")
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError
         )
     }
 
     fun buyPhoneCredit(
-        card: Card,
-        ipin: String,
-        mobile: String,
-        operator: Operator,
-        carrierPlan: CarrierPlan,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            mobile: String,
+            operator: Operator,
+            carrierPlan: CarrierPlan,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
 
@@ -676,101 +674,101 @@ class TutiApiClient {
 
         request.setPaymentInfo("MPHONE=$mobile")
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun buyNECCredit(
-        card: Card,
-        ipin: String,
-        meterNumber: String,
-        amount: Float,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            ipin: String,
+            meterNumber: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.setPayeeId(TelecomIDs.NEC.payeeID)
         request.setPaymentInfo("METER=$meterNumber")
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.BILL_PAYMENT,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.BILL_PAYMENT,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun guessBillerId(
-        mobile: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            mobile: String,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.GUESS_Biller,
-            null,
-            onResponse,
-            onError,
-            null,
-            "mobile",
-            mobile
+                RequestMethods.GET,
+                serverURL + Operations.GUESS_Biller,
+                null,
+                onResponse,
+                onError,
+                null,
+                "mobile",
+                mobile
         )
     }
 
     fun generatePaymentToken(
-        request: PaymentToken?,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            request: PaymentToken?,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.GeneratePaymentToken,
-            request,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.GeneratePaymentToken,
+                request,
+                onResponse,
+                onError,
         )
     }
 
     fun getPaymentToken(
-        uuid: String,
-        onResponse: (PaymentToken) -> Unit,
-        onError: (PaymentToken?, Exception?) -> Unit
+            uuid: String,
+            onResponse: (PaymentToken) -> Unit,
+            onError: (PaymentToken?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.GetPaymentToken,
-            null,
-            onResponse,
-            onError,
-            null,
-            "uuid", uuid
+                RequestMethods.GET,
+                serverURL + Operations.GetPaymentToken,
+                null,
+                onResponse,
+                onError,
+                null,
+                "uuid", uuid
         )
     }
 
     fun quickPayment(
-        request: EBSRequest?,
-        onResponse: (PaymentToken) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            request: EBSRequest?,
+            onResponse: (PaymentToken) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.QuickPayment,
-            request as Any,
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.QuickPayment,
+                request as Any,
+                onResponse,
+                onError,
         )
     }
 
     fun changeIPIN(
-        card: Card,
-        oldIPIN: String,
-        newIPIN: String,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            card: Card,
+            oldIPIN: String,
+            newIPIN: String,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
 
         val request = EBSRequest()
@@ -784,22 +782,22 @@ class TutiApiClient {
         request.pan = card.PAN
 
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.CHANGE_IPIN,
-            request as Any,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.CHANGE_IPIN,
+                request as Any,
+                onResponse,
+                onError
         )
     }
 
     inline fun <reified ResponseType, reified ErrorType> sendRequest(
-        method: RequestMethods,
-        URL: String,
-        requestToBeSent: Any?,
-        crossinline onResponse: (ResponseType) -> Unit,
-        crossinline onError: (ErrorType?, Exception?) -> Unit,
-        headers: Map<String, String>? = null,
-        vararg params: String
+            method: RequestMethods,
+            URL: String,
+            requestToBeSent: Any?,
+            crossinline onResponse: (ResponseType) -> Unit,
+            crossinline onError: (ErrorType?, Exception?) -> Unit,
+            headers: Map<String, String>? = null,
+            vararg params: String
     ): Thread {
         // create a runnable to run it in a new thread (so main thread never hangs)
         val finalURL = if (params.isEmpty()) URL else URL + "?" + params[0] + "=" + params[1]
@@ -869,18 +867,11 @@ class TutiApiClient {
                 responseAsString as ResponseType
             }
             else -> {
-                try {
-                    gson.fromJson(
-                        responseAsString,
-                        type
-                    )
-                }catch (e: Exception) {
-                    gson.fromJson(
-                        responseAsString,
-                        ResponseType::class.java
-                    )
-                }
-
+//                gson.fromJson(
+//                        responseAsString,
+//                        ResponseType::class.java
+//                )
+                Json.decodeFromString(responseAsString)
             }
         }
 
@@ -896,8 +887,8 @@ class TutiApiClient {
             }
 
         val okHttpClient: OkHttpClient =
-            OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
+                OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
+                        .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
         val gson = Gson()
 
     }

@@ -1,35 +1,18 @@
-package com.tuti.api.data;
+package com.tuti.api.data
 
-import com.google.gson.annotations.SerializedName;
+import kotlinx.serialization.SerialName
 
-import java.io.Serializable;
+@kotlinx.serialization.Serializable
+data class DueAmount (
+    @SerialName("due_amount")
+    val dueAmount: String? = null,
 
-public class DueAmount implements Serializable {
-    public String getDueAmount() {
-        return dueAmount;
-    }
+    @SerialName("total_amount")
+    val totalAmount: String? = null,
 
-    public String getTotalAmount() {
-        return totalAmount;
-    }
+    @SerialName("min_amount")
+    val minAmount: String? = null,
 
-    public String getMinAmount() {
-        return minAmount;
-    }
-
-    public String getPaidAmount() {
-        return paidAmount;
-    }
-
-    @SerializedName("due_amount")
-    String dueAmount;
-
-    @SerializedName("total_amount")
-    String totalAmount;
-
-    @SerializedName("min_amount")
-    String minAmount;
-
-    @SerializedName("paid_amount")
-    String paidAmount;
-}
+    @SerialName("paid_amount")
+    val paidAmount: String? = null,
+)

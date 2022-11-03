@@ -10,7 +10,6 @@ import com.tuti.api.authentication.SignUpRequest
 import com.tuti.api.authentication.SignUpResponse
 import com.tuti.api.data.Card
 import com.tuti.api.data.Cards
-import com.tuti.api.data.ResponseData
 import com.tuti.api.data.TutiResponse
 import com.tuti.util.Utils
 import org.junit.Assert
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.math.exp
 
 class ApiTest {
     @BeforeEach

@@ -1,35 +1,18 @@
-package com.tuti.api.data;
+package com.tuti.api.data
 
+import kotlinx.serialization.SerialName
 
-import com.google.gson.annotations.SerializedName;
+@kotlinx.serialization.Serializable
+data class Fees(
+        @SerialName("mohe_fees")
+        val moheFees: Float = 0f,
 
-import java.io.Serializable;
+        @SerialName("p2p_fees")
+        val p2pFees: Float = 0f,
 
-public class Fees implements Serializable {
+        @SerialName("custom_fees")
+        val customFees: Float = 0f,
 
-    @SerializedName("mohe_fees")
-    float moheFees;
-    @SerializedName("p2p_fees")
-    float p2pFees;
-    @SerializedName("custom_fees")
-    float customFees;
-    @SerializedName("special_payment_fees")
-    float specialPaymentFees;
-
-    public float getMoheFees() {
-        return moheFees;
-    }
-
-    public float getP2pFees() {
-        return p2pFees;
-    }
-
-    public float getCustomFees() {
-        return customFees;
-    }
-
-    public float getSpecialPaymentFees() {
-        return specialPaymentFees;
-    }
-
-}
+        @SerialName("special_payment_fees")
+        val specialPaymentFees: Float = 0f,
+)

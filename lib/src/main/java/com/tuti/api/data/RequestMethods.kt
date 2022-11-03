@@ -1,8 +1,5 @@
-package com.tuti.api.data;
+package com.tuti.api.data
 
-public enum RequestMethods {
-    GET,
-    POST,
-    PUT,
-    DELETE
+enum class RequestMethods {
+    GET, POST, PUT, DELETE
 }

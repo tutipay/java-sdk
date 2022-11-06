@@ -14,25 +14,25 @@ import java.util.*
  */
 
 @kotlinx.serialization.Serializable
-class TutiResponse(
-        val message: String? = null,
-        val code: String? = null,
-        val uuid: String? = null,
-        val result: String? = null,
+data class TutiResponse(
+        val message: String = "",
+        val code: String = "",
+        val uuid: String = "",
+        val result: String = "",
         @SerialName("biller_id")
-        val billerId: String? = null,
-        val eBSFailedResponse: EBSResponse? = null,
+        val billerId: String = "",
+        val eBSFailedResponse: EBSResponse = EBSResponse(),
 
-        val token: String? = null,
+        val token: String = "",
 
-        private val status: String? = null,
+        private val status: String = "",
 
         @SerialName("due_amount")
-        private val dueAmount: DueAmount? = null,
-        private val fees: Fees? = null,
+        private val dueAmount: DueAmount = DueAmount(),
+        private val fees: Fees? = Fees(),
 
         @SerialName("ebs_response")
-        private val ebsResponse: EBSResponse? = null,
+        private val ebsResponse: EBSResponse = EBSResponse()
 ) {
     val encodedQRToken: ByteArray
         get() = Base64.getDecoder().decode(result)

@@ -7,16 +7,17 @@ import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 @kotlinx.serialization.Serializable
 class EBSResponse : Serializable {
-    val responseMessage: String? = null
-    var responseStatus: String? = null
+    val responseMessage: String = ""
+    var responseStatus: String = ""
     val responseCode: Int? = null
 
     // Always return a result, never fail!
     // we have to set the locale as this will fail in a non en-US ones!
-    var tranDateTime: String? = null
+    var tranDateTime: String = ""
         get() {
             // we have to set the locale as this will fail in a non en-US ones!
             var data: Date? = Date()
@@ -39,50 +40,50 @@ class EBSResponse : Serializable {
             }
             return fmt.format(data)
         }
-    val terminalId: String? = null
+    val terminalId: String = ""
     val systemTraceAuditNumber: Int? = null
-    val clientId: String? = null
-    val pAN: String? = null
-    val expDate: String? = null
+    val clientId: String = ""
+    val pAN: String = ""
+    val expDate: String = ""
     val tranAmount: Float? = null
-    val eBSServiceName: String? = null
-    val workingKey: String? = null
-    val toCard: String? = null
-    val toAccount: String? = null
-    val referenceNumber: String? = null
-    val approvalCode: String? = null
+    val eBSServiceName: String = ""
+    val workingKey: String = ""
+    val toCard: String = ""
+    val toAccount: String = ""
+    val referenceNumber: String = ""
+    val approvalCode: String = ""
     val tranFee: Float? = null
     val additionalAmount: Float? = null
     val acqTranFee: Float? = null
     val issuerTranFee: Float? = null
-    val pubKeyValue: String? = null
-    val tranCurrency: String? = null
-    val paymentInfo: String? = null
-    var payeeId: String? = null
-    var fromAccount: String? = null
-    var financialInstitutionId: String? = null
-    var uUID: String? = null
-    var merchantAccountType: String? = null
-    var merchantAccountReference: String? = null
-    var merchantName: String? = null
-    var merchantCity: String? = null
-    var merchantID: String? = null
-    var generatedQR: String? = null
-    var merchantCategoryCode: String? = null
-    var postalCode: String? = null
-    var currencyCode: String? = null
+    val pubKeyValue: String = ""
+    val tranCurrency: String = ""
+    val paymentInfo: String = ""
+    var payeeId: String = ""
+    var fromAccount: String = ""
+    var financialInstitutionId: String = ""
+    var uUID: String = ""
+    var merchantAccountType: String = ""
+    var merchantAccountReference: String = ""
+    var merchantName: String = ""
+    var merchantCity: String = ""
+    var merchantID: String = ""
+    var generatedQR: String = ""
+    var merchantCategoryCode: String = ""
+    var postalCode: String = ""
+    var currencyCode: String = ""
     var lastTransactions: List<LastTransactions>? = null
-    var countryCode: String? = null
-    var qRCode: String? = null
-    var transactionId: String? = null
-    var voucherNumber: String? = null
-    var voucherCode: String? = null
-    val message: String? = null
-    val code: String? = null
-    var mbr: String? = null
-    private val errorMessage: ErrorMessage? = null
-    val balance: HashMap<String, Double>? = null
-    var billInfo: HashMap<String, String>? = null
+    var countryCode: String = ""
+    var qRCode: String = ""
+    var transactionId: String = ""
+    var voucherNumber: String = ""
+    var voucherCode: String = ""
+    val message: String = ""
+    val code: String = ""
+    var mbr: String = ""
+    private val errorMessage: ErrorMessage = ErrorMessage()
+    val balance: HashMap<String, Double> = HashMap()
+    var billInfo: HashMap<String, String> = HashMap()
 
     /**
      * @return the due amount for the payeeI
@@ -91,7 +92,7 @@ class EBSResponse : Serializable {
      */
     fun getDueAmount(payeeId: PayeeID?): String? {
         return when (payeeId) {
-            PayeeID.Zain -> billInfo!!["totalAmount"] // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
+            PayeeID.Zain -> billInfo["totalAmount"] // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
             PayeeID.MTN -> billInfo!!["unbilledAmount"] // FIXME(adonese): This doesn't seem to be correct..
             PayeeID.Sudani -> billInfo!!["billAmount"]
             PayeeID.Invoice -> billInfo!!["amount_due"]
@@ -129,8 +130,8 @@ class EBSResponse : Serializable {
                 "0"
             }
         }
-    var dynamicFees: String? = null
-    val ebsError: String?
+    var dynamicFees: String = ""
+    val ebsError: String
         get() = errorMessage!!.ebsMessage
     val ebsCode: Int?
         get() = errorMessage!!.ebsCode
@@ -144,7 +145,7 @@ class EBSResponse : Serializable {
      * - it checks if the error code is *NOT* zero (to handle ebs case)
      * - the other case will be for non-ebs errors.
      */
-    fun getError(code: Int): String? {
+    fun getError(code: Int): String {
         return if (code >= 400 && code < 500) {
             // a validation error - and other form of errors
             this.code
@@ -172,17 +173,17 @@ class EBSResponse : Serializable {
 
 @kotlinx.serialization.Serializable
 internal data class ErrorMessage(
-        val message: String? = null,
+        val message: String = "",
         val code: Int? = null,
-        private val status: String? = null,
+        private val status: String = "",
         private val details: ErrorDetails? = null,
 
         ) {
-    val ebsMessage: String?
+    val ebsMessage: String
         get() = details!!.responseMessage
     val ebsCode: Int?
         get() = details!!.responseCode
-    val ebsStatus: String?
+    val ebsStatus: String
         get() = details!!.responseStatus
     val isEbsError: Boolean
         get() = if (details!!.responseCode == null) {
@@ -194,7 +195,7 @@ internal data class ErrorMessage(
 
 @kotlinx.serialization.Serializable
 internal data class ErrorDetails(
-        val responseMessage: String? = null,
-        val responseStatus: String? = null,
+        val responseMessage: String = "",
+        val responseStatus: String = "",
         val responseCode: Int? = null,
 )

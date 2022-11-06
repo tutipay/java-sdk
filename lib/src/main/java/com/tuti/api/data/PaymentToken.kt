@@ -13,25 +13,25 @@ import java.util.*
  */
 @kotlinx.serialization.Serializable
 class PaymentToken(
-        var amount: Int = 0,
+        val amount: Int = 0,
 
         @SerialName("cart_id")
-        var cartId: String? = null,
+        val cartId: String = "",
 
         @SerialName("UUID")
-        var uuid: String? = null,
+        val uuid: String = "",
 
         @SerialName("note")
-        var paymentNote: String? = null,
+        val paymentNote: String = "",
 
         @SerialName("toCard")
-        var cardTobePaid: String? = null,
+        val cardTobePaid: String = "",
 
         /**
          * Use getTransaction to get the inner transaction response we get from EBS
          * @return
          */
-        var transaction: EBSResponse? = null,
+        val transaction: EBSResponse = EBSResponse(),
 
         @SerialName("is_paid")
         val isPaymentSuccessful: Boolean = false,

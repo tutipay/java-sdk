@@ -3,23 +3,23 @@ package com.tuti.api.authentication
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
-class SignInRequest(
-        var username: String? = null,
-        var password: String? = null,
-        var otp: String? = null,
+data class SignInRequest(
+        val username: String = "",
+        val password: String = "",
+        val otp: String = "",
 
         /**
          * the update new password to be used for password change api
          * @param newPassword
          */
         @SerialName("new_password")
-        var newPassword: String? = null,
-        var mobile: String? = null,
-        var signature: String? = null,
-        var message: String? = null,
+        val newPassword: String = "",
+        val mobile: String = "",
+        val signature: String = "",
+        val message: String = "",
 
         @SerialName("authorization")
-        var oldToken: String? = null,
+        val oldToken: String = "",
 
         /**
          * Use to sign in a user given their mobile number and password.

@@ -5,14 +5,14 @@ import kotlinx.serialization.SerialName
 @kotlinx.serialization.Serializable
 data class DueAmount (
     @SerialName("due_amount")
-    val dueAmount: String? = null,
+    val dueAmount: String = "",
 
     @SerialName("total_amount")
-    val totalAmount: String? = null,
+    val totalAmount: String = "",
 
     @SerialName("min_amount")
-    val minAmount: String? = null,
+    val minAmount: String = "",
 
     @SerialName("paid_amount")
-    val paidAmount: String? = null,
+    val paidAmount: String = "",
 )

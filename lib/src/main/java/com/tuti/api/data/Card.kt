@@ -4,16 +4,16 @@ import com.google.common.base.Objects
 import com.google.gson.annotations.SerializedName
 
 data class Card(
-    val name: String? = null,
+    val name: String = "",
 
     @SerializedName("exp_date")
-    val expiryDate: String? = null,
+    val expiryDate: String = "",
 
     @SerializedName("pan")
-    val PAN: String? = null,
+    val PAN: String = "",
 
-    val mobile: String? = null,
+    val mobile: String = "",
 
     @SerializedName("card_index")
-    val cardIndex: String? = null
+    val cardIndex: String = ""
 )

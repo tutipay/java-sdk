@@ -17,20 +17,6 @@ object Library {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val client = TutiApiClient()
-        client.isSingleThreaded = true
-        val credentials = SignInRequest("0129751986", "Rami1111.")
-        client.SignIn(
-            credentials,
-            { signInResponse: SignInResponse ->
-                run {
-                    println("mobile number is: " + signInResponse.user.mobileNumber)
-                }
-            },  { _: TutiResponse?, _: Exception? ->
-            run {
-
-            }
-        })
         addBeneficiary()
 
     }
@@ -49,11 +35,11 @@ private fun addBeneficiary() {
         }
     })
 
-    tutiApiClient.getBeneficiaries(beneficiary, { signInResponse: List<NoebsBeneficiary>   ->
+    tutiApiClient.getBeneficiaries( { signInResponse: List<NoebsBeneficiary>   ->
         run { println(signInResponse[0].data) }
     }, { objectReceived: TutiResponse?, _: Exception? ->
         run {
-            println(objectReceived.toString())
+           // println(objectReceived.toString())
         }
     })
 }

@@ -361,14 +361,13 @@ class TutiApiClient {
     }
 
     fun getBeneficiaries(
-            card: Any?,
             onResponse: (List<NoebsBeneficiary>) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.GET,
                 serverURL + Operations.BENEFICIARY,
-                card,
+                null,
                 onResponse,
                 onError,
         )
@@ -867,10 +866,6 @@ class TutiApiClient {
                 responseAsString as ResponseType
             }
             else -> {
-//                gson.fromJson(
-//                        responseAsString,
-//                        ResponseType::class.java
-//                )
                 Json.decodeFromString(responseAsString)
             }
         }

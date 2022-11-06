@@ -1,18 +1,10 @@
-package com.tuti.api.authentication;
+package com.tuti.api.authentication
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 
-public class SignUpResponse {
-    @SerializedName("details")
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-}
+@kotlinx.serialization.Serializable
+data class SignUpResponse (
+    @SerialName("details")
+    var user: User = User()
+)

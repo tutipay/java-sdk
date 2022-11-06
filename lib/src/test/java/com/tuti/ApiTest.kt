@@ -24,10 +24,10 @@ class ApiTest {
     fun signIn() {
         val credentials = SignInRequest("0923377628", "Rami1111.")
         client.SignIn(
-            credentials,
-            { signInResponse: SignInResponse ->
-                client.authToken = signInResponse.authorizationJWT
-            }) { objectReceived: TutiResponse?, exception: Exception? ->
+                credentials,
+                { signInResponse: SignInResponse ->
+                    signInResponse.authorizationJWT.let { client.authToken = it }
+                }) { objectReceived: TutiResponse?, exception: Exception? ->
 
         }
 
@@ -36,22 +36,22 @@ class ApiTest {
     @Test
     fun testSignInApi() {
         var credentials = SignInRequest("adonese", "12345678")
-        client!!.SignIn(credentials, { signInResponse: SignInResponse ->
+        client.SignIn(credentials, { signInResponse: SignInResponse ->
             val user = signInResponse.user
             println("User information from sign in endpoint (adonese case):\n$user")
-            Assert.assertEquals("adonese", user.username)
-            Assert.assertEquals("Mohamed Yousif", user.fullname)
-            Assert.assertEquals("mmbusif@gmail.com", user.email)
-            Assert.assertEquals("0925343834", user.mobileNumber)
-            Assert.assertTrue(user.isMerchant)
-            Assert.assertEquals(0, user.id.toLong())
+            Assertions.assertEquals("adonese", user.username)
+            Assertions.assertEquals("Mohamed Yousif", user.fullname)
+            Assertions.assertEquals("mmbusif@gmail.com", user.email)
+            Assertions.assertEquals("0925343834", user.mobileNumber)
+            Assertions.assertTrue(user.isMerchant)
+            Assertions.assertEquals(0, user.id.toLong())
         }) { error: TutiResponse?, exception: Exception? -> Assert.fail("sign in failed") }
         credentials = SignInRequest("non_existent_user" + Utils.generateRandomAlphanumericString(8), "asjfkdlj")
         client.SignIn(
-            credentials,
-            { signInResponse: SignInResponse? -> Assert.fail("sign in failed because the user is non existent") }) { error: TutiResponse?, exception: Exception? ->
+                credentials,
+                { signInResponse: SignInResponse? -> Assert.fail("sign in failed because the user is non existent") }) { error: TutiResponse?, exception: Exception? ->
             if (error != null) println(
-                "\nNon existent user case:\n$error"
+                    "\nNon existent user case:\n$error"
             )
             if (exception != null) Assert.fail("exception in sign in")
         }
@@ -59,7 +59,7 @@ class ApiTest {
 
     @Test
     fun testSignUpApi() {
-        val info = SignUpRequest()
+
         val tag = Utils.generateRandomNumericString(8)
         val mobileNumber = "02" + Utils.generateRandomNumericString(8)
         val username = "test_$tag"
@@ -67,13 +67,15 @@ class ApiTest {
         val fullname = Utils.generateARandomName() + " " + Utils.generateARandomName()
         val password = Utils.generateRandomAlphanumericString(12) + "A1."
         val isMerchant = Random().nextBoolean()
-        info.mobileNumber = mobileNumber
-        info.password = password
-        info.username = username
-        info.fullname = fullname
-        info.email = email
-        info.isMerchant = isMerchant
-        client!!.Signup(info, { signUpResponse: SignUpResponse ->
+        val info = SignUpRequest(mobileNumber = mobileNumber,
+                password = password,
+                username = username,
+                fullname = fullname,
+                email = email,
+                isMerchant = isMerchant
+        )
+
+        client.Signup(info, { signUpResponse: SignUpResponse ->
             val user = signUpResponse.user
             println("User information from signup endpoint:\n$user")
             Assert.assertEquals(username, user.username)
@@ -83,7 +85,7 @@ class ApiTest {
             Assert.assertEquals(isMerchant, user.isMerchant)
         }) { error: TutiResponse?, exception: Exception? -> Assert.fail("sign up failed") }
         val creds = SignInRequest(username, password)
-        client!!.SignIn(creds, { objectReceived: SignInResponse ->
+        client.SignIn(creds, { objectReceived: SignInResponse ->
             val user = objectReceived.user
             println("User information from sign in endpoint:\n$user")
             Assert.assertEquals(username, user.username)
@@ -104,7 +106,7 @@ class ApiTest {
         val expiryDate = Utils.generateRandomNumericString(4)
 
         //create a card object to hold the cards data
-        val cardToAdd = Card(name = name,expiryDate= expiryDate,PAN = PAN)
+        val cardToAdd = Card(name = name, expiryDate = expiryDate, PAN = PAN)
 
         println("Card to add$cardToAdd")
         client.addCard(cardToAdd, { objectReceived: TutiResponse? -> }

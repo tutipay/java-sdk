@@ -13,6 +13,7 @@ import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -47,10 +48,10 @@ class TutiApiClient {
         val request = EBSRequest()
         val encryptedIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, request.uuid)
         request.tranAmount = amount
-        request.setTranCurrencyCode("SDG")
+        request.tranCurrencyCode = "SDG"
         request.pan = card.PAN
         request.expDate = card.expiryDate
-        request.setIPIN(encryptedIPIN)
+        request.IPIN = encryptedIPIN
         return request
     }
 
@@ -311,7 +312,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.GET,
                 serverURL + Operations.GET_CARDS,
-                null,
+                "",
                 onResponse,
                 onError,
         )
@@ -332,7 +333,7 @@ class TutiApiClient {
     }
 
     fun getIpinPublicKey(
-            ebsRequest: Any?,
+            ebsRequest: EBSRequest,
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -367,7 +368,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.GET,
                 serverURL + Operations.BENEFICIARY,
-                null,
+                "",
                 onResponse,
                 onError,
         )
@@ -388,7 +389,7 @@ class TutiApiClient {
     }
 
     fun addCard(
-            card: Any?,
+            card: Card?,
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -444,7 +445,9 @@ class TutiApiClient {
         val encryptedIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, request.uuid)
         request.pan = card.PAN
         request.expDate = card.expiryDate
-        request.setIPIN(encryptedIPIN)
+        request.IPIN = encryptedIPIN
+        println(request.tranDateTime)
+        println(request.applicationId)
 
         sendRequest(
                 RequestMethods.POST,
@@ -487,7 +490,7 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setToCard(receiverCard.PAN)
+        request.toCard = receiverCard.PAN
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.CARD_TRANSFER,
@@ -507,8 +510,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.Bashair.payeeID)
-        request.setPaymentInfo(bashairType.bashairInfo(paymentValue))
+        request.payeeId = TelecomIDs.Bashair.payeeID
+        request.paymentInfo = bashairType.bashairInfo(paymentValue)
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -528,8 +531,8 @@ class TutiApiClient {
     ) {
 
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.E15.payeeID)
-        request.setPaymentInfo(E15(true, invoice, ""))
+        request.payeeId = TelecomIDs.E15.payeeID
+        request.paymentInfo = (E15(true, invoice, ""))
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -549,8 +552,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        request.setPaymentInfo(Customs(bankCode, declarantCode))
+        request.payeeId = (TelecomIDs.CUSTOMS.payeeID)
+        request.paymentInfo = (Customs(bankCode, declarantCode))
 
         sendRequest(
                 RequestMethods.POST,
@@ -571,8 +574,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        request.setPaymentInfo(MOHEArab("", "", courseId, admissionType))
+        request.payeeId = (TelecomIDs.CUSTOMS.payeeID)
+        request.paymentInfo = (MOHEArab("", "", courseId, admissionType))
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -593,8 +596,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.CUSTOMS.payeeID)
-        request.setPaymentInfo(MOHE(seatNumber, courseId, admissionType))
+        request.payeeId = (TelecomIDs.CUSTOMS.payeeID)
+        request.paymentInfo = (MOHE(seatNumber, courseId, admissionType))
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -613,8 +616,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.Einvoice.payeeID)
-        request.setPaymentInfo("customerBillerRef=$customerRef")
+        request.payeeId = (TelecomIDs.Einvoice.payeeID)
+        request.paymentInfo = ("customerBillerRef=$customerRef")
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -640,10 +643,10 @@ class TutiApiClient {
             Operator.ZAIN -> run {
                 when (carrierPlan) {
                     CarrierPlan.PREPAID -> run {
-                        request.setPayeeId(TelecomIDs.ZAIN.payeeID)
+                        request.payeeId = (TelecomIDs.ZAIN.payeeID)
                     }
                     CarrierPlan.POSTPAID -> run {
-                        request.setPayeeId(TelecomIDs.ZAIN_BILL.payeeID)
+                        request.payeeId = (TelecomIDs.ZAIN_BILL.payeeID)
                     }
                 }
             }
@@ -651,10 +654,10 @@ class TutiApiClient {
             Operator.SUDANI -> run {
                 when (carrierPlan) {
                     CarrierPlan.PREPAID -> run {
-                        request.setPayeeId(TelecomIDs.SUDANI.payeeID)
+                        request.payeeId = (TelecomIDs.SUDANI.payeeID)
                     }
                     CarrierPlan.POSTPAID -> run {
-                        request.setPayeeId(TelecomIDs.SUDANI_BILL.payeeID)
+                        request.payeeId = (TelecomIDs.SUDANI_BILL.payeeID)
                     }
                 }
             }
@@ -662,16 +665,16 @@ class TutiApiClient {
             Operator.MTN -> run {
                 when (carrierPlan) {
                     CarrierPlan.PREPAID -> run {
-                        request.setPayeeId(TelecomIDs.MTN.payeeID)
+                        request.payeeId = (TelecomIDs.MTN.payeeID)
                     }
                     CarrierPlan.POSTPAID -> run {
-                        request.setPayeeId(TelecomIDs.MTN_BILL.payeeID)
+                        request.payeeId = (TelecomIDs.MTN_BILL.payeeID)
                     }
                 }
             }
         }
 
-        request.setPaymentInfo("MPHONE=$mobile")
+        request.paymentInfo = ("MPHONE=$mobile")
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -690,8 +693,8 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.setPayeeId(TelecomIDs.NEC.payeeID)
-        request.setPaymentInfo("METER=$meterNumber")
+        request.payeeId = (TelecomIDs.NEC.payeeID)
+        request.paymentInfo = ("METER=$meterNumber")
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BILL_PAYMENT,
@@ -709,7 +712,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.GET,
                 serverURL + Operations.GUESS_Biller,
-                null,
+                "",
                 onResponse,
                 onError,
                 null,
@@ -740,7 +743,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.GET,
                 serverURL + Operations.GetPaymentToken,
-                null,
+                "",
                 onResponse,
                 onError,
                 null,
@@ -756,7 +759,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.QuickPayment,
-                request as Any,
+                request,
                 onResponse,
                 onError,
         )
@@ -776,23 +779,23 @@ class TutiApiClient {
         val newIPINEncrypted: String = IPINBlockGenerator.getIPINBlock(newIPIN, ebsKey, request.uuid)
 
         request.expDate = card.expiryDate
-        request.setIPIN(oldIPINEncrypted)
-        request.setNewIPIN(newIPINEncrypted)
+        request.IPIN = (oldIPINEncrypted)
+        request.newIPIN = (newIPINEncrypted)
         request.pan = card.PAN
 
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.CHANGE_IPIN,
-                request as Any,
+                request,
                 onResponse,
                 onError
         )
     }
 
-    inline fun <reified ResponseType, reified ErrorType> sendRequest(
+    inline fun <reified RequestType, reified ResponseType, reified ErrorType> sendRequest(
             method: RequestMethods,
             URL: String,
-            requestToBeSent: Any?,
+            requestToBeSent: RequestType?,
             crossinline onResponse: (ResponseType) -> Unit,
             crossinline onError: (ErrorType?, Exception?) -> Unit,
             headers: Map<String, String>? = null,
@@ -800,8 +803,11 @@ class TutiApiClient {
     ): Thread {
         // create a runnable to run it in a new thread (so main thread never hangs)
         val finalURL = if (params.isEmpty()) URL else URL + "?" + params[0] + "=" + params[1]
+
         val runnable = {
-            val requestBody: RequestBody = gson.toJson(requestToBeSent).toRequestBody(JSON)
+            val jsonObjectString = Json.encodeToString(requestToBeSent)
+            println(jsonObjectString)
+            val requestBody: RequestBody = jsonObjectString.toRequestBody(JSON)
             val requestBuilder: Request.Builder = Request.Builder().url(finalURL)
             requestBuilder.header("Authorization", authToken)
 
@@ -866,6 +872,7 @@ class TutiApiClient {
                 responseAsString as ResponseType
             }
             else -> {
+
                 Json.decodeFromString(responseAsString)
             }
         }
@@ -885,6 +892,10 @@ class TutiApiClient {
                 OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
                         .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
         val gson = Gson()
-
+        val Json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            encodeDefaults = true
+        }
     }
 }

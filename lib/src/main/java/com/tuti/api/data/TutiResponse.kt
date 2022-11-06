@@ -25,15 +25,26 @@ data class TutiResponse(
 
         val token: String = "",
 
-        private val status: String = "",
+        val status: String = "",
 
         @SerialName("due_amount")
-        private val dueAmount: DueAmount = DueAmount(),
-        private val fees: Fees? = Fees(),
+        val dueAmount: DueAmount = DueAmount(),
+        val fees: Fees? = Fees(),
 
         @SerialName("ebs_response")
-        private val ebsResponse: EBSResponse = EBSResponse()
+        val ebsResponse: EBSResponse = EBSResponse()
 ) {
+
+    fun getRawPaymentToken(): String {
+        return result;
+    }
+
+    // getPaymentTokenUUID in payment token api, we use uuid field to denote
+    // the payment token
+    fun getPaymentTokenUUID(): String {
+        return uuid;
+    }
+
     val encodedQRToken: ByteArray
         get() = Base64.getDecoder().decode(result)
 
@@ -48,5 +59,17 @@ data class TutiResponse(
         } catch (e: Exception) {
             null
         }
+    }
+
+    // get EBS public key for IPIN generation
+    fun getiPINKey(): String {
+        return this.ebsResponse.pubKeyValue
+    }
+
+    /**
+     * get EBS public key for encryption (used throughout the code to encrypt all transactions except for IPIN generation. Check {@link #getiPINKey()} instead
+     */
+    fun getKey(): String {
+        return this.ebsResponse.pubKeyValue
     }
 }

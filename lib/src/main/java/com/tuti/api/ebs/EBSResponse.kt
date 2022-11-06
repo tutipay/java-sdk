@@ -7,7 +7,6 @@ import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 @kotlinx.serialization.Serializable
 class EBSResponse : Serializable {
@@ -40,10 +39,12 @@ class EBSResponse : Serializable {
             }
             return fmt.format(data)
         }
+
+    val ID:Int = 0
     val terminalId: String = ""
     val systemTraceAuditNumber: Int? = null
     val clientId: String = ""
-    val pAN: String = ""
+    val pan: String = ""
     val expDate: String = ""
     val tranAmount: Float? = null
     val eBSServiceName: String = ""
@@ -81,7 +82,7 @@ class EBSResponse : Serializable {
     val message: String = ""
     val code: String = ""
     var mbr: String = ""
-    private val errorMessage: ErrorMessage = ErrorMessage()
+    val errorMessage: ErrorMessage = ErrorMessage()
     val balance: HashMap<String, Double> = HashMap()
     var billInfo: HashMap<String, String> = HashMap()
 
@@ -172,11 +173,11 @@ class EBSResponse : Serializable {
  */
 
 @kotlinx.serialization.Serializable
-internal data class ErrorMessage(
+data class ErrorMessage(
         val message: String = "",
         val code: Int? = null,
-        private val status: String = "",
-        private val details: ErrorDetails? = null,
+        val status: String = "",
+        val details: ErrorDetails? = null,
 
         ) {
     val ebsMessage: String
@@ -194,7 +195,7 @@ internal data class ErrorMessage(
 }
 
 @kotlinx.serialization.Serializable
-internal data class ErrorDetails(
+data class ErrorDetails(
         val responseMessage: String = "",
         val responseStatus: String = "",
         val responseCode: Int? = null,

@@ -3,14 +3,11 @@
  */
 package com.tuti
 
-import com.google.gson.reflect.TypeToken
 import com.tuti.api.TutiApiClient
-import com.tuti.api.authentication.SignInRequest
-import com.tuti.api.authentication.SignInResponse
-import com.tuti.api.data.TutiResponse
-import com.tuti.model.Beneficiary
-import com.tuti.model.NoebsBeneficiary
-import com.tuti.model.ben
+import com.tuti.api.data.Card
+import com.tuti.api.ebs.EBSRequest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 object Library {
     var jwt: String? = null
@@ -18,28 +15,12 @@ object Library {
     @JvmStatic
     fun main(args: Array<String>) {
         addBeneficiary()
-
     }
 }
 
 private fun addBeneficiary() {
     val tutiApiClient = TutiApiClient()
     tutiApiClient.authToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDk4MDc1LCJpc3MiOiJub2VicyJ9.2YveVIAuCg6O4-PsxZJ4pclQJGNapdNlIUC0XaBmFrY"
-    val beneficiary = Beneficiary(number = "0912222222", billType = 0, operator = 1)
-    tutiApiClient.addBeneficiary(beneficiary, { signInResponse: TutiResponse? ->
-        run { println(signInResponse) }
-    }, { objectReceived: TutiResponse?, _: Exception? ->
-        run {
-            println(objectReceived.toString())
-        }
-    })
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDk4MDc1LCJpc3MiOiJub2VicyJ9.2YveVIAuCg6O4-PsxZJ4pclQJGNapdNlIUC0XaBmFrY"
 
-    tutiApiClient.getBeneficiaries( { signInResponse: List<NoebsBeneficiary>   ->
-        run { println(signInResponse[0].data) }
-    }, { objectReceived: TutiResponse?, _: Exception? ->
-        run {
-           // println(objectReceived.toString())
-        }
-    })
 }

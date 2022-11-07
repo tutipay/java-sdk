@@ -865,7 +865,7 @@ class TutiApiClient {
 
 
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
-        var type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
+        val type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
 
         return when (ResponseType::class.java) {
             String::class.java -> {

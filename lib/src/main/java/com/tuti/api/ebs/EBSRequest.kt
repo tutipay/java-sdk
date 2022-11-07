@@ -27,7 +27,7 @@ class EBSRequest {
     val tranDateTime: String = getCurrentDate()
 
     @SerialName("UUID")
-    val uuid:String = generateUUID()
+    val uuid: String = generateUUID()
 
 
     var pubKey: String? = null
@@ -117,7 +117,7 @@ class EBSRequest {
         return uuid.toString()
     }
 
-    private fun setEncryptedIPIN(pubKey: String?) {
+    fun setEncryptedIPIN(pubKey: String?) {
         IPIN = getIPINBlock(IPIN, pubKey, uuid)
     }
 

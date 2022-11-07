@@ -32,9 +32,8 @@ internal class TutiApiClientTest {
     @Test
     fun generateOtpInsecure() {
         val tutiApiClient = TutiApiClient()
-        var req: SignInRequest = SignInRequest()
-        req.mobile = "sdsds"
-        tutiApiClient.GenerateOtpInsecure(req, null!!, null!!)
+        var req: SignInRequest = SignInRequest(mobile = "sdsds")
+        tutiApiClient.GenerateOtpInsecure(req, {}, {resp ,t -> Unit})
     }
 
     @Test

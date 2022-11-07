@@ -1,19 +1,19 @@
 package com.tuti.api.data
 
-import com.google.common.base.Objects
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 
+@kotlinx.serialization.Serializable
 data class Card(
-    val name: String? = null,
+        val name: String = "",
 
-    @SerializedName("exp_date")
-    val expiryDate: String? = null,
+        @SerialName("exp_date")
+        val expiryDate: String = "",
 
-    @SerializedName("pan")
-    val PAN: String? = null,
+        @SerialName("pan")
+        val PAN: String = "",
 
-    val mobile: String? = null,
+        val mobile: String = "",
 
-    @SerializedName("card_index")
-    val cardIndex: String? = null
+        @SerialName("card_index")
+        val cardIndex: String = ""
 )

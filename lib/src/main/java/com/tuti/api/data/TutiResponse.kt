@@ -62,14 +62,14 @@ data class TutiResponse(
     }
 
     // get EBS public key for IPIN generation
-    fun getiPINKey(): String {
+    fun getiPINKey(): String? {
         return this.ebsResponse.pubKeyValue
     }
 
     /**
      * get EBS public key for encryption (used throughout the code to encrypt all transactions except for IPIN generation. Check {@link #getiPINKey()} instead
      */
-    fun getKey(): String {
+    fun getKey(): String? {
         return this.ebsResponse.pubKeyValue
     }
 }

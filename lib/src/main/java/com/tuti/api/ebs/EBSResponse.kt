@@ -40,48 +40,48 @@ class EBSResponse : Serializable {
             return fmt.format(data)
         }
 
-    val ID:Int = 0
-    val terminalId: String = ""
+    val ID: Int = 0
+    val terminalId: String? = null
     val systemTraceAuditNumber: Int? = null
-    val clientId: String = ""
-    val pan: String = ""
-    val expDate: String = ""
+    val clientId: String? = null
+    val pan: String? = null
+    val expDate: String? = null
     val tranAmount: Float? = null
-    val eBSServiceName: String = ""
-    val workingKey: String = ""
-    val toCard: String = ""
-    val toAccount: String = ""
-    val referenceNumber: String = ""
-    val approvalCode: String = ""
+    val eBSServiceName: String? = null
+    val workingKey: String? = null
+    val toCard: String? = null
+    val toAccount: String? = null
+    val referenceNumber: String? = null
+    val approvalCode: String? = null
     val tranFee: Float? = null
     val additionalAmount: Float? = null
     val acqTranFee: Float? = null
     val issuerTranFee: Float? = null
-    val pubKeyValue: String = ""
+    val pubKeyValue: String? = null
     val tranCurrency: String = ""
     val paymentInfo: String = ""
     var payeeId: String = ""
     var fromAccount: String = ""
     var financialInstitutionId: String = ""
-    var uUID: String = ""
+    var UUID: String = ""
     var merchantAccountType: String = ""
     var merchantAccountReference: String = ""
-    var merchantName: String = ""
-    var merchantCity: String = ""
-    var merchantID: String = ""
-    var generatedQR: String = ""
-    var merchantCategoryCode: String = ""
-    var postalCode: String = ""
+    var merchantName: String? = null
+    var merchantCity: String? = null
+    var merchantID: String? = null
+    var generatedQR: String? = null
+    var merchantCategoryCode: String? = null
+    var postalCode: String? = null
     var currencyCode: String = ""
     var lastTransactions: List<LastTransactions>? = null
     var countryCode: String = ""
     var qRCode: String = ""
     var transactionId: String = ""
-    var voucherNumber: String = ""
-    var voucherCode: String = ""
+    var voucherNumber: String? = null
+    var voucherCode: String? = null
     val message: String = ""
     val code: String = ""
-    var mbr: String = ""
+    var mbr: String? = null
     val errorMessage: ErrorMessage = ErrorMessage()
     val balance: HashMap<String, Double> = HashMap()
     var billInfo: HashMap<String, String> = HashMap()
@@ -131,7 +131,7 @@ class EBSResponse : Serializable {
                 "0"
             }
         }
-    var dynamicFees: String = ""
+    var dynamicFees: String? = null
     val ebsError: String
         get() = errorMessage!!.ebsMessage
     val ebsCode: Int?

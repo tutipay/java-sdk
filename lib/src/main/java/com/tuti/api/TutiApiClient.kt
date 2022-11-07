@@ -389,14 +389,14 @@ class TutiApiClient {
     }
 
     fun addCard(
-            card: Card?,
+            card: Card,
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.ADD_CARD,
-                card,
+                listOf(card),
                 onResponse,
                 onError,
         )

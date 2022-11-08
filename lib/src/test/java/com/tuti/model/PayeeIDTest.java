@@ -8,7 +8,7 @@ class PayeeIDTest {
 
     @Test
     void getName() {
-        PayeeID id = PayeeID.Zain;
-        assertEquals("0010010002", id.getName());
+        PayeeID id = PayeeID.ZainPostpaid;
+        assertEquals("0010010002", id.getPayeeId());
     }
 }

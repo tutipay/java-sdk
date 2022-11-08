@@ -79,8 +79,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/tutipay/java-sdk")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = "adonese" ?: System.getenv("USERNAME")
+                password = "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" ?: System.getenv("TOKEN")
             }
         }
     }

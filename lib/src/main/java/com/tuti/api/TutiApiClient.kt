@@ -347,7 +347,7 @@ class TutiApiClient {
     }
 
     fun addBeneficiary(
-            beneficiary: Beneficiary,
+            beneficiary: NoebsBeneficiary,
             onResponse: (TutiResponse?) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -355,7 +355,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BENEFICIARY,
-                beneficiary.toNoebs(),
+                beneficiary,
                 onResponse,
                 onError,
         )

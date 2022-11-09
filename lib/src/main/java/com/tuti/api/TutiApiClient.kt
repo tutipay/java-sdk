@@ -1,8 +1,5 @@
 package com.tuti.api
 
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.authentication.SignUpRequest
@@ -866,7 +863,6 @@ class TutiApiClient {
 
 
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
-        var type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
 
         return when (ResponseType::class.java) {
             String::class.java -> {
@@ -891,7 +887,7 @@ class TutiApiClient {
         val okHttpClient: OkHttpClient =
                 OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
                         .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
-        val gson = Gson()
+
         val Json = Json {
             ignoreUnknownKeys = true
             isLenient = true

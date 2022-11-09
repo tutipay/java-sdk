@@ -78,8 +78,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/tutipay/java-sdk")
             credentials {
-                username = "rami3sam" ?: System.getenv("USERNAME")
-                password = "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" ?: System.getenv("TOKEN")
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
             }
         }
     }

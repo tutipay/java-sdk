@@ -7,5 +7,5 @@ import kotlinx.serialization.SerialName
 data class NoebsBeneficiary(
         @SerialName("data") val data: String,
         @SerialName("bill_type") val bill_type: String,
-        @SerialName("name") val name: String = data,
+        @SerialName("name") val name: String,
 )

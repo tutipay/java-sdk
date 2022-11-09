@@ -36,9 +36,3 @@ data class SignupRequest(
         @SerialName("user_pubkey")
         val pubkey: String,
 )
-
-@kotlinx.serialization.Serializable
-data class NoebsBeneficiary(
-        @SerialName("data") var data: String,
-        @SerialName("bill_type") var bill_type: String,
-)

@@ -375,14 +375,14 @@ class TutiApiClient {
     }
 
     fun deleteBeneficiary(
-            card: Any?,
-            onResponse: (TutiResponse) -> Unit,
+            beneficiary: NoebsBeneficiary,
+            onResponse: (String) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.DELETE,
                 serverURL + Operations.BENEFICIARY,
-                card,
+                beneficiary,
                 onResponse,
                 onError,
         )

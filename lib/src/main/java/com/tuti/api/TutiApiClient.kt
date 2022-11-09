@@ -12,6 +12,7 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -842,7 +843,7 @@ class TutiApiClient {
                 }
             } catch (exception: Exception) {
                 when (exception) {
-                    is JsonSyntaxException -> {
+                    is SerializationException -> {
                         exception.printStackTrace()
                         onError(null, exception)
                     }
@@ -872,7 +873,6 @@ class TutiApiClient {
                 responseAsString as ResponseType
             }
             else -> {
-
                 Json.decodeFromString(responseAsString)
             }
         }

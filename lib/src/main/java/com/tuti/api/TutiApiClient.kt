@@ -1,8 +1,5 @@
 package com.tuti.api
 
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.authentication.SignUpRequest
@@ -12,6 +9,7 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -347,7 +345,7 @@ class TutiApiClient {
     }
 
     fun addBeneficiary(
-            beneficiary: Beneficiary,
+            beneficiary: NoebsBeneficiary,
             onResponse: (TutiResponse?) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -355,7 +353,7 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.BENEFICIARY,
-                beneficiary.toNoebs(),
+                beneficiary,
                 onResponse,
                 onError,
         )
@@ -375,14 +373,14 @@ class TutiApiClient {
     }
 
     fun deleteBeneficiary(
-            card: Any?,
-            onResponse: (TutiResponse) -> Unit,
+            beneficiary: NoebsBeneficiary,
+            onResponse: (String) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.DELETE,
                 serverURL + Operations.BENEFICIARY,
-                card,
+                beneficiary,
                 onResponse,
                 onError,
         )
@@ -842,7 +840,7 @@ class TutiApiClient {
                 }
             } catch (exception: Exception) {
                 when (exception) {
-                    is JsonSyntaxException -> {
+                    is SerializationException -> {
                         exception.printStackTrace()
                         onError(null, exception)
                     }
@@ -865,14 +863,12 @@ class TutiApiClient {
 
 
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
-        val type = object : TypeToken<List<NoebsBeneficiary>>() {}.type
 
         return when (ResponseType::class.java) {
             String::class.java -> {
                 responseAsString as ResponseType
             }
             else -> {
-
                 Json.decodeFromString(responseAsString)
             }
         }
@@ -891,7 +887,7 @@ class TutiApiClient {
         val okHttpClient: OkHttpClient =
                 OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS)
                         .readTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
-        val gson = Gson()
+
         val Json = Json {
             ignoreUnknownKeys = true
             isLenient = true

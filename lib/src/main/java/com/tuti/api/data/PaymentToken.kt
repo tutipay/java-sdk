@@ -1,11 +1,9 @@
 package com.tuti.api.data
 
-import com.google.gson.Gson
-import com.tuti.api.data.PaymentToken
 import com.tuti.api.ebs.EBSResponse
 import kotlinx.serialization.SerialName
-import java.io.Reader
-import java.io.StringReader
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.util.*
 
 /**
@@ -48,12 +46,14 @@ class PaymentToken(
          */
         @JvmStatic
         fun ParseQRToken(b64Token: String?): PaymentToken? {
+            val json = Json { ignoreUnknownKeys = true }
             val parsedToken = Base64.getDecoder().decode(b64Token)
-            val gson = Gson()
-            val targetReader: Reader = StringReader(String(parsedToken))
+//            val gson = Gson()
+//            val targetReader: Reader = StringReader(String(parsedToken))
             return try {
-                val pt = gson.fromJson(targetReader, PaymentToken::class.java)
-                targetReader.close()
+//                val pt = gson.fromJson(targetReader, PaymentToken::class.java)
+//                targetReader.close()
+                val pt = json.decodeFromString<PaymentToken>(String(parsedToken))
                 pt
             } catch (e: Exception) {
                 null

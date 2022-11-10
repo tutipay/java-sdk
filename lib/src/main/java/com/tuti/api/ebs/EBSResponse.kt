@@ -93,9 +93,9 @@ class EBSResponse : Serializable {
      */
     fun getDueAmount(payeeId: PayeeID?): String? {
         return when (payeeId) {
-            PayeeID.Zain -> billInfo["totalAmount"] // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
-            PayeeID.MTN -> billInfo!!["unbilledAmount"] // FIXME(adonese): This doesn't seem to be correct..
-            PayeeID.Sudani -> billInfo!!["billAmount"]
+            PayeeID.ZainPostpaid -> billInfo["totalAmount"] // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
+            PayeeID.MTNPostpaid -> billInfo!!["unbilledAmount"] // FIXME(adonese): This doesn't seem to be correct..
+            PayeeID.SudaniPostpaid -> billInfo!!["billAmount"]
             PayeeID.Invoice -> billInfo!!["amount_due"]
             PayeeID.Mohe, PayeeID.MoheArab -> billInfo!!["dueAmount"]
             PayeeID.Customs -> billInfo!!["AmountToBePaid"]

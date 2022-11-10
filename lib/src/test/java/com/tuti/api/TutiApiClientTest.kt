@@ -6,7 +6,6 @@ import com.tuti.api.data.TutiResponse
 import org.junit.jupiter.api.Assertions.*
 
 import com.tuti.api.ebs.EBSRequest
-import com.tuti.model.Beneficiary
 
 import org.junit.jupiter.api.Test
 
@@ -45,17 +44,17 @@ internal class TutiApiClientTest {
 
     @Test
     fun addBeneficiary() {
-        val tutiApiClient = TutiApiClient()
-        tutiApiClient.authToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
-        val beneficiary = Beneficiary(number = "0912141679", billType = 0, operator = 1)
-        tutiApiClient.addBeneficiary(beneficiary, { signInResponse: TutiResponse? ->
-            run { println(signInResponse) }
-        }, { objectReceived: TutiResponse?, exception: Exception? ->
-            run {
-                println(objectReceived.toString())
-            }
-        })
+//        val tutiApiClient = TutiApiClient()
+//        tutiApiClient.authToken =
+//            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
+//        val beneficiary = Beneficiary(number = "0912141679", billType = 0, operator = 1)
+//        tutiApiClient.addBeneficiary(beneficiary, { signInResponse: TutiResponse? ->
+//            run { println(signInResponse) }
+//        }, { objectReceived: TutiResponse?, exception: Exception? ->
+//            run {
+//                println(objectReceived.toString())
+//            }
+//        })
     }
 }
 

@@ -17,6 +17,6 @@ class EBSResponseTest {
         HashMap<String, String> map = new HashMap<>();
         map.put("totalAmount", "100");
         ebsResponse.setBillInfo(map);
-        assertEquals("100", ebsResponse.getDueAmount(PayeeID.Zain));
+        assertEquals("100", ebsResponse.getDueAmount(PayeeID.ZainPostpaid));
     }
 }

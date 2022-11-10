@@ -14,9 +14,6 @@ data class Ipin(
         val pan: String,
         val expDate: String,
         val phone: String,
-        var otp: String?="",
-        var uuid: String? ="",
-var ipin: String? = ""
 )
 
 data class IpinCompletion(

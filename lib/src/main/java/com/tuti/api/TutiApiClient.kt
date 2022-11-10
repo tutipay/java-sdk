@@ -24,6 +24,8 @@ class TutiApiClient {
         private set
     var isSingleThreaded = false
     var authToken: String = ""
+    var ipinUsername: String = ""
+    var ipinPassword: String = ""
     var ebsKey: String =
             "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
 
@@ -760,6 +762,62 @@ class TutiApiClient {
                 request,
                 onResponse,
                 onError,
+        )
+    }
+
+    /**
+     * generateIpin the first step into generating a new IPIN
+     */
+    fun generateIpin(
+        data: Ipin,
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+
+        val request = EBSRequest()
+        request.expDate = data.expDate
+        request.phoneNumber = "249" + data.phone.replace("0", "")
+        request.pan = data.pan
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.START_IPIN,
+            request,
+            onResponse,
+            onError
+        )
+    }
+
+    /**
+     * Second step for ipin generation, user will be prompted to enter the otp
+     * alongside other data for complete ipin generation step to take place
+     */
+    fun confirmIpinGeneration(
+        data: IpinCompletion,
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+
+        val encryptedIPIN: String =
+            IPINBlockGenerator.getIPINBlock(data.ipin, ebsKey, data.uuid)
+        val encryptedOTP: String =
+            IPINBlockGenerator.getIPINBlock(data.otp, ebsKey, data.uuid)
+        val password: String = IPINBlockGenerator.getIPINBlock("P@ssw0rd", ebsKey, data.uuid)
+
+        val request = EBSRequest()
+        request.otherPan = data.pan
+
+        request.IPIN = (encryptedIPIN)
+        request.otp = (encryptedOTP)
+        request.userName = ("TutiPay")
+        request.password = (password)
+        request.expDate = data.expDate
+        request.phoneNumber = "249" + data.phone.replace("0", "")
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.CONFIRM_IPIN,
+            request,
+            onResponse,
+            onError
         )
     }
 

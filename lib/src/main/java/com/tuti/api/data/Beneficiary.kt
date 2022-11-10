@@ -9,3 +9,21 @@ data class NoebsBeneficiary(
         @SerialName("bill_type") val bill_type: String,
         @SerialName("name") val name: String,
 )
+
+data class Ipin(
+        val pan: String,
+        val expDate: String,
+        val phone: String,
+        var otp: String?="",
+        var uuid: String? ="",
+var ipin: String? = ""
+)
+
+data class IpinCompletion(
+        val pan: String,
+        val expDate: String,
+        val phone: String,
+        val otp: String,
+        val uuid: String,
+        val ipin: String
+)

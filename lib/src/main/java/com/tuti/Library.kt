@@ -5,6 +5,7 @@ package com.tuti
 
 import com.tuti.api.TutiApiClient
 import com.tuti.api.data.Card
+import com.tuti.api.data.TutiResponse
 import com.tuti.api.ebs.EBSRequest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -15,6 +16,7 @@ object Library {
     @JvmStatic
     fun main(args: Array<String>) {
         addBeneficiary()
+        testFirebase()
     }
 }
 
@@ -23,4 +25,18 @@ private fun addBeneficiary() {
     tutiApiClient.authToken =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDk4MDc1LCJpc3MiOiJub2VicyJ9.2YveVIAuCg6O4-PsxZJ4pclQJGNapdNlIUC0XaBmFrY"
 
+}
+
+private fun testFirebase() {
+    val tutiApiClient = TutiApiClient()
+    tutiApiClient.authToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY4MTQ0OTIxLCJpc3MiOiJub2VicyJ9.bgvBds5TL24YsVAWT6aGS6BCmm1BMRQyaEzRXJbU2TQ"
+
+    tutiApiClient.UpsertFirebase("this is my firebase token", { signInResponse: TutiResponse? ->
+        run { println(signInResponse) }
+    }, { objectReceived: TutiResponse?, exception: Exception? ->
+        run {
+            println(objectReceived.toString())
+        }
+    })
 }

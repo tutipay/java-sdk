@@ -56,6 +56,21 @@ internal class TutiApiClientTest {
 //            }
 //        })
     }
+
+    @Test
+    fun upsertFirebase() {
+        val tutiApiClient = TutiApiClient()
+        tutiApiClient.authToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
+
+        tutiApiClient.UpsertFirebase("this is my firebase token", { signInResponse: TutiResponse? ->
+            run { println(signInResponse) }
+        }, { objectReceived: TutiResponse?, exception: Exception? ->
+            run {
+                println(objectReceived.toString())
+            }
+        })
+    }
 }
 
 

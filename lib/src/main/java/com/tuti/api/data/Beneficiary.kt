@@ -14,7 +14,13 @@ data class Ipin(
         val pan: String,
         val expDate: String,
         val phone: String,
-)
+) {
+        init {
+                require(pan.length >= 16)
+                require(expDate.length == 4)
+                require(phone.length == 10)
+        }
+}
 
 data class IpinCompletion(
         val pan: String,
@@ -23,4 +29,13 @@ data class IpinCompletion(
         val otp: String,
         val uuid: String,
         val ipin: String
-)
+) {
+        init {
+                require(pan.length >= 16)
+                require(expDate.length == 4)
+                require(phone.length == 10)
+                require(otp.length == 4)
+
+        }
+}
+

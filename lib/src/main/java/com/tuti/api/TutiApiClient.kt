@@ -9,6 +9,8 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -748,6 +750,22 @@ class TutiApiClient {
                 onError,
                 null,
                 "uuid", uuid
+        )
+    }
+    fun UpsertFirebase(
+        token: String,
+        onResponse: (TutiResponse?) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        @Serializable
+        data class data(@SerialName("token") val data: String)
+
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.UpsertFirebaseToken,
+            data(token),
+            onResponse,
+            onError,
         )
     }
 

@@ -791,10 +791,9 @@ class TutiApiClient {
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
-
         val request = EBSRequest()
         request.expDate = data.expDate
-        request.phoneNumber = "249" + data.phone.replace("0", "")
+        request.phoneNumber = "249" + data.phone.removePrefix("0")
         request.pan = data.pan
         sendRequest(
             RequestMethods.POST,
@@ -814,22 +813,12 @@ class TutiApiClient {
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
-
-        val encryptedIPIN: String =
-            IPINBlockGenerator.getIPINBlock(data.ipin, ebsKey, data.uuid)
-        val encryptedOTP: String =
-            IPINBlockGenerator.getIPINBlock(data.otp, ebsKey, data.uuid)
-        val password: String = IPINBlockGenerator.getIPINBlock("P@ssw0rd", ebsKey, data.uuid)
-
         val request = EBSRequest()
         request.otherPan = data.pan
-
-        request.IPIN = (encryptedIPIN)
-        request.otp = (encryptedOTP)
-        request.userName = ("TutiPay")
-        request.password = (password)
+        request.IPIN = (data.ipin)
+        request.otp = (data.otp)
         request.expDate = data.expDate
-        request.phoneNumber = "249" + data.phone.replace("0", "")
+        request.phoneNumber = "249" + data.phone.removePrefix("0")
         sendRequest(
             RequestMethods.POST,
             serverURL + Operations.CONFIRM_IPIN,

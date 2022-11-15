@@ -65,7 +65,7 @@ internal class TutiApiClientTest {
 
         tutiApiClient.UpsertFirebase("this is my firebase token", { signInResponse: TutiResponse? ->
             run { println(signInResponse) }
-        }, { objectReceived: TutiResponse?, exception: Exception? ->
+        }, { objectReceived: TutiResponse?, _: Exception? ->
             run {
                 println(objectReceived.toString())
             }

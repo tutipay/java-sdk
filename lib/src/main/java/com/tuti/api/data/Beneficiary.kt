@@ -35,7 +35,6 @@ data class IpinCompletion(
                 require(expDate.length == 4)
                 require(phone.length == 10)
                 require(otp.length == 4)
-
         }
 }
 

@@ -9,16 +9,13 @@ import com.tuti.api.ebs.EBSRequest
 import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.*
 import com.tuti.util.IPINBlockGenerator
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class TutiApiClient {
@@ -752,20 +749,21 @@ class TutiApiClient {
                 "uuid", uuid
         )
     }
+
     fun UpsertFirebase(
-        token: String,
-        onResponse: (TutiResponse?) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            token: String,
+            onResponse: (TutiResponse?) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         @Serializable
         data class data(@SerialName("token") val data: String)
 
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.UpsertFirebaseToken,
-            data(token),
-            onResponse,
-            onError,
+                RequestMethods.POST,
+                serverURL + Operations.UpsertFirebaseToken,
+                data(token),
+                onResponse,
+                onError,
         )
     }
 
@@ -787,20 +785,20 @@ class TutiApiClient {
      * generateIpin the first step into generating a new IPIN
      */
     fun generateIpin(
-        data: Ipin,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            data: Ipin,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = EBSRequest()
         request.expDate = data.expDate
         request.phoneNumber = "249" + data.phone.removePrefix("0")
         request.pan = data.pan
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.START_IPIN,
-            request,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.START_IPIN,
+                request,
+                onResponse,
+                onError
         )
     }
 
@@ -809,9 +807,9 @@ class TutiApiClient {
      * alongside other data for complete ipin generation step to take place
      */
     fun confirmIpinGeneration(
-        data: IpinCompletion,
-        onResponse: (TutiResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            data: IpinCompletion,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = EBSRequest()
         request.otherPan = data.pan
@@ -820,11 +818,11 @@ class TutiApiClient {
         request.expDate = data.expDate
         request.phoneNumber = "249" + data.phone.removePrefix("0")
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.CONFIRM_IPIN,
-            request,
-            onResponse,
-            onError
+                RequestMethods.POST,
+                serverURL + Operations.CONFIRM_IPIN,
+                request,
+                onResponse,
+                onError
         )
     }
 
@@ -909,7 +907,12 @@ class TutiApiClient {
                         exception.printStackTrace()
                         onError(null, exception)
                     }
+                    is IOException -> {
+                        exception.printStackTrace()
+                        onError(null, exception)
+                    }
                     else -> {
+                        exception.printStackTrace()
                         throw exception
                     }
                 }

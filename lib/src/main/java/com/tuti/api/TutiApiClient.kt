@@ -253,7 +253,7 @@ class TutiApiClient {
     }
 
     fun SignupWithCard(
-            signUpRequest: Card?,
+            signUpRequest: SignUpCard?,
             onResponse: (SignUpResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {

@@ -1,5 +1,6 @@
 package com.tuti.model;
 
+
 public class Operations {
     public static final String PUBLIC_KEY = "key";
     public static final String GET_BALANCE = "balance";
@@ -47,4 +48,5 @@ public class Operations {
     public static final String UpsertFirebaseToken = "user/firebase";
     public static final String GetPaymentToken = "payment_token";
     public static final String ChangePassword = "change_password";
+    public static final String  TRANSACTION_BY_ID = "transaction";
 }

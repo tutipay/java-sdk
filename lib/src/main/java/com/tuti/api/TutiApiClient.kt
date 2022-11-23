@@ -826,6 +826,7 @@ class TutiApiClient {
         )
     }
 
+
     fun changeIPIN(
             card: Card,
             oldIPIN: String,
@@ -850,6 +851,23 @@ class TutiApiClient {
                 request,
                 onResponse,
                 onError
+        )
+    }
+
+    fun getTransctionByUUID(
+        uuid: String,
+        onResponse: (EBSResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.TRANSACTION_BY_ID,
+            "",
+            onResponse,
+            onError,
+            null,
+            "uuid",
+            uuid
         )
     }
 

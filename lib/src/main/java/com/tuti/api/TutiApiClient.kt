@@ -860,7 +860,7 @@ class TutiApiClient {
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
+            RequestMethods.GET,
             serverURL + Operations.TRANSACTION_BY_ID,
             "",
             onResponse,

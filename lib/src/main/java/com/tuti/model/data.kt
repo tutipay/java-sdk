@@ -36,3 +36,13 @@ data class SignupRequest(
         @SerialName("user_pubkey")
         val pubkey: String,
 )
+
+
+@kotlinx.serialization.Serializable
+data class GenerateOTP(
+        val mobile: String,
+        val password: String? = "",
+        @SerialName("fullname") val name: String? = "",
+
+        @SerialName("user_pubkey") val pubkey: String,
+)

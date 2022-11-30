@@ -132,8 +132,8 @@ class TutiApiClient {
      * @param onResponse
      * @param onError
      */
-    fun GenerateOtpSignIn(
-            credentials: SignInRequest?,
+    fun generateOtpSignIn(
+            credentials: GenerateOTP,
             onResponse: (SignInResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -146,6 +146,7 @@ class TutiApiClient {
         )
     }
 
+    @Deprecated(message = "Replace with GenerateOtpSignIn", replaceWith = ReplaceWith("generateOtpSignIn"))
     /**
      * GenerateOtpSignIn service used to request an otp to be sent to the user's registered sms phone number
      *

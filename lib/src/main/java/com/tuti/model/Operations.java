@@ -11,7 +11,7 @@ public class Operations {
     public static final String SIGN_IN = "login";
     public static final String SINGLE_SIGN_IN = "otp/login";
     public static final String GENERATE_LOGIN_OTP = "otp/generate";
-    public static final String GENERATE_LOGIN_OTP_INSECURE = "otp/generate_insecure";
+    public static final String GENERATE_LOGIN_OTP_INSECURE = "otp/generate";
     public static final String VERIFY_OTP = "otp/verify";
     public static final String OTP_2FA = "otp/balance";
     public static final String SIGN_UP = "register";

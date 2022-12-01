@@ -147,13 +147,13 @@ class TutiApiClient {
     }
 
     @Deprecated(message = "Replace with GenerateOtpSignIn", replaceWith = ReplaceWith("generateOtpSignIn"))
-    /**
-     * GenerateOtpSignIn service used to request an otp to be sent to the user's registered sms phone number
-     *
-     * @param credentials
-     * @param onResponse
-     * @param onError
-     */
+            /**
+             * GenerateOtpSignIn service used to request an otp to be sent to the user's registered sms phone number
+             *
+             * @param credentials
+             * @param onResponse
+             * @param onError
+             */
     fun GenerateOtpInsecure(
             credentials: SignInRequest?,
             onResponse: (SignInResponse) -> Unit,
@@ -521,6 +521,28 @@ class TutiApiClient {
         )
     }
 
+    fun generateVoucher(
+            card: Card,
+            ipin: String,
+            voucherNumber: String,
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+
+        val request = fillRequestFields(card, ipin, amount)
+        request.payeeId = TelecomIDs.E15.payeeID
+        request.voucherNumber = voucherNumber
+
+        sendRequest(
+                RequestMethods.POST,
+                serverURL + Operations.GENERATE_VOUCHER,
+                request,
+                onResponse,
+                onError
+        )
+    }
+
     fun payE15Invoice(
             card: Card,
             ipin: String,
@@ -856,19 +878,19 @@ class TutiApiClient {
     }
 
     fun getTransctionByUUID(
-        uuid: String,
-        onResponse: (EBSResponse) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            uuid: String,
+            onResponse: (EBSResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.TRANSACTION_BY_ID,
-            "",
-            onResponse,
-            onError,
-            null,
-            "uuid",
-            uuid
+                RequestMethods.GET,
+                serverURL + Operations.TRANSACTION_BY_ID,
+                "",
+                onResponse,
+                onError,
+                null,
+                "uuid",
+                uuid
         )
     }
 

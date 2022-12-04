@@ -15,7 +15,10 @@ data class Card(
         val mobile: String = "",
 
         @SerialName("card_index")
-        val cardIndex: String = ""
+        val cardIndex: String = "",
+
+        @SerialName("user_pubkey")
+        val pubkey: String = "",
 )
 
 
@@ -27,7 +30,8 @@ data class SignUpCard(
         @SerialName("pan")
         val pan: String,
         val mobile: String,
-        val password: String
+        val password: String,
+        @SerialName("user_pubkey") val pubkey: String,
 ) {
         init {
                 require(pan.length >= 16)

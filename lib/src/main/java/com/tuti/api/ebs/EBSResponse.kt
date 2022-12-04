@@ -1,12 +1,12 @@
 package com.tuti.api.ebs
 
 import com.tuti.model.PayeeID
+import kotlinx.serialization.SerialName
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
 
 @kotlinx.serialization.Serializable
 class EBSResponse : Serializable {
@@ -14,31 +14,29 @@ class EBSResponse : Serializable {
     var responseStatus: String = ""
     val responseCode: Int? = null
 
+    @SerialName("tranDateTime")
+    private val transactionDateTime: String? = null
+
     // Always return a result, never fail!
     // we have to set the locale as this will fail in a non en-US ones!
-    var tranDateTime: String = ""
+    @SerialName("aaa")
+    val tranDateTime: String?
         get() {
             // we have to set the locale as this will fail in a non en-US ones!
-            var data: Date? = Date()
             val fmt = SimpleDateFormat("YYYY-MM-dd HH:mm:ss")
             val format = SimpleDateFormat("ddMMyyHHmmss")
-            if (field == null) {
-                // create time from this moment
-                data = Date()
-                // Always return a result, never fail!
-                return fmt.format(data)
-            }
-            try {
-                val date = format.parse(field)
-                data = date
+            return try {
+                val date = format.parse(transactionDateTime)
+                fmt.format(date)
             } catch (e: ParseException) {
                 e.printStackTrace()
-                data = Date()
-                // Always return a result, never fail!
-                return fmt.format(data)
+                null
+            } catch (e: NullPointerException) {
+                e.printStackTrace()
+                null
             }
-            return fmt.format(data)
         }
+
 
     val ID: Int = 0
     val terminalId: String? = null

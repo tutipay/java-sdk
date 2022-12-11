@@ -1,5 +1,7 @@
 package com.tuti.model
 
+import com.tuti.api.data.PaymentToken
+import com.tuti.api.ebs.EBSResponse
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
@@ -45,4 +47,28 @@ data class GenerateOTP(
         @SerialName("fullname") val name: String? = "",
 
         @SerialName("user_pubkey") val pubkey: String,
+)
+
+/*
+	Type           string                     `json:"type"`
+	Date           time.Time                  `json:"date"`
+	UUID string `gorm:"primaryKey"`
+	To             string                     `json:"to"`
+	Title          string                     `json:"title"`
+	Body           string                     `json:"body"`
+	EBSData        ebs_fields.EBSResponse `json:"data" gorm:"foreignKey:UUID;references:UUID"` // EBS parser fields holds many unnecssary info
+	PaymentRequest ebs_fields.QrData          `json:"payment_request" gorm:"foreignKey:UUID"`
+	CallToAction   string                     `json:"call_to_action"`
+	Phone          string                     `json:"phone"`
+ **/
+@kotlinx.serialization.Serializable
+data class Notification(
+        @SerialName("phone") val mobile: String?,
+        val type: String?,
+        val to: String,
+        val body: String,
+        val data: EBSResponse?,
+        @SerialName("call_to_action") val callToAction: String?,
+        @SerialName("payment_request") val paymentToken: PaymentToken?
+
 )

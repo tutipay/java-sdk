@@ -49,4 +49,5 @@ public class Operations {
     public static final String GetPaymentToken = "payment_token";
     public static final String ChangePassword = "change_password";
     public static final String  TRANSACTION_BY_ID = "transaction";
+    public static final String NOTIFICATIONS = "notifications";
 }

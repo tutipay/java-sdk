@@ -267,6 +267,20 @@ class TutiApiClient {
         )
     }
 
+    fun getNotificaitons(
+        mobile: String,
+        onResponse: (Notification) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.NOTIFICATIONS,
+            mobile,
+            onResponse,
+            onError, null, "mobile", mobile
+        )
+    }
+
     /**
      * VerifyFirebase used to verify a verification ID token that was sent to a user. It sets is_activiated
      * flag as true for the selected user. This is basically an in-background operation, and as though it shouldn't

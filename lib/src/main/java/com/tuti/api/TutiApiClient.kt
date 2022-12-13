@@ -267,17 +267,17 @@ class TutiApiClient {
         )
     }
 
-    fun getNotificaitons(
-        mobile: String,
-        onResponse: (Notification) -> Unit,
+    fun getNotifications(
+        filters: NotificationFilters,
+        onResponse: (Notifications) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
+            RequestMethods.GET,
             serverURL + Operations.NOTIFICATIONS,
-            mobile,
+            filters.mobile,
             onResponse,
-            onError, null, "mobile", mobile
+            onError, null, "mobile", filters.mobile, "all", if (filters.getAll) "true" else "false"
         )
     }
 
@@ -917,9 +917,9 @@ class TutiApiClient {
             headers: Map<String, String>? = null,
             vararg params: String
     ): Thread {
-        // create a runnable to run it in a new thread (so main thread never hangs)
-        val finalURL = if (params.isEmpty()) URL else URL + "?" + params[0] + "=" + params[1]
-
+        val d = params.toList().chunked(2).map { it[0] to it[1] }
+        val urlData = d.map { "${it.first}=${it.second}" }.joinToString("&", "?", "")
+        val finalURL = URL + urlData
         val runnable = {
             val jsonObjectString = Json.encodeToString(requestToBeSent)
             println(jsonObjectString)
@@ -986,7 +986,6 @@ class TutiApiClient {
 
 
     inline fun <reified ResponseType> parseResponse(responseAsString: String): ResponseType {
-
         return when (ResponseType::class.java) {
             String::class.java -> {
                 responseAsString as ResponseType

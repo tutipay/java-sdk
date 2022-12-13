@@ -1,11 +1,12 @@
 package com.tuti.api
 
 import com.tuti.api.authentication.SignInRequest
-import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.TutiResponse
 import org.junit.jupiter.api.Assertions.*
 
 import com.tuti.api.ebs.EBSRequest
+import com.tuti.model.NotificationFilters
+import com.tuti.model.Notifications
 
 import org.junit.jupiter.api.Test
 
@@ -68,6 +69,22 @@ internal class TutiApiClientTest {
         }, { objectReceived: TutiResponse?, _: Exception? ->
             run {
                 println(objectReceived.toString())
+            }
+        })
+    }
+
+    @Test
+    fun getNotifications() {
+        val tutiApiClient = TutiApiClient()
+        tutiApiClient.authToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
+        tutiApiClient.getNotifications(NotificationFilters(getAll = true, mobile="0111493885"), onResponse = { res: Notifications? ->
+            run {
+                assertEquals(res!!.notifications[0].phone, "0129751986")
+                assertEquals(res!!.notifications[1].body, "fufff")
+        }}, onError = { objectReceived: TutiResponse?, _: Exception? ->
+            run {
+
             }
         })
     }

@@ -63,12 +63,23 @@ data class GenerateOTP(
  **/
 @kotlinx.serialization.Serializable
 data class Notification(
-        @SerialName("phone") val mobile: String?,
+        @SerialName("phone") val phone: String?,
         val type: String?,
-        val to: String,
-        val body: String,
+        val to: String?,
+        val body: String?,
+        val date: String?,
+        val title: String?,
         val data: EBSResponse?,
+        @SerialName("is_read") val isRead: Boolean?,
         @SerialName("call_to_action") val callToAction: String?,
-        @SerialName("payment_request") val paymentToken: PaymentToken?
+        @SerialName("payment_request") val paymentToken: PaymentToken?,
+)
 
+@kotlinx.serialization.Serializable
+data class Notifications (
+        val notifications: List<Notification> = emptyList()
+)
+data class NotificationFilters(
+        val mobile: String,
+        val getAll: Boolean = false,
 )

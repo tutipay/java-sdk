@@ -67,7 +67,7 @@ data class Notification(
         val type: String?,
         val to: String?,
         val body: String?,
-        val date: String?,
+        val date: Long?,
         val title: String?,
         val data: EBSResponse?,
         @SerialName("UUID") val uuid: String?,

@@ -70,6 +70,7 @@ data class Notification(
         val date: String?,
         val title: String?,
         val data: EBSResponse?,
+        @SerialName("UUID") val uuid: String?,
         @SerialName("is_read") val isRead: Boolean?,
         @SerialName("call_to_action") val callToAction: String?,
         @SerialName("payment_request") val paymentToken: PaymentToken?,

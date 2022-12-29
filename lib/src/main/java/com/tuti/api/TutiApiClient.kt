@@ -499,12 +499,14 @@ class TutiApiClient {
             card: Card,
             ipin: String,
             receiverCard: Card,
+            deviceId: String = "",
             amount: Float,
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
         request.toCard = receiverCard.PAN
+        request.deviceId = deviceId
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.CARD_TRANSFER,
@@ -540,6 +542,7 @@ class TutiApiClient {
             ipin: String,
             voucherNumber: String,
             amount: Float,
+            deviceId: String = "",
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -547,7 +550,7 @@ class TutiApiClient {
         val request = fillRequestFields(card, ipin, amount)
         request.payeeId = TelecomIDs.E15.payeeID
         request.voucherNumber = voucherNumber
-
+        request.deviceId = deviceId
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.GENERATE_VOUCHER,

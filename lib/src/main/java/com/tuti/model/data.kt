@@ -21,7 +21,6 @@ data class SignInRequest(
 
 @kotlinx.serialization.Serializable
 data class SignupRequest(
-
         @SerialName("password")
         val password: String,
         @SerialName("otp")
@@ -45,22 +44,10 @@ data class GenerateOTP(
         val mobile: String,
         val password: String? = "",
         @SerialName("fullname") val name: String? = "",
-
         @SerialName("user_pubkey") val pubkey: String,
 )
 
-/*
-	Type           string                     `json:"type"`
-	Date           time.Time                  `json:"date"`
-	UUID string `gorm:"primaryKey"`
-	To             string                     `json:"to"`
-	Title          string                     `json:"title"`
-	Body           string                     `json:"body"`
-	EBSData        ebs_fields.EBSResponse `json:"data" gorm:"foreignKey:UUID;references:UUID"` // EBS parser fields holds many unnecssary info
-	PaymentRequest ebs_fields.QrData          `json:"payment_request" gorm:"foreignKey:UUID"`
-	CallToAction   string                     `json:"call_to_action"`
-	Phone          string                     `json:"phone"`
- **/
+
 @kotlinx.serialization.Serializable
 data class Notification(
         @SerialName("phone") val phone: String?,

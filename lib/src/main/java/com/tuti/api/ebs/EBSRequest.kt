@@ -56,6 +56,8 @@ class EBSRequest {
     var idNo: String? = null
     var merchantCategoryCode: String? = null
     val postalCode: String? = null
+    @SerialName("device_id")
+    var deviceId: String? = ""
 
     var panCategory: String? = null
 

@@ -81,7 +81,7 @@ internal class TutiApiClientTest {
         tutiApiClient.getNotifications(NotificationFilters(getAll = true, mobile="0111493885"), onResponse = { res: Notifications? ->
             run {
                 assertEquals(res!!.notifications[0].phone, "0129751986")
-                assertEquals(res!!.notifications[1].body, "fufff")
+                assertEquals(res.notifications[0].body, "fuff")
         }}, onError = { objectReceived: TutiResponse?, _: Exception? ->
             run {
 

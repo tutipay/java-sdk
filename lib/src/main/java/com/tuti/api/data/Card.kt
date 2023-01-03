@@ -5,18 +5,13 @@ import kotlinx.serialization.SerialName
 @kotlinx.serialization.Serializable
 data class Card(
         val name: String = "",
-
         @SerialName("exp_date")
         val expiryDate: String = "",
-
         @SerialName("pan")
         val PAN: String = "",
-
         val mobile: String = "",
-
         @SerialName("card_index")
         val cardIndex: String = "",
-
         @SerialName("user_pubkey")
         val pubkey: String = "",
 )

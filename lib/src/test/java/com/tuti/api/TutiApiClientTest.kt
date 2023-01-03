@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 import com.tuti.api.ebs.EBSRequest
 import com.tuti.model.NotificationFilters
 import com.tuti.model.Notifications
+import com.tuti.model.User
 
 import org.junit.jupiter.api.Test
 
@@ -83,6 +84,21 @@ internal class TutiApiClientTest {
                 assertEquals(res!!.notifications[0].phone, "0129751986")
                 assertEquals(res.notifications[0].body, "fuff")
         }}, onError = { objectReceived: TutiResponse?, _: Exception? ->
+            run {
+
+            }
+        })
+    }
+
+    @Test
+    fun getUserCard() {
+        val tutiApiClient = TutiApiClient()
+        tutiApiClient.authToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
+        tutiApiClient.getUserCard(mobile="0111493885", onResponse = { res: User? ->
+            run {
+                assertEquals(res!!.cards[0].PAN, "0129751986")
+            }}, onError = { objectReceived: TutiResponse?, _: Exception? ->
             run {
 
             }

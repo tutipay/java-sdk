@@ -515,7 +515,6 @@ class TutiApiClient {
                 onError,
         )
     }
-
     fun purchaseBashairCredit(
             card: Card,
             ipin: String,
@@ -536,7 +535,6 @@ class TutiApiClient {
                 onError,
         )
     }
-
     fun generateVoucher(
             card: Card,
             ipin: String,
@@ -546,7 +544,6 @@ class TutiApiClient {
             onResponse: (TutiResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
-
         val request = fillRequestFields(card, ipin, amount)
         request.payeeId = TelecomIDs.E15.payeeID
         request.voucherNumber = voucherNumber
@@ -645,6 +642,8 @@ class TutiApiClient {
                 onError
         )
     }
+
+
 
     fun payEInvoice(
             card: Card,
@@ -910,6 +909,25 @@ class TutiApiClient {
                 uuid
         )
     }
+
+
+    fun getUserCard(
+        mobile: String,
+        onResponse: (User) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.USER_CARDS,
+            "",
+            onResponse,
+            onError,
+            null,
+            "mobile",
+            mobile
+        )
+    }
+
 
     inline fun <reified RequestType, reified ResponseType, reified ErrorType> sendRequest(
             method: RequestMethods,

@@ -1,8 +1,11 @@
 package com.tuti.model
 
+import com.tuti.api.data.Card
 import com.tuti.api.data.PaymentToken
 import com.tuti.api.ebs.EBSResponse
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
 
 @kotlinx.serialization.Serializable
 data class SignInRequest(
@@ -70,4 +73,15 @@ data class Notifications (
 data class NotificationFilters(
         val mobile: String,
         val getAll: Boolean = false,
+)
+
+
+@Serializable
+data class User (
+        val fullname: String,
+        @SerialName("mobile")
+        val mobile: String,
+        val email: String,
+        @SerialName("Cards")
+        val cards: List<Card>,
 )

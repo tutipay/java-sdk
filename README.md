@@ -4,21 +4,21 @@
 
 ### Add it in your root build.gradle
 
-  ```sh
+```sh
   repositories {
 			...
 			maven { url 'https://jitpack.io' }
 		}
-  ```
+ ```
 
 
   ### Add the dependency
   
-   ```sh
+```sh
 dependencies {
 	         implementation 'com.github.tutipay:java-sdk:-SNAPSHOT' # add this stage always use the bleeding edge version
 	}
- ```
+```
 
  ## How does the api work
 
@@ -110,6 +110,7 @@ repositories {
         }
     }
 ```
+
 - That is it actually! 
 
 ### how to use noebs published Github Package
@@ -125,4 +126,4 @@ repositories {
             }
         }
 ```
-- add to your app's gradle file the implementation, which is `implementation 'noebs:lib:22.10.27'`
+- add to your app's gradle file the implementation, which is `implementation 'noebs:lib:-latest-version'`

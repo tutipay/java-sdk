@@ -445,7 +445,7 @@ class TutiApiClient {
     }
 
     /**
-     * @param request
+     * @param card: Card represents a noebs payment card.
      * @param onResponse
      * @param onError
      */
@@ -610,7 +610,7 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.payeeId = (TelecomIDs.CUSTOMS.payeeID)
+        request.payeeId = (TelecomIDs.MOHEArab.payeeID)
         request.paymentInfo = (MOHEArab("", "", courseId, admissionType))
         sendRequest(
                 RequestMethods.POST,
@@ -632,7 +632,7 @@ class TutiApiClient {
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
-        request.payeeId = (TelecomIDs.CUSTOMS.payeeID)
+        request.payeeId = (TelecomIDs.MOHE.payeeID)
         request.paymentInfo = (MOHE(seatNumber, courseId, admissionType))
         sendRequest(
                 RequestMethods.POST,
@@ -773,6 +773,26 @@ class TutiApiClient {
         )
     }
 
+
+    /**
+     * Performs a noebs payment via QR or a payment link. The api is still in beta and
+     * as such it is subject to be change.
+     */
+    fun quickPayment(
+        request: EBSRequest?,
+        uuid: String = "",
+        onResponse: (PaymentToken) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.QuickPayment,
+            request,
+            onResponse,
+            onError, null, "uuid", uuid
+        )
+    }
+
     fun getPaymentToken(
             uuid: String,
             onResponse: (PaymentToken) -> Unit,
@@ -806,19 +826,7 @@ class TutiApiClient {
         )
     }
 
-    fun quickPayment(
-            request: EBSRequest?,
-            onResponse: (PaymentToken) -> Unit,
-            onError: (TutiResponse?, Exception?) -> Unit
-    ) {
-        sendRequest(
-                RequestMethods.POST,
-                serverURL + Operations.QuickPayment,
-                request,
-                onResponse,
-                onError,
-        )
-    }
+
 
     /**
      * generateIpin the first step into generating a new IPIN

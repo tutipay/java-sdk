@@ -14,6 +14,8 @@ enum class TelecomIDs(val payeeID: String, val label: String, val paymentInfo: S
     CUSTOMS("0010030003", "Electricity Bills", "METER=", "electricity"),
     Einvoice("0055555555", "Electricity Bills", "METER=", "electricity"),
     Bashair("0010060002", "Electricity Bills", "METER=", "electricity"),
+    MOHE("0010030002", "MOHE bills", "", "mohe"),
+    MOHEArab("0010030004", "MOHE Arab bills", "", "mohe"),
 }
 
 enum class BashairTypes (val value: String) {

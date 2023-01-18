@@ -33,7 +33,6 @@ class TutiApiClient {
         serverURL = getServerURL(isDevelopment)
     }
 
-    //test deploy
 
     constructor() {
         serverURL = getServerURL(false)
@@ -100,6 +99,10 @@ class TutiApiClient {
                 onResponse,
                 onError,
         )
+    }
+
+    fun TestDeploy() : String {
+        return "from SDK"
     }
 
 

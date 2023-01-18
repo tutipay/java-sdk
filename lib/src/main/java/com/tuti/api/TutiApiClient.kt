@@ -648,8 +648,6 @@ class TutiApiClient {
         )
     }
 
-
-
     fun payEInvoice(
             card: Card,
             ipin: String,
@@ -926,7 +924,7 @@ class TutiApiClient {
 
     fun getUserCard(
         mobile: String,
-        onResponse: (User) -> Unit,
+        onResponse: (UserCards) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(

@@ -921,7 +921,7 @@ class TutiApiClient {
 
     fun getUserCard(
         mobile: String,
-        onResponse: (User) -> Unit,
+        onResponse: (UserCards) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(

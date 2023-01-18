@@ -35,3 +35,30 @@ data class SignUpCard(
                 require(password.length >= 8 )
         }
 }
+
+@kotlinx.serialization.Serializable
+data class Cards (
+        val cards: List<Card> = emptyList()
+)
+
+@kotlinx.serialization.Serializable
+data class UserCards (
+        @SerialName("pan")
+        val pan: String = "",
+        @SerialName("exp_date")
+        val expDate: String = "",
+        @SerialName("Cards")
+        val cards: List<Card> = emptyList()
+
+){
+        fun getMainCard(): Card {
+                return if (this.pan.isNotEmpty()) {
+                        Card(PAN = this.pan, expiryDate = this.expDate)
+                }else if (cards.isNotEmpty()) {
+                        Card(PAN = this.cards.first().PAN, expiryDate = this.cards.first().expiryDate)
+                } else {
+                        throw Exception("user has no cards")
+                }
+
+        }
+}

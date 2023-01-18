@@ -645,8 +645,6 @@ class TutiApiClient {
         )
     }
 
-
-
     fun payEInvoice(
             card: Card,
             ipin: String,

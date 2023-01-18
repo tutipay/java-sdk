@@ -28,6 +28,8 @@ class TutiApiClient {
     var ebsKey: String =
             "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANx4gKYSMv3CrWWsxdPfxDxFvl+Is/0kc1dvMI1yNWDXI3AgdI4127KMUOv7gmwZ6SnRsHX/KAM0IPRe0+Sa0vMCAwEAAQ=="
 
+    val entertainmentServer = "https://plus.2t.sd/"
+
     @Deprecated("")
     constructor(isDevelopment: Boolean) {
         serverURL = getServerURL(isDevelopment)
@@ -98,6 +100,32 @@ class TutiApiClient {
                 credentials,
                 onResponse,
                 onError,
+        )
+    }
+    fun GetAllProviders(
+            onResponse: (ProvidersResponse) -> Unit,
+            onError : (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+                RequestMethods.GET,
+                entertainmentServer,
+                "",
+                onResponse,
+                onError
+        )
+    }
+
+    fun GetProviderProducts(
+            provider : ProviderCode,
+            onResponse: (ProductsResponse) -> Unit,
+            onError : (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+                RequestMethods.GET,
+                entertainmentServer + Operations.GET_PROVIDER_PRODUCTS + "?provider=${provider.code}",
+                "",
+                onResponse,
+                onError
         )
     }
 

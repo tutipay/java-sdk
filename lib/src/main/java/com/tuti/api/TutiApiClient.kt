@@ -108,7 +108,7 @@ class TutiApiClient {
     ) {
         sendRequest(
                 RequestMethods.GET,
-                entertainmentServer,
+                entertainmentServer + Operations.GET_PROVIDERS,
                 "",
                 onResponse,
                 onError
@@ -116,16 +116,17 @@ class TutiApiClient {
     }
 
     fun GetProviderProducts(
-            provider : ProviderCode,
+            providerCode : String,
             onResponse: (ProductsResponse) -> Unit,
             onError : (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.GET,
-                entertainmentServer + Operations.GET_PROVIDER_PRODUCTS + "?provider=${provider.code}",
+                entertainmentServer + Operations.GET_PROVIDER_PRODUCTS,
                 "",
-                onResponse,
-                onError
+                onResponse = onResponse,
+                onError = onError,
+                params = arrayOf("provider", providerCode)
         )
     }
 

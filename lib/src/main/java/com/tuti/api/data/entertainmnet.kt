@@ -109,7 +109,7 @@ data class AmountInfo (
         @SerialName("CustomerFee")
         val CustomerFee : Float,
 
-        @SerialName("CommissionRate")
+        @SerialName("DistributorFee")
         val DistributorFee : Float,
 
         @SerialName("ReceiveCurrencyIso")

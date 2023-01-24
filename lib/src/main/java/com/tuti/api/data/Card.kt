@@ -51,6 +51,11 @@ data class UserCards (
         val cards: List<Card> = emptyList()
 
 ){
+        /**
+         * a helper method to returns a user main card
+         * @throws Exception when a user doesn't have any cards
+         * @return [Card]
+         */
         fun getMainCard(): Card {
                 return if (this.pan.isNotEmpty()) {
                         Card(PAN = this.pan, expiryDate = this.expDate)

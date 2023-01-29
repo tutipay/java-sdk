@@ -51,4 +51,5 @@ object Operations {
     const val TRANSACTION_BY_ID = "transaction"
     const val USER_CARDS = "users/cards"
     const val NOTIFICATIONS = "notifications"
+    const val SUBMIT_CONTACTS = "submit_contacts"
 }

@@ -102,9 +102,10 @@ class TutiApiClient {
                 onError,
         )
     }
+
     fun GetAllProviders(
             onResponse: (ProvidersResponse) -> Unit,
-            onError : (TutiResponse?, Exception?) -> Unit
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.GET,
@@ -116,9 +117,9 @@ class TutiApiClient {
     }
 
     fun GetProviderProducts(
-            providerCode : String,
+            providerCode: String,
             onResponse: (ProductsResponse) -> Unit,
-            onError : (TutiResponse?, Exception?) -> Unit
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.GET,
@@ -130,7 +131,7 @@ class TutiApiClient {
         )
     }
 
-    fun TestDeploy() : String {
+    fun TestDeploy(): String {
         return "from SDK"
     }
 
@@ -302,16 +303,16 @@ class TutiApiClient {
     }
 
     fun getNotifications(
-        filters: NotificationFilters,
-        onResponse: (Notifications) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            filters: NotificationFilters,
+            onResponse: (Notifications) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.NOTIFICATIONS,
-            filters.mobile,
-            onResponse,
-            onError, null, "mobile", filters.mobile, "all", if (filters.getAll) "true" else "false"
+                RequestMethods.GET,
+                serverURL + Operations.NOTIFICATIONS,
+                filters.mobile,
+                onResponse,
+                onError, null, "mobile", filters.mobile, "all", if (filters.getAll) "true" else "false"
         )
     }
 
@@ -391,6 +392,20 @@ class TutiApiClient {
                 ebsRequest,
                 onResponse,
                 onError
+        )
+    }
+
+    fun syncContacts(
+            contacts: List<Contact>,
+            onResponse: (contacts:List<Contact>) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+                RequestMethods.POST,
+                serverURL + Operations.SUBMIT_CONTACTS,
+                contacts,
+                onResponse,
+                onError,
         )
     }
 
@@ -549,6 +564,7 @@ class TutiApiClient {
                 onError,
         )
     }
+
     fun purchaseBashairCredit(
             card: Card,
             ipin: String,
@@ -569,6 +585,7 @@ class TutiApiClient {
                 onError,
         )
     }
+
     fun generateVoucher(
             card: Card,
             ipin: String,
@@ -811,17 +828,17 @@ class TutiApiClient {
      * as such it is subject to be change.
      */
     fun quickPayment(
-        request: EBSRequest?,
-        uuid: String = "",
-        onResponse: (PaymentToken) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            request: EBSRequest?,
+            uuid: String = "",
+            onResponse: (PaymentToken) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.POST,
-            serverURL + Operations.QuickPayment,
-            request,
-            onResponse,
-            onError, null, "uuid", uuid
+                RequestMethods.POST,
+                serverURL + Operations.QuickPayment,
+                request,
+                onResponse,
+                onError, null, "uuid", uuid
         )
     }
 
@@ -857,7 +874,6 @@ class TutiApiClient {
                 onError,
         )
     }
-
 
 
     /**
@@ -952,19 +968,19 @@ class TutiApiClient {
 
 
     fun getUserCard(
-        mobile: String,
-        onResponse: (UserCards) -> Unit,
-        onError: (TutiResponse?, Exception?) -> Unit
+            mobile: String,
+            onResponse: (UserCards) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
-            RequestMethods.GET,
-            serverURL + Operations.USER_CARDS,
-            "",
-            onResponse,
-            onError,
-            null,
-            "mobile",
-            mobile
+                RequestMethods.GET,
+                serverURL + Operations.USER_CARDS,
+                "",
+                onResponse,
+                onError,
+                null,
+                "mobile",
+                mobile
         )
     }
 

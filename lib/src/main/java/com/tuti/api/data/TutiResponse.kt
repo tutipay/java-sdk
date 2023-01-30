@@ -29,7 +29,7 @@ data class TutiResponse(
         val dueAmount: DueAmount = DueAmount(),
         val fees: Fees? = Fees(),
         @SerialName("payment_link")
-        val paymentLink: String?,
+        val paymentLink: String? = null,
 
         @SerialName("ebs_response")
         val ebsResponse: EBSResponse = EBSResponse()

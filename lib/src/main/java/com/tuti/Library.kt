@@ -4,7 +4,10 @@
 package com.tuti
 
 import com.tuti.api.TutiApiClient
+import com.tuti.api.authentication.SignInRequest
+import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.Card
+import com.tuti.api.data.Contact
 import com.tuti.api.data.TutiResponse
 import com.tuti.api.ebs.EBSRequest
 import kotlinx.serialization.encodeToString
@@ -15,28 +18,18 @@ object Library {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        addBeneficiary()
-        testFirebase()
+        val client = TutiApiClient()
+        client.SignIn(SignInRequest(mobile = "0923377628", password = "Rami1111."),
+        onResponse = {signInResponse: SignInResponse ->
+            val token = signInResponse.authorizationJWT
+            client.authToken = token
+            client.syncContacts(listOf(Contact("Rami","0923377628") , Contact("Mohammed Salah","0968199068")),
+            onResponse = {contacts ->
+                print(contacts)
+            },
+            onError = {tutiResponse, exception ->  })
+        },
+        onError = {tutiResponse, exception ->  })
     }
 }
 
-private fun addBeneficiary() {
-    val tutiApiClient = TutiApiClient()
-    tutiApiClient.authToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDk4MDc1LCJpc3MiOiJub2VicyJ9.2YveVIAuCg6O4-PsxZJ4pclQJGNapdNlIUC0XaBmFrY"
-
-}
-
-private fun testFirebase() {
-    val tutiApiClient = TutiApiClient()
-    tutiApiClient.authToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY4MTQ0OTIxLCJpc3MiOiJub2VicyJ9.bgvBds5TL24YsVAWT6aGS6BCmm1BMRQyaEzRXJbU2TQ"
-
-    tutiApiClient.UpsertFirebase("this is my firebase token", { signInResponse: TutiResponse? ->
-        run { println(signInResponse) }
-    }, { objectReceived: TutiResponse?, exception: Exception? ->
-        run {
-            println(objectReceived.toString())
-        }
-    })
-}

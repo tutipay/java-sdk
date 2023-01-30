@@ -28,6 +28,8 @@ data class TutiResponse(
         @SerialName("due_amount")
         val dueAmount: DueAmount = DueAmount(),
         val fees: Fees? = Fees(),
+        @SerialName("payment_link")
+        val paymentLink: String?,
 
         @SerialName("ebs_response")
         val ebsResponse: EBSResponse = EBSResponse()

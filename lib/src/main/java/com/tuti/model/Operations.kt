@@ -52,4 +52,5 @@ object Operations {
     const val USER_CARDS = "users/cards"
     const val NOTIFICATIONS = "notifications"
     const val SUBMIT_CONTACTS = "submit_contacts"
+    const val CHECK_USER = "check_user"
 }

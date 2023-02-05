@@ -984,6 +984,20 @@ class TutiApiClient {
         )
     }
 
+    fun isUser(
+            phones: ArrayList<String>,
+            onResponse: (IsUserResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+                RequestMethods.POST,
+                serverURL + Operations.CHECK_USER,
+                phones,
+                onResponse,
+                onError,
+                null,
+        )
+    }
 
     inline fun <reified RequestType, reified ResponseType, reified ErrorType> sendRequest(
             method: RequestMethods,

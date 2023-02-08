@@ -6,7 +6,7 @@ package com.tuti
 import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
-import com.tuti.api.data.Contact
+import com.tuti.api.data.IsUserRequest
 
 object Library {
     var jwt: String? = null
@@ -14,17 +14,19 @@ object Library {
     @JvmStatic
     fun main(args: Array<String>) {
         val client = TutiApiClient()
-        client.SignIn(SignInRequest(mobile = "0923377628", password = "Rami1234."),
+        client.SignIn(SignInRequest(mobile = System.getenv("tuti_username"),
+                password = System.getenv("tuti_password")),
                 onResponse = { signInResponse: SignInResponse ->
                     val token = signInResponse.authorizationJWT
                     client.authToken = token
-                    client.syncContacts(listOf(Contact("Rami", "0923377628"),
-                            Contact("Mohammed Salah", "0968199068"),
-                             Contact("Khalid", "0123456789")),
-                            onResponse = { contacts ->
-                                print(contacts)
-                            },
-                            onError = { tutiResponse, exception -> })
+
+                    val phones = IsUserRequest(listOf("", ""))
+
+                    client.isUser(phones, onResponse = { isUserResponse ->
+                        println(isUserResponse.toString())
+                    }, onError = { _, _ -> })
+
+
                 },
                 onError = { tutiResponse, exception -> })
     }

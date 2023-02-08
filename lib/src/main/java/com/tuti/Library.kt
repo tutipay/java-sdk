@@ -6,12 +6,7 @@ package com.tuti
 import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
-import com.tuti.api.data.Card
 import com.tuti.api.data.Contact
-import com.tuti.api.data.TutiResponse
-import com.tuti.api.ebs.EBSRequest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 object Library {
     var jwt: String? = null
@@ -19,17 +14,19 @@ object Library {
     @JvmStatic
     fun main(args: Array<String>) {
         val client = TutiApiClient()
-        client.SignIn(SignInRequest(mobile = "0923377628", password = "Rami1111."),
-        onResponse = {signInResponse: SignInResponse ->
-            val token = signInResponse.authorizationJWT
-            client.authToken = token
-            client.syncContacts(listOf(Contact("Rami","0923377628") , Contact("Mohammed Salah","0968199068")),
-            onResponse = {contacts ->
-                print(contacts)
-            },
-            onError = {tutiResponse, exception ->  })
-        },
-        onError = {tutiResponse, exception ->  })
+        client.SignIn(SignInRequest(mobile = "0923377628", password = "Rami1234."),
+                onResponse = { signInResponse: SignInResponse ->
+                    val token = signInResponse.authorizationJWT
+                    client.authToken = token
+                    client.syncContacts(listOf(Contact("Rami", "0923377628"),
+                            Contact("Mohammed Salah", "0968199068"),
+                             Contact("Khalid", "0123456789")),
+                            onResponse = { contacts ->
+                                print(contacts)
+                            },
+                            onError = { tutiResponse, exception -> })
+                },
+                onError = { tutiResponse, exception -> })
     }
 }
 

@@ -6,6 +6,12 @@ data class IsUser (
     val is_user: Boolean,
 )
 
+@kotlinx.serialization.Serializable
 data class IsUserResponse (
     val result: List<IsUser>
+)
+
+@kotlinx.serialization.Serializable
+data class IsUserRequest(
+        val phones:List<String>
 )

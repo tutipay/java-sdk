@@ -985,7 +985,7 @@ class TutiApiClient {
     }
 
     fun isUser(
-            phones: List<String>,
+            phones: IsUserRequest,
             onResponse: (IsUserResponse) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {

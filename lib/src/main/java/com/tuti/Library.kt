@@ -20,7 +20,7 @@ object Library {
                     val token = signInResponse.authorizationJWT
                     client.authToken = token
 
-                    val phones = IsUserRequest(listOf("", ""))
+                    val phones = IsUserRequest(listOf("0923377628", "0123456789"))
 
                     client.isUser(phones, onResponse = { isUserResponse ->
                         println(isUserResponse.toString())

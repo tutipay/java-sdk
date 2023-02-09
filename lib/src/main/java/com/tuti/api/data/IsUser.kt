@@ -4,6 +4,7 @@ package com.tuti.api.data
 data class IsUser (
     val phone: String,
     val is_user: Boolean,
+    val PAN:String? = null
 )
 
 @kotlinx.serialization.Serializable

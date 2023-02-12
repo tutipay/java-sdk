@@ -999,6 +999,21 @@ class TutiApiClient {
         )
     }
 
+    fun setMainCard(
+            card: SetMainCardRequest,
+            onResponse: (SetMainCardResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+                RequestMethods.POST,
+                serverURL + Operations.SET_MAIN_CARD,
+                card,
+                onResponse,
+                onError,
+                null,
+        )
+    }
+
     inline fun <reified RequestType, reified ResponseType, reified ErrorType> sendRequest(
             method: RequestMethods,
             URL: String,

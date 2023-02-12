@@ -67,3 +67,14 @@ data class UserCards (
 
         }
 }
+@kotlinx.serialization.Serializable
+data class SetMainCardRequest(
+        @SerialName("PAN")
+        val PAN: String = "",
+)
+
+@kotlinx.serialization.Serializable
+data class SetMainCardResponse(
+        @SerialName("result")
+        val result: String = "",
+)

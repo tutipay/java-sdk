@@ -397,7 +397,7 @@ class TutiApiClient {
 
     fun syncContacts(
             contacts: List<Contact>,
-            onResponse: (contacts:List<Contact>) -> Unit,
+            onResponse: (contacts: List<Contact>) -> Unit,
             onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
@@ -559,6 +559,27 @@ class TutiApiClient {
         sendRequest(
                 RequestMethods.POST,
                 serverURL + Operations.CARD_TRANSFER,
+                request,
+                onResponse,
+                onError,
+        )
+    }
+
+    fun userAccountTransfer(
+            card: Card,
+            ipin: String,
+            receiverPhoneNumber: String,
+            deviceId: String = "",
+            amount: Float,
+            onResponse: (TutiResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        val request = fillRequestFields(card, ipin, amount)
+        request.mobile = receiverPhoneNumber
+        request.deviceId = deviceId
+        sendRequest(
+                RequestMethods.POST,
+                serverURL + Operations.P2P_MOBILE,
                 request,
                 onResponse,
                 onError,

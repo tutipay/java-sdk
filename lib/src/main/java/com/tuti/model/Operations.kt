@@ -53,5 +53,6 @@ object Operations {
     const val NOTIFICATIONS = "notifications"
     const val SUBMIT_CONTACTS = "submit_contacts"
     const val CHECK_USER = "check_user"
+    const val P2P_MOBILE = "p2p_mobile"
     const val SET_MAIN_CARD = "cards/set_main"
 }

@@ -6,7 +6,7 @@ package com.tuti
 import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
-import com.tuti.api.data.IsUserRequest
+import com.tuti.api.data.Card
 
 object Library {
     var jwt: String? = null
@@ -14,21 +14,36 @@ object Library {
     @JvmStatic
     fun main(args: Array<String>) {
         val client = TutiApiClient()
-        client.SignIn(SignInRequest(mobile = System.getenv("tuti_username"),
-                password = System.getenv("tuti_password")),
-                onResponse = { signInResponse: SignInResponse ->
-                    val token = signInResponse.authorizationJWT
-                    client.authToken = token
+        val tuti_username = System.getenv("tuti_username")
+        val tuti_password = System.getenv("tuti_password")
+        val tuti_card_pan = System.getenv("tuti_card_pan")
+        val tuti_card_exp_date = System.getenv("tuti_card_exp_date")
+        val tuti_card_ipin = System.getenv("tuti_card_ipin")
+        val uuid = "3c420386-5fd0-4b72-918a-5b87bba13f81"
 
-                    val phones = IsUserRequest(listOf("0923377628", "0123456789"))
+        val card = Card(
+            PAN = tuti_card_pan,
+            expiryDate = tuti_card_exp_date
+        )
 
-                    client.isUser(phones, onResponse = { isUserResponse ->
-                        println(isUserResponse.toString())
-                    }, onError = { _, _ -> })
+        client.SignIn(SignInRequest(
+            mobile = tuti_username,
+            password = tuti_password
+        ),
+            onResponse = { signInResponse: SignInResponse ->
+                val token = signInResponse.authorizationJWT
+                client.authToken = token
 
+                client.payByUUID(card = card,
+                    ipin = tuti_card_ipin,
+                    uuid = uuid,
+                    amount = 1f,
+                    onResponse = { paymentToken ->
+                        print(paymentToken)
+                    }, onError = { tutiResponse, exception -> })
 
-                },
-                onError = { tutiResponse, exception -> })
+            },
+            onError = { tutiResponse, exception -> })
     }
 }
 

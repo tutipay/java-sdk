@@ -863,6 +863,26 @@ class TutiApiClient {
         )
     }
 
+    fun payByUUID(
+        card: Card,
+        ipin: String,
+        uuid:String,
+        amount:Float,
+        onResponse: (PaymentToken) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        val request = EBSRequest()
+        fillRequestFields(card,ipin,amount)
+        request.quickPayToken = uuid
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.QuickPayment,
+            request,
+            onResponse,
+            onError, null, "uuid", uuid
+        )
+    }
+
     fun getPaymentToken(
             uuid: String,
             onResponse: (PaymentToken) -> Unit,

@@ -871,8 +871,7 @@ class TutiApiClient {
         onResponse: (PaymentToken) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
-        val request = EBSRequest()
-        fillRequestFields(card,ipin,amount)
+        val request = fillRequestFields(card,ipin,amount)
         request.quickPayToken = uuid
         sendRequest(
             RequestMethods.POST,

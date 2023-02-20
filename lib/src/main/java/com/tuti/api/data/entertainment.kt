@@ -116,25 +116,20 @@ data class SendTransferRequest(
         @Transient
         val ebsKey: String = "",
 
-        val BalanceUUID: String = UUID.randomUUID().toString(),
-        val BalancePAN: String = card.PAN,
-        val BalanceIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, BalanceUUID),
-        val BalanceExpDate: String = card.expiryDate,
-        val BalanceApplicationId: String = "TutiPayCon",
-        val BalanceTranDateTime: String = "050123141642",
+
         val ProductID: String,
         val Amount: Float,
+        val PAN: String = card.PAN,
+        val ExpDate: String = card.expiryDate,
+        val ApplicationId: String = "TutiPayCon",
         val TutiDiscount: Float = 0f,
+        val BalanceUUID: String = UUID.randomUUID().toString(),
+        val BalanceIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, BalanceUUID),
+        val BalanceTranDateTime: String = "050123141642",
         val CardTransferUUID: String = UUID.randomUUID().toString(),
-        val CardTransferPAN: String = card.PAN,
         val CardTransferIPIN: String = IPINBlockGenerator.getIPINBlock(ipin, ebsKey, CardTransferUUID),
-        val CardTransferExpDate: String = card.expiryDate,
-        val CardTransferApplicationId: String = "TutiPayCon",
         val CardTransferTranDateTime: String = "050123141642",
-        val CardTransferTranCurrencyCode: String = "SDG",
-        val CardTransferToCard: String = "9222191370749163884",
-        val CardTransferTranAmount: Float = 0f
-)
+        )
 
 @Serializable
 data class SendTransferResponse(

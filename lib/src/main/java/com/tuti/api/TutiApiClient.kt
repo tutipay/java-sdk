@@ -131,6 +131,30 @@ class TutiApiClient {
         )
     }
 
+    fun EntertainmentSendTranser(
+            card: Card,
+            ipin: String,
+            productID : String,
+            amount : Float,
+            onResponse: (SendTransferResponse) -> Unit,
+            onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        val request = SendTransferRequest(
+                card = card,
+                ipin = ipin,
+                ebsKey = ebsKey,
+                ProductID = productID,
+                Amount = amount
+        )
+        sendRequest(
+                RequestMethods.POST,
+                entertainmentServer + Operations.ENTERTAINMENT_SEND_TRANSFER,
+                requestToBeSent = request,
+                onResponse = onResponse,
+                onError = onError,
+        )
+    }
+
     fun TestDeploy(): String {
         return "from SDK"
     }

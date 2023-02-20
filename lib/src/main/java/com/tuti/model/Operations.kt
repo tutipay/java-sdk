@@ -1,6 +1,7 @@
 package com.tuti.model
 
 object Operations {
+    const val ENTERTAINMENT_SEND_TRANSFER = "SendTransfer"
     const val GET_PROVIDER_PRODUCTS = "GetProviderProducts"
     const val GET_PROVIDERS = "GetAllProviders"
     const val PUBLIC_KEY = "key"

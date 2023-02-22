@@ -885,7 +885,7 @@ class TutiApiClient {
     fun getPaymentToken(
             uuid: String,
             onResponse: (PaymentToken) -> Unit,
-            onError: (PaymentToken?, Exception?) -> Unit
+            onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(
                 RequestMethods.GET,

@@ -34,12 +34,19 @@ jobs:
       with:
         arguments: build -x test
         
+    - name: Set short git commit SHA
+      id: vars
+      run: |
+         calculatedSha=$(git rev-parse --short ${{ github.sha }})
+         echo "::set-output name=short_sha::$calculatedSha"
+
+        
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: publish
+        arguments: publish -P version=${{ steps.vars.outputs.short_sha }}
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}

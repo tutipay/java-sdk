@@ -22,23 +22,32 @@ object Library {
         val uuid = "3c420386-5fd0-4b72-918a-5b87bba13f81"
 
         val card = Card(
-            PAN = "",
-            expiryDate = "2402"
+                PAN = tuti_card_pan,
+                expiryDate = tuti_card_exp_date
         )
 
-        client.EntertainmentSendTranser(
-                card,
-                "",
-                "FHUSUS25271",
-                300.0f,
-                {
-                println(it.toString())
+        client.SignIn(SignInRequest(
+                mobile = tuti_username,
+                password = tuti_password
+        ),
+                onResponse = { signInResponse: SignInResponse ->
+                    val token = signInResponse.authorizationJWT
+                    client.authToken = token
+                    client.getPaymentToken(uuid,
+                            onResponse = { PaymentToken ->
+
+                            },
+                            onError = { paymentToken, exception ->
+                                exception?.let {
+
+                                }
+                                paymentToken?.let {
+                                    print("error occcurrrrrrrrrrrred")
+                                }
+                            })
+
                 },
-                { tutiResponse, exception ->
-                    println(tutiResponse?.message.toString())
-                    println(exception?.message)
-                }
-        )
+                onError = { tutiResponse, exception -> })
     }
 }
 

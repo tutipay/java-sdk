@@ -16,11 +16,11 @@ object Library {
         val client = TutiApiClient()
         val tuti_username = System.getenv("tuti_username")
         val tuti_password = System.getenv("tuti_password")
+        val tuti_card_pan = System.getenv("tuti_card_pan")
+        val tuti_card_exp_date = System.getenv("tuti_card_exp_date")
+        val tuti_card_ipin = System.getenv("tuti_card_ipin")
         val uuid = "3c420386-5fd0-4b72-918a-5b87bba13f81"
 
-        val tuti_card_pan = System.getenv("tuti_card_pan") ?: ""
-        val tuti_card_exp_date = System.getenv("tuti_card_exp_date") ?: ""
-        val tuti_card_ipin = System.getenv("tuti_card_ipin") ?: ""
         val card = Card(
                 PAN = tuti_card_pan,
                 expiryDate = tuti_card_exp_date

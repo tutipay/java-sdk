@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class SignInRequest(
         @SerialName("password")
         val password: String? = "",
@@ -22,7 +22,7 @@ data class SignInRequest(
         val message: String? = "",
 )
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class SignupRequest(
         @SerialName("password")
         val password: String,
@@ -42,7 +42,7 @@ data class SignupRequest(
 )
 
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class GenerateOTP(
         val mobile: String,
         val password: String? = "",
@@ -51,7 +51,7 @@ data class GenerateOTP(
 )
 
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class Notification(
         @SerialName("phone") val phone: String?,
         val type: String?,
@@ -66,10 +66,6 @@ data class Notification(
         @SerialName("payment_request") val paymentToken: PaymentToken?,
 )
 
-@kotlinx.serialization.Serializable
-data class Notifications (
-        val notifications: List<Notification> = emptyList()
-)
 data class NotificationFilters(
         val mobile: String,
         val getAll: Boolean = false,

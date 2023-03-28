@@ -7,6 +7,9 @@ import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.Card
+import com.tuti.api.ebs.EBSResponse
+import com.tuti.model.Notification
+import com.tuti.model.NotificationFilters
 
 object Library {
     var jwt: String? = null
@@ -22,32 +25,23 @@ object Library {
         val uuid = "3c420386-5fd0-4b72-918a-5b87bba13f81"
 
         val card = Card(
-                PAN = tuti_card_pan,
-                expiryDate = tuti_card_exp_date
+            PAN = tuti_card_pan,
+            expiryDate = tuti_card_exp_date
         )
 
         client.SignIn(SignInRequest(
-                mobile = tuti_username,
-                password = tuti_password
+            mobile = tuti_username,
+            password = tuti_password
         ),
-                onResponse = { signInResponse: SignInResponse ->
-                    val token = signInResponse.authorizationJWT
-                    client.authToken = token
-                    client.getPaymentToken(uuid,
-                            onResponse = { PaymentToken ->
+            onResponse = { signInResponse: SignInResponse ->
+                val token = signInResponse.authorizationJWT
+                client.authToken = token
+                client.getTransctionByUUID(uuid = "dcfb767f-9a64-40a4-9da0-ae78956f0085",
+                onResponse = {ebsResponse: EBSResponse ->  println(ebsResponse.billInfo?.get("customerName"))},
+                onError = {tutiResponse, exception ->  })
 
-                            },
-                            onError = { paymentToken, exception ->
-                                exception?.let {
-
-                                }
-                                paymentToken?.let {
-                                    print("error occcurrrrrrrrrrrred")
-                                }
-                            })
-
-                },
-                onError = { tutiResponse, exception -> })
+            },
+            onError = { tutiResponse, exception -> })
     }
 }
 

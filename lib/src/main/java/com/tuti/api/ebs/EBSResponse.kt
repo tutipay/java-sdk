@@ -2,11 +2,14 @@ package com.tuti.api.ebs
 
 import com.tuti.model.PayeeID
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.json.*
 import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+
+val json = Json { ignoreUnknownKeys = true }
 
 @kotlinx.serialization.Serializable
 class EBSResponse : Serializable {
@@ -57,7 +60,16 @@ class EBSResponse : Serializable {
     val issuerTranFee: Float? = null
     val pubKeyValue: String? = null
     val tranCurrency: String = ""
-    val paymentInfo: String = ""
+
+    @SerialName("paymentInfo")
+    val paymentInfo1: String? = null
+
+    @SerialName("bill_to")
+    val paymentInfo2: String? = null
+
+    @kotlinx.serialization.Transient
+    val paymentInfo = paymentInfo1 ?: paymentInfo2 ?: ""
+
     var payeeId: String = ""
     var fromAccount: String = ""
     var financialInstitutionId: String = ""
@@ -82,7 +94,16 @@ class EBSResponse : Serializable {
     var mbr: String? = null
     val errorMessage: ErrorMessage = ErrorMessage()
     val balance: HashMap<String, Double> = HashMap()
-    var billInfo: HashMap<String, String> = HashMap()
+
+    @SerialName("billInfo")
+    val billInfo1: Map<String, String>? = null
+
+    @SerialName("bill_info2")
+    val billInfo2String: String? = null
+    val billInfo2 = billInfo2String?.let { json.parseToJsonElement(it).jsonObject.toStringMap() }
+
+    @kotlinx.serialization.Transient
+    val billInfo: Map<String, String>? = billInfo1 ?: billInfo2
 
     /**
      * @return the due amount for the payeeI
@@ -90,14 +111,17 @@ class EBSResponse : Serializable {
      * @return
      */
     fun getDueAmount(payeeId: PayeeID?): String? {
+        if(this.billInfo == null){
+            return ""
+        }
         return when (payeeId) {
             PayeeID.ZainPostpaid -> billInfo["totalAmount"] // FIXME(adonese): Zain also has an `unbilledAmount` field like mtn but we are using totalAmount here just for testing
-            PayeeID.MTNPostpaid -> billInfo!!["unbilledAmount"] // FIXME(adonese): This doesn't seem to be correct..
-            PayeeID.SudaniPostpaid -> billInfo!!["billAmount"]
-            PayeeID.Invoice -> billInfo!!["amount_due"]
-            PayeeID.Mohe, PayeeID.MoheArab -> billInfo!!["dueAmount"]
-            PayeeID.Customs -> billInfo!!["AmountToBePaid"]
-            PayeeID.E15 -> billInfo!!["TotalAmount"]
+            PayeeID.MTNPostpaid -> billInfo["unbilledAmount"] // FIXME(adonese): This doesn't seem to be correct..
+            PayeeID.SudaniPostpaid -> billInfo["billAmount"]
+            PayeeID.Invoice -> billInfo["amount_due"]
+            PayeeID.Mohe, PayeeID.MoheArab -> billInfo["dueAmount"]
+            PayeeID.Customs -> billInfo["AmountToBePaid"]
+            PayeeID.E15 -> billInfo["TotalAmount"]
             else -> ""
         }
     }
@@ -110,7 +134,7 @@ class EBSResponse : Serializable {
         get() {
             val formatter: NumberFormat = DecimalFormat("#0.00")
             return try {
-                formatter.format(balance!!["available"])
+                formatter.format(balance["available"])
             } catch (e: Exception) {
                 "0"
             }
@@ -124,16 +148,16 @@ class EBSResponse : Serializable {
         get() {
             val formatter: NumberFormat = DecimalFormat("#0.00")
             return try {
-                formatter.format(balance!!["leger"])
+                formatter.format(balance["leger"])
             } catch (e: Exception) {
                 "0"
             }
         }
     var dynamicFees: String? = null
     val ebsError: String
-        get() = errorMessage!!.ebsMessage
+        get() = errorMessage.ebsMessage
     val ebsCode: Int?
-        get() = errorMessage!!.ebsCode
+        get() = errorMessage.ebsCode
 
     /**
      * @param code error code, get it from onError error.getErrorCode()
@@ -149,7 +173,7 @@ class EBSResponse : Serializable {
             // a validation error - and other form of errors
             this.code
         } else {
-            errorMessage!!.message
+            errorMessage.message
         }
     }
 
@@ -157,7 +181,7 @@ class EBSResponse : Serializable {
      * A helper functions that works for both classes of errors; whether they are ebs or not
      */
     fun getEbsCode(code: Int?): Int? {
-        return if (errorMessage!!.isEbsError) {
+        return if (errorMessage.isEbsError) {
             errorMessage.ebsCode
         } else {
             errorMessage.code
@@ -172,12 +196,12 @@ class EBSResponse : Serializable {
 
 @kotlinx.serialization.Serializable
 data class ErrorMessage(
-        val message: String = "",
-        val code: Int? = null,
-        val status: String = "",
-        val details: ErrorDetails? = null,
+    val message: String = "",
+    val code: Int? = null,
+    val status: String = "",
+    val details: ErrorDetails? = null,
 
-        ) {
+    ) {
     val ebsMessage: String
         get() = details!!.responseMessage
     val ebsCode: Int?
@@ -194,7 +218,15 @@ data class ErrorMessage(
 
 @kotlinx.serialization.Serializable
 data class ErrorDetails(
-        val responseMessage: String = "",
-        val responseStatus: String = "",
-        val responseCode: Int? = null,
+    val responseMessage: String = "",
+    val responseStatus: String = "",
+    val responseCode: Int? = null,
 )
+
+fun JsonObject.toStringMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    this.keys.forEach { key ->
+        map[key] = this[key]?.jsonPrimitive?.contentOrNull ?:""
+    }
+    return map
+}

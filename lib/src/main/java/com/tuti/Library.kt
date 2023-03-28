@@ -7,6 +7,7 @@ import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.Card
+import com.tuti.api.ebs.EBSResponse
 import com.tuti.model.Notification
 import com.tuti.model.NotificationFilters
 
@@ -35,13 +36,9 @@ object Library {
             onResponse = { signInResponse: SignInResponse ->
                 val token = signInResponse.authorizationJWT
                 client.authToken = token
-                client.getNotifications(
-                    NotificationFilters("", true),
-                    onResponse = { notifications: List<Notification> ->
-                        println(notifications)
-                    },
-                    onError = { tutiResponse, exception -> }
-                )
+                client.getTransctionByUUID(uuid = "8e0fc330-e9cb-4d01-8e99-5476f75baf5c",
+                onResponse = {ebsResponse: EBSResponse ->  println(ebsResponse.paymentInfo)},
+                onError = {tutiResponse, exception ->  })
 
             },
             onError = { tutiResponse, exception -> })

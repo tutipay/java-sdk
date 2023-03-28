@@ -57,7 +57,16 @@ class EBSResponse : Serializable {
     val issuerTranFee: Float? = null
     val pubKeyValue: String? = null
     val tranCurrency: String = ""
-    val paymentInfo: String = ""
+
+    @SerialName("paymentInfo")
+    val paymentInfo1: String? = null
+
+    @SerialName("bill_to")
+    val paymentInfo2: String? = null
+
+    @kotlinx.serialization.Transient
+    val paymentInfo = paymentInfo1 ?: paymentInfo2 ?: ""
+
     var payeeId: String = ""
     var fromAccount: String = ""
     var financialInstitutionId: String = ""
@@ -172,12 +181,12 @@ class EBSResponse : Serializable {
 
 @kotlinx.serialization.Serializable
 data class ErrorMessage(
-        val message: String = "",
-        val code: Int? = null,
-        val status: String = "",
-        val details: ErrorDetails? = null,
+    val message: String = "",
+    val code: Int? = null,
+    val status: String = "",
+    val details: ErrorDetails? = null,
 
-        ) {
+    ) {
     val ebsMessage: String
         get() = details!!.responseMessage
     val ebsCode: Int?
@@ -194,7 +203,7 @@ data class ErrorMessage(
 
 @kotlinx.serialization.Serializable
 data class ErrorDetails(
-        val responseMessage: String = "",
-        val responseStatus: String = "",
-        val responseCode: Int? = null,
+    val responseMessage: String = "",
+    val responseStatus: String = "",
+    val responseCode: Int? = null,
 )

@@ -36,8 +36,8 @@ object Library {
             onResponse = { signInResponse: SignInResponse ->
                 val token = signInResponse.authorizationJWT
                 client.authToken = token
-                client.getTransctionByUUID(uuid = "8e0fc330-e9cb-4d01-8e99-5476f75baf5c",
-                onResponse = {ebsResponse: EBSResponse ->  println(ebsResponse.paymentInfo)},
+                client.getTransctionByUUID(uuid = "dcfb767f-9a64-40a4-9da0-ae78956f0085",
+                onResponse = {ebsResponse: EBSResponse ->  println(ebsResponse.billInfo?.get("customerName"))},
                 onError = {tutiResponse, exception ->  })
 
             },

@@ -5,7 +5,6 @@ import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.data.TutiResponse
 import com.tuti.api.ebs.EBSRequest
 import com.tuti.model.NotificationFilters
-import com.tuti.model.Notifications
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -77,10 +76,10 @@ internal class TutiApiClientTest {
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwMTExNDkzODg1IiwiZXhwIjoxNjY3NDMxNTY5LCJpc3MiOiJub2VicyJ9.DUyUJDTPO68b9f4Jl5dCnt-yIQOGfA94l2C-t7D88JY"
         tutiApiClient.getNotifications(
             NotificationFilters(getAll = true, mobile = "0111493885"),
-            onResponse = { res: Notifications? ->
+            onResponse = { res ->
                 run {
-                    assertEquals(res!!.notifications[0].phone, "0129751986")
-                    assertEquals(res.notifications[0].body, "fuff")
+                    assertEquals(res[0].phone, "0129751986")
+                    assertEquals(res[0].body, "fuff")
                 }
             },
             onError = { objectReceived: TutiResponse?, _: Exception? ->

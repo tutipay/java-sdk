@@ -547,8 +547,8 @@ class TutiApiClient {
         request.pan = card.PAN
         request.expDate = card.expiryDate
         request.IPIN = encryptedIPIN
-        println(request.tranDateTime)
-        println(request.applicationId)
+        //println(request.tranDateTime)
+        //println(request.applicationId)
 
         sendRequest(
             RequestMethods.POST,
@@ -911,7 +911,7 @@ class TutiApiClient {
         ipin: String,
         uuid: String,
         amount: Float,
-        onResponse: (PaymentToken) -> Unit,
+        onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
@@ -1117,7 +1117,7 @@ class TutiApiClient {
         val finalURL = URL + urlData
         val runnable = {
             val jsonObjectString = Json.encodeToString(requestToBeSent)
-            println(jsonObjectString)
+            //println(jsonObjectString)
             val requestBody: RequestBody = jsonObjectString.toRequestBody(JSON)
             val requestBuilder: Request.Builder = Request.Builder().url(finalURL)
             requestBuilder.header("Authorization", authToken)

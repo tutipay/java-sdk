@@ -2,8 +2,8 @@ package com.tuti.api.ebs
 
 import com.tuti.model.PayeeID
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
-import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat
 
 val json = Json { ignoreUnknownKeys = true }
 
-@kotlinx.serialization.Serializable
-class EBSResponse : Serializable {
+@Serializable
+class EBSResponse {
     val responseMessage: String = ""
     var responseStatus: String = ""
     val responseCode: Int? = null
@@ -111,7 +111,7 @@ class EBSResponse : Serializable {
      * @return
      */
     fun getDueAmount(payeeId: PayeeID?): String? {
-        if(this.billInfo == null){
+        if (this.billInfo == null) {
             return ""
         }
         return when (payeeId) {
@@ -194,7 +194,7 @@ class EBSResponse : Serializable {
  * whether they were stemmed from EBS errors, or other kind of errors
  */
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ErrorMessage(
     val message: String = "",
     val code: Int? = null,
@@ -216,7 +216,7 @@ data class ErrorMessage(
         }
 }
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ErrorDetails(
     val responseMessage: String = "",
     val responseStatus: String = "",
@@ -226,7 +226,7 @@ data class ErrorDetails(
 fun JsonObject.toStringMap(): Map<String, String> {
     val map = mutableMapOf<String, String>()
     this.keys.forEach { key ->
-        map[key] = this[key]?.jsonPrimitive?.contentOrNull ?:""
+        map[key] = this[key]?.jsonPrimitive?.contentOrNull ?: ""
     }
     return map
 }

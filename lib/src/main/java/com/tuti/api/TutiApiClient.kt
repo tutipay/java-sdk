@@ -166,6 +166,35 @@ class TutiApiClient {
     }
 
 
+    fun getUserProfile(
+        onResponse: (UserProfile) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.USER_PROFILE,
+            "",
+            onResponse = onResponse,
+            onError = onError,
+        )
+    }
+
+
+
+    fun setUserProfile(
+        userProfile: UserProfile,
+        onResponse: (UserProfileResult) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.PUT,
+            serverURL + Operations.USER_PROFILE,
+            userProfile,
+            onResponse = onResponse,
+            onError = onError,
+        )
+    }
+
     /**
      * OneTimeSignIn allows tutipay users to sign in via a code we send to their phone numbers
      * Notice: this method ONLY works for tutipay registered devices, at the moment
@@ -547,8 +576,8 @@ class TutiApiClient {
         request.pan = card.PAN
         request.expDate = card.expiryDate
         request.IPIN = encryptedIPIN
-        println(request.tranDateTime)
-        println(request.applicationId)
+        //println(request.tranDateTime)
+        //println(request.applicationId)
 
         sendRequest(
             RequestMethods.POST,
@@ -911,7 +940,7 @@ class TutiApiClient {
         ipin: String,
         uuid: String,
         amount: Float,
-        onResponse: (PaymentToken) -> Unit,
+        onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         val request = fillRequestFields(card, ipin, amount)
@@ -1117,7 +1146,7 @@ class TutiApiClient {
         val finalURL = URL + urlData
         val runnable = {
             val jsonObjectString = Json.encodeToString(requestToBeSent)
-            println(jsonObjectString)
+            //println(jsonObjectString)
             val requestBody: RequestBody = jsonObjectString.toRequestBody(JSON)
             val requestBuilder: Request.Builder = Request.Builder().url(finalURL)
             requestBuilder.header("Authorization", authToken)

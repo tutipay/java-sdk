@@ -7,9 +7,7 @@ import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.Card
-import com.tuti.api.ebs.EBSResponse
-import com.tuti.model.Notification
-import com.tuti.model.NotificationFilters
+import com.tuti.api.data.UserProfile
 
 object Library {
     var jwt: String? = null
@@ -22,7 +20,6 @@ object Library {
         val tuti_card_pan = System.getenv("tuti_card_pan")
         val tuti_card_exp_date = System.getenv("tuti_card_exp_date")
         val tuti_card_ipin = System.getenv("tuti_card_ipin")
-        val uuid = "3c420386-5fd0-4b72-918a-5b87bba13f81"
 
         val card = Card(
             PAN = tuti_card_pan,
@@ -34,11 +31,28 @@ object Library {
             password = tuti_password
         ),
             onResponse = { signInResponse: SignInResponse ->
+
+
+
                 val token = signInResponse.authorizationJWT
+
+                client.setUserProfile(
+                    UserProfile(
+                        fullname = "Rami Essamedeen",
+                        username = "rami3sam",
+                        gender = "Male",
+                        email = "rami3sam@gmail.com",
+                        birthday = "1995-09-30"
+                    ),
+                    onResponse = {userProfile -> println(userProfile.result)
+                    },
+                    onError = {tutiResponse, exception ->  }
+                )
+
                 client.authToken = token
-                client.getTransctionByUUID(uuid = "dcfb767f-9a64-40a4-9da0-ae78956f0085",
-                onResponse = {ebsResponse: EBSResponse ->  println(ebsResponse.billInfo?.get("customerName"))},
-                onError = {tutiResponse, exception ->  })
+                client.getUserProfile(
+                    onResponse = { userProfile -> userProfile},
+                    onError = { tutiResponse, exception -> })
 
             },
             onError = { tutiResponse, exception -> })

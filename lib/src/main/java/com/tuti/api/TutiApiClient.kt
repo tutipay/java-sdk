@@ -166,6 +166,34 @@ class TutiApiClient {
     }
 
 
+    fun getUserProfile(
+        onResponse: (UserProfile) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.GET,
+            serverURL + Operations.USER_PROFILE,
+            "",
+            onResponse = onResponse,
+            onError = onError,
+        )
+    }
+
+
+    fun setUserProfile(
+        userProfile: UserProfile,
+        onResponse: (UserProfile) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.PUT,
+            serverURL + Operations.USER_PROFILE,
+            userProfile,
+            onResponse = onResponse,
+            onError = onError,
+        )
+    }
+
     /**
      * OneTimeSignIn allows tutipay users to sign in via a code we send to their phone numbers
      * Notice: this method ONLY works for tutipay registered devices, at the moment

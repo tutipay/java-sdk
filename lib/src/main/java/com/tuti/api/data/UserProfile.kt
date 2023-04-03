@@ -8,3 +8,8 @@ data class UserProfile(
     val birthday:String,
     val gender:String,
 )
+
+@kotlinx.serialization.Serializable
+data class UserProfileResult(
+    val result:String,
+)

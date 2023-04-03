@@ -36,18 +36,18 @@ object Library {
 
                 val token = signInResponse.authorizationJWT
 
-//                client.setUserProfile(
-//                    UserProfile(
-//                        fullname = "Rami Essamedeen",
-//                        username = "rami3sam",
-//                        gender = "Male",
-//                        email = "rami3sam@gmail.com",
-//                        birthday = "1995-09-30"
-//                    ),
-//                    onResponse = {userProfile ->
-//                    },
-//                    onError = {tutiResponse, exception ->  }
-//                )
+                client.setUserProfile(
+                    UserProfile(
+                        fullname = "Rami Essamedeen",
+                        username = "rami3sam",
+                        gender = "Male",
+                        email = "rami3sam@gmail.com",
+                        birthday = "1995-09-30"
+                    ),
+                    onResponse = {userProfile -> println(userProfile.result)
+                    },
+                    onError = {tutiResponse, exception ->  }
+                )
 
                 client.authToken = token
                 client.getUserProfile(

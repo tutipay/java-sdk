@@ -180,9 +180,10 @@ class TutiApiClient {
     }
 
 
+
     fun setUserProfile(
         userProfile: UserProfile,
-        onResponse: (UserProfile) -> Unit,
+        onResponse: (UserProfileResult) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
         sendRequest(

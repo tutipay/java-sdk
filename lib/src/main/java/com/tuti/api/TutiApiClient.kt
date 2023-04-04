@@ -900,7 +900,7 @@ class TutiApiClient {
     }
 
     fun generatePaymentToken(
-        request: PaymentToken?,
+        request: PaymentToken,
         onResponse: (TutiResponse) -> Unit,
         onError: (TutiResponse?, Exception?) -> Unit
     ) {
@@ -908,6 +908,20 @@ class TutiApiClient {
             RequestMethods.POST,
             serverURL + Operations.GeneratePaymentToken,
             request,
+            onResponse,
+            onError,
+        )
+    }
+
+    fun sendPaymentRequest(
+        paymentRequest: PaymentRequest,
+        onResponse: (TutiResponse) -> Unit,
+        onError: (TutiResponse?, Exception?) -> Unit
+    ) {
+        sendRequest(
+            RequestMethods.POST,
+            serverURL + Operations.PAYMENT_REQUEST,
+            paymentRequest,
             onResponse,
             onError,
         )

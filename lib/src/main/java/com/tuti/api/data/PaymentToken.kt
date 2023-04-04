@@ -61,3 +61,10 @@ class PaymentToken(
         }
     }
 }
+
+@kotlinx.serialization.Serializable
+data class PaymentRequest(
+    val mobile:String,
+    val toCard:String,
+    val amount:Long,
+)

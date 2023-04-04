@@ -7,6 +7,7 @@ import com.tuti.api.TutiApiClient
 import com.tuti.api.authentication.SignInRequest
 import com.tuti.api.authentication.SignInResponse
 import com.tuti.api.data.Card
+import com.tuti.api.data.PaymentRequest
 import com.tuti.api.data.UserProfile
 
 object Library {
@@ -35,24 +36,17 @@ object Library {
 
 
                 val token = signInResponse.authorizationJWT
+                client.authToken = token
 
-                client.setUserProfile(
-                    UserProfile(
-                        fullname = "Rami Essamedeen",
-                        username = "rami3sam",
-                        gender = "Male",
-                        email = "rami3sam@gmail.com",
-                        birthday = "1995-09-30"
+                client.sendPaymentRequest(
+                    paymentRequest = PaymentRequest(
+                        mobile = tuti_username,
+                        toCard = tuti_card_pan,
+                        amount = 1L
                     ),
-                    onResponse = {userProfile -> println(userProfile.result)
-                    },
+                    onResponse = {tutiResponse -> println(tutiResponse.uuid) },
                     onError = {tutiResponse, exception ->  }
                 )
-
-                client.authToken = token
-                client.getUserProfile(
-                    onResponse = { userProfile -> userProfile},
-                    onError = { tutiResponse, exception -> })
 
             },
             onError = { tutiResponse, exception -> })

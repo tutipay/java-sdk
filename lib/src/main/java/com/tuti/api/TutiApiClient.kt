@@ -44,8 +44,8 @@ class TutiApiClient {
     }
 
     private fun getServerURL(development: Boolean): String {
-        val developmentHost = "https://beta.app.2t.sd/api/consumer/"
-        val productionHost = "https://beta.app.2t.sd/api/consumer/"
+        val developmentHost = "https://beta.app.2t.sd/consumer/"
+        val productionHost = "https://beta.app.2t.sd/consumer/"
         return if (development) developmentHost else productionHost
     }
 

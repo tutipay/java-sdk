@@ -81,3 +81,18 @@ data class User (
         @SerialName("Cards")
         val cards: List<Card>,
 )
+
+
+@Serializable
+data class DapiTransaction(
+        val ID: Int,
+        val CreatedAt: String,
+        val UpdatedAt: String,
+        val DeletedAt: String?,
+        val responseCode: Int
+)
+
+@Serializable
+data class DapiResponse(
+        val data: List<DapiTransaction>
+)

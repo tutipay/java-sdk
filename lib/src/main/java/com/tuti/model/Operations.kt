@@ -59,5 +59,5 @@ object Operations {
     const val USER_PROFILE = "user"
     const val PAYMENT_REQUEST = "payment_request"
     // https://blue-violet-2528.fly.dev/transactions
-    const val DAPI_GET_TRANSACTIONS = "/transactions"
+    const val DAPI_GET_TRANSACTIONS = "transactions"
 }
